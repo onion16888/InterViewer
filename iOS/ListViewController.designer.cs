@@ -9,17 +9,17 @@ using System.CodeDom.Compiler;
 
 namespace InterViewer.iOS
 {
-	[Register ("ViewController")]
-	partial class ViewController
+	[Register ("ListViewController")]
+	partial class ListViewController
 	{
 		[Outlet]
-		MapKit.MKMapView map { get; set; }
+		UIKit.UIToolbar toolbar { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (map != null) {
-				map.Dispose ();
-				map = null;
+			if (toolbar != null) {
+				toolbar.Dispose ();
+				toolbar = null;
 			}
 		}
 	}
