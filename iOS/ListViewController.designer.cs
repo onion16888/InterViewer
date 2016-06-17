@@ -13,13 +13,37 @@ namespace InterViewer.iOS
 	partial class ListViewController
 	{
 		[Outlet]
-		UIKit.UIToolbar toolbar { get; set; }
+		UIKit.UIButton btnAdd { get; set; }
+
+		[Outlet]
+		UIKit.UIButton btnDocuments { get; set; }
+
+		[Outlet]
+		UIKit.UIButton btnImages { get; set; }
+
+		[Outlet]
+		UIKit.UIButton btnTemplate { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (toolbar != null) {
-				toolbar.Dispose ();
-				toolbar = null;
+			if (btnAdd != null) {
+				btnAdd.Dispose ();
+				btnAdd = null;
+			}
+
+			if (btnDocuments != null) {
+				btnDocuments.Dispose ();
+				btnDocuments = null;
+			}
+
+			if (btnImages != null) {
+				btnImages.Dispose ();
+				btnImages = null;
+			}
+
+			if (btnTemplate != null) {
+				btnTemplate.Dispose ();
+				btnTemplate = null;
 			}
 		}
 	}
