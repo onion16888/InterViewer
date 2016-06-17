@@ -1,22 +1,66 @@
-﻿// WARNING
+// WARNING
 //
-// This file has been generated automatically by Xamarin Studio from the outlets and
-// actions declared in your storyboard file.
-// Manual changes to this file will not be maintained.
+// This file has been generated automatically by Xamarin Studio to store outlets and
+// actions made in the UI designer. If it is removed, they will be lost.
+// Manual changes to this file may not be handled correctly.
 //
 using Foundation;
-using System;
 using System.CodeDom.Compiler;
-using UIKit;
 
 namespace InterViewer.iOS
 {
-	[Register("DetailViewController")]
+	[Register ("DetailViewController")]
 	partial class DetailViewController
 	{
-		void ReleaseDesignerOutlets()
+		[Outlet]
+		UIKit.UIButton btnCamera { get; set; }
+
+		[Outlet]
+		UIKit.UIButton btnClock { get; set; }
+
+		[Outlet]
+		UIKit.UIButton btnMicrophone { get; set; }
+
+		[Outlet]
+		UIKit.UIButton btnNote { get; set; }
+
+		[Outlet]
+		UIKit.UIButton btnPencil { get; set; }
+
+		[Outlet]
+		UIKit.UIButton btnTag { get; set; }
+		
+		void ReleaseDesignerOutlets ()
 		{
+			if (btnCamera != null) {
+				btnCamera.Dispose ();
+				btnCamera = null;
+			}
+
+			if (btnClock != null) {
+				btnClock.Dispose ();
+				btnClock = null;
+			}
+
+			if (btnMicrophone != null) {
+				btnMicrophone.Dispose ();
+				btnMicrophone = null;
+			}
+
+			if (btnNote != null) {
+				btnNote.Dispose ();
+				btnNote = null;
+			}
+
+			if (btnPencil != null) {
+				btnPencil.Dispose ();
+				btnPencil = null;
+			}
+
+			if (btnTag != null) {
+				btnTag.Dispose ();
+				btnTag = null;
+			}
 		}
 	}
 }
-

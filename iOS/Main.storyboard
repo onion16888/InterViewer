@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ul9-b0-Vb1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rws-GZ-tcI">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -160,7 +160,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="249" y="350"/>
+            <point key="canvasLocation" x="249" y="317"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="lBU-fQ-ueQ">
@@ -460,9 +460,142 @@
                     <view key="view" contentMode="scaleToFill" id="ZoY-k1-AOt">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Pf-bi-hsX">
+                                <rect key="frame" x="0.0" y="64" width="80" height="536"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AQr-DV-oc0">
+                                        <rect key="frame" x="15" y="10" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="Sxi-Ur-zi8"/>
+                                            <constraint firstAttribute="height" constant="50" id="cWd-yp-s7B"/>
+                                            <constraint firstAttribute="width" constant="50" id="n6Z-1g-wph"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="tuJ-0X-wUp"/>
+                                        </constraints>
+                                        <state key="normal" title="便利貼" image="icon_note.png"/>
+                                        <state key="disabled" image="icon_note_d.png"/>
+                                        <state key="selected" image="icon_note_s.png"/>
+                                        <state key="highlighted" image="icon_note_s.png"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3XH-Zp-vDr">
+                                        <rect key="frame" x="15" y="140" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="BlI-bX-Swf"/>
+                                            <constraint firstAttribute="width" constant="50" id="FsH-QL-DgZ"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="RCh-u5-rpU"/>
+                                            <constraint firstAttribute="height" constant="50" id="g9S-sY-qyz"/>
+                                        </constraints>
+                                        <state key="normal" title="標籤" image="icon_tag.png"/>
+                                        <state key="disabled" image="icon_tag_d.png"/>
+                                        <state key="selected" image="icon_tag_s.png"/>
+                                        <state key="highlighted" image="icon_tag_s.png"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="No2-jv-RUm">
+                                        <rect key="frame" x="15" y="205" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="IdL-Kh-eEt"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="awv-5R-wfb"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="dST-t5-I0y"/>
+                                            <constraint firstAttribute="width" constant="50" id="k5f-t6-xBR"/>
+                                        </constraints>
+                                        <state key="normal" title="錄音" image="icon_microphone.png"/>
+                                        <state key="disabled" image="icon_microphone_d.png"/>
+                                        <state key="selected" image="icon_microphone_s.png"/>
+                                        <state key="highlighted" image="icon_microphone_s.png"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bcy-72-kHp">
+                                        <rect key="frame" x="15" y="270" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="I5Q-Vj-9sz"/>
+                                            <constraint firstAttribute="height" constant="50" id="QTp-Xg-pM8"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="flF-5J-MSL"/>
+                                            <constraint firstAttribute="width" constant="50" id="zMC-wr-fsS"/>
+                                        </constraints>
+                                        <state key="normal" title="拍照" image="icon_camera.png"/>
+                                        <state key="disabled" image="icon_camera_d.png"/>
+                                        <state key="selected" image="icon_camera_s.png"/>
+                                        <state key="highlighted" image="icon_camera_s.png"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wgq-7d-dcX">
+                                        <rect key="frame" x="15" y="476" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="VyK-Dc-2sq"/>
+                                            <constraint firstAttribute="height" constant="50" id="p3F-1b-zFy"/>
+                                            <constraint firstAttribute="width" constant="50" id="u2F-tr-2lV"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="w7z-h4-w45"/>
+                                        </constraints>
+                                        <state key="normal" title="筆記" image="icon_pencil.png"/>
+                                        <state key="disabled" image="icon_pencil_d.png"/>
+                                        <state key="selected" image="icon_pencil_s.png"/>
+                                        <state key="highlighted" image="icon_pencil_s.png"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DrU-QD-iov">
+                                        <rect key="frame" x="15" y="75" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="1LZ-TU-7qE"/>
+                                            <constraint firstAttribute="height" constant="50" id="NUV-FA-7Ha"/>
+                                            <constraint firstAttribute="width" constant="50" id="QOx-RD-P7D"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="Uem-TH-0z3"/>
+                                        </constraints>
+                                        <state key="normal" title="提醒" image="icon_clock.png"/>
+                                        <state key="disabled" image="icon_clock_d.png"/>
+                                        <state key="selected" image="icon_clock_s.png"/>
+                                        <state key="highlighted" image="icon_clock_s.png"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="3BQ-W0-Rzh"/>
+                                    <constraint firstItem="bcy-72-kHp" firstAttribute="centerX" secondItem="9Pf-bi-hsX" secondAttribute="centerX" id="92x-wH-WJU"/>
+                                    <constraint firstItem="3XH-Zp-vDr" firstAttribute="centerX" secondItem="9Pf-bi-hsX" secondAttribute="centerX" id="Ak8-nY-TyX"/>
+                                    <constraint firstAttribute="bottom" secondItem="Wgq-7d-dcX" secondAttribute="bottom" constant="10" id="DUf-iS-Phb"/>
+                                    <constraint firstItem="Wgq-7d-dcX" firstAttribute="centerX" secondItem="9Pf-bi-hsX" secondAttribute="centerX" id="FIb-Oq-FF1"/>
+                                    <constraint firstItem="DrU-QD-iov" firstAttribute="top" secondItem="AQr-DV-oc0" secondAttribute="bottom" constant="15" id="JXB-np-StQ"/>
+                                    <constraint firstItem="No2-jv-RUm" firstAttribute="top" secondItem="3XH-Zp-vDr" secondAttribute="bottom" constant="15" id="Ks9-Ik-eWd"/>
+                                    <constraint firstItem="No2-jv-RUm" firstAttribute="top" secondItem="3XH-Zp-vDr" secondAttribute="bottom" constant="15" id="O91-TQ-O4H"/>
+                                    <constraint firstItem="bcy-72-kHp" firstAttribute="top" secondItem="No2-jv-RUm" secondAttribute="bottom" constant="15" id="OQT-Lt-60t"/>
+                                    <constraint firstItem="DrU-QD-iov" firstAttribute="top" secondItem="AQr-DV-oc0" secondAttribute="bottom" constant="15" id="OpB-iH-zpC"/>
+                                    <constraint firstItem="3XH-Zp-vDr" firstAttribute="top" secondItem="DrU-QD-iov" secondAttribute="bottom" constant="15" id="SNT-hN-h3U"/>
+                                    <constraint firstItem="AQr-DV-oc0" firstAttribute="centerX" secondItem="9Pf-bi-hsX" secondAttribute="centerX" id="ULi-6B-9MH"/>
+                                    <constraint firstItem="3XH-Zp-vDr" firstAttribute="top" secondItem="DrU-QD-iov" secondAttribute="bottom" constant="15" id="XPL-9Z-6LE"/>
+                                    <constraint firstAttribute="width" constant="80" id="Zf0-eG-vig"/>
+                                    <constraint firstAttribute="width" constant="80" id="dIe-0E-02d"/>
+                                    <constraint firstItem="No2-jv-RUm" firstAttribute="centerX" secondItem="9Pf-bi-hsX" secondAttribute="centerX" id="gTo-GF-jaw"/>
+                                    <constraint firstItem="AQr-DV-oc0" firstAttribute="top" secondItem="9Pf-bi-hsX" secondAttribute="top" constant="10" id="r9U-bD-6lE"/>
+                                    <constraint firstItem="DrU-QD-iov" firstAttribute="centerX" secondItem="9Pf-bi-hsX" secondAttribute="centerX" id="taD-to-Cy1"/>
+                                    <constraint firstItem="bcy-72-kHp" firstAttribute="top" secondItem="No2-jv-RUm" secondAttribute="bottom" constant="15" id="xXO-DV-MwS"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Zf0-eG-vig"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D21-IC-G6c">
+                                <rect key="frame" x="80" y="20" width="520" height="580"/>
+                                <color key="backgroundColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="D21-IC-G6c" firstAttribute="leading" secondItem="9Pf-bi-hsX" secondAttribute="trailing" id="3ya-O9-Las"/>
+                            <constraint firstItem="D21-IC-G6c" firstAttribute="top" secondItem="ZoY-k1-AOt" secondAttribute="topMargin" constant="20" id="XUc-Ew-FwW"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="D21-IC-G6c" secondAttribute="trailing" constant="-20" id="ZZW-OG-cC5"/>
+                            <constraint firstItem="cHl-B3-BxY" firstAttribute="top" secondItem="9Pf-bi-hsX" secondAttribute="bottom" id="l6H-Ty-a8k"/>
+                            <constraint firstItem="9Pf-bi-hsX" firstAttribute="leading" secondItem="ZoY-k1-AOt" secondAttribute="leadingMargin" constant="-20" id="o4z-H0-hod"/>
+                            <constraint firstItem="9Pf-bi-hsX" firstAttribute="top" secondItem="c34-n4-dFg" secondAttribute="bottom" id="rQI-xH-SMW"/>
+                            <constraint firstItem="cHl-B3-BxY" firstAttribute="top" secondItem="D21-IC-G6c" secondAttribute="bottom" id="wgz-gm-DaN"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Detail" id="i8C-dM-96l"/>
+                    <connections>
+                        <outlet property="btnCamera" destination="bcy-72-kHp" id="VZd-3Z-mKC"/>
+                        <outlet property="btnClock" destination="DrU-QD-iov" id="jmR-Ee-47x"/>
+                        <outlet property="btnMicrophone" destination="No2-jv-RUm" id="Skx-ar-AgH"/>
+                        <outlet property="btnNote" destination="AQr-DV-oc0" id="o7m-f1-UZQ"/>
+                        <outlet property="btnPencil" destination="Wgq-7d-dcX" id="FPp-Ey-Ty8"/>
+                        <outlet property="btnTag" destination="3XH-Zp-vDr" id="jb4-YQ-sGb"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dRX-rw-hD8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
