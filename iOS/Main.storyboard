@@ -18,27 +18,148 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kin-Gu-FwY">
+                                <rect key="frame" x="0.0" y="64" width="80" height="536"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HmI-o4-zXz">
+                                        <rect key="frame" x="15" y="10" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="avR-hS-3rL"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="jGT-05-Vmy"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="mZY-Kx-SQR"/>
+                                            <constraint firstAttribute="height" constant="50" id="vqC-77-uhL"/>
+                                        </constraints>
+                                        <state key="normal" image="icon_note.png"/>
+                                        <state key="disabled" image="icon_note_d.png"/>
+                                        <state key="selected" image="icon_note_s.png"/>
+                                        <state key="highlighted" image="icon_note_s.png"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BWH-Ws-Ade">
+                                        <rect key="frame" x="15" y="140" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="FV0-YV-HW6"/>
+                                            <constraint firstAttribute="width" constant="50" id="K0l-kj-phA"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="TRV-xv-Wum"/>
+                                            <constraint firstAttribute="height" constant="50" id="iqM-Bm-zoA"/>
+                                        </constraints>
+                                        <state key="normal" title="Button" image="icon_tag.png"/>
+                                        <state key="disabled" image="icon_tag_d.png"/>
+                                        <state key="selected" image="icon_tag_s.png"/>
+                                        <state key="highlighted" image="icon_tag_s.png"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aFy-Eo-huc">
+                                        <rect key="frame" x="15" y="205" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="1Cd-zB-5Nc"/>
+                                            <constraint firstAttribute="height" constant="50" id="Dp8-Eh-j1M"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="fB9-2g-pbe"/>
+                                            <constraint firstAttribute="width" constant="50" id="rX6-Yd-ifn"/>
+                                        </constraints>
+                                        <state key="normal" title="Button" image="icon_microphone.png"/>
+                                        <state key="disabled" image="icon_microphone_d.png"/>
+                                        <state key="selected" image="icon_microphone_s.png"/>
+                                        <state key="highlighted" image="icon_microphone_s.png"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KrN-6u-S3l">
+                                        <rect key="frame" x="15" y="270" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="SdZ-G7-Mp8"/>
+                                            <constraint firstAttribute="width" constant="50" id="aYe-Zs-XKO"/>
+                                            <constraint firstAttribute="height" constant="50" id="b3B-uz-laO"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="f6O-jo-XM8"/>
+                                        </constraints>
+                                        <state key="normal" image="icon_camera.png"/>
+                                        <state key="disabled" image="icon_camera_d.png"/>
+                                        <state key="selected" image="icon_camera_s.png"/>
+                                        <state key="highlighted" image="icon_camera_s.png"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y6P-wS-8gF">
+                                        <rect key="frame" x="15" y="476" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="4MF-a6-ssv"/>
+                                            <constraint firstAttribute="width" constant="50" id="DuB-HR-ldZ"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="FjP-oD-o2q"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="Ha7-ZQ-0yC"/>
+                                        </constraints>
+                                        <state key="normal" image="icon_pencil.png"/>
+                                        <state key="disabled" image="icon_pencil_d.png"/>
+                                        <state key="selected" image="icon_pencil_s.png"/>
+                                        <state key="highlighted" image="icon_pencil_s.png"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TwZ-XB-Znq">
+                                        <rect key="frame" x="15" y="75" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="75w-X2-dkd"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="FFB-8r-8XA"/>
+                                            <constraint firstAttribute="height" constant="50" id="G9i-p7-uMw"/>
+                                            <constraint firstAttribute="width" constant="50" id="HHl-QR-l2Q"/>
+                                        </constraints>
+                                        <state key="normal" title="Button" image="icon_clock.png"/>
+                                        <state key="disabled" image="icon_clock_d.png"/>
+                                        <state key="selected" image="icon_clock_s.png"/>
+                                        <state key="highlighted" image="icon_clock_s.png"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="TwZ-XB-Znq" firstAttribute="centerX" secondItem="Kin-Gu-FwY" secondAttribute="centerX" id="8OA-eF-D6g"/>
+                                    <constraint firstItem="KrN-6u-S3l" firstAttribute="top" secondItem="aFy-Eo-huc" secondAttribute="bottom" constant="15" id="Crk-w6-3m1"/>
+                                    <constraint firstAttribute="width" constant="80" id="CwO-cO-H7V"/>
+                                    <constraint firstItem="BWH-Ws-Ade" firstAttribute="top" secondItem="TwZ-XB-Znq" secondAttribute="bottom" constant="15" id="Jqw-NA-hvG"/>
+                                    <constraint firstItem="KrN-6u-S3l" firstAttribute="top" secondItem="aFy-Eo-huc" secondAttribute="bottom" constant="15" id="KWt-BX-vt7"/>
+                                    <constraint firstItem="aFy-Eo-huc" firstAttribute="centerX" secondItem="Kin-Gu-FwY" secondAttribute="centerX" id="L6B-GI-74A"/>
+                                    <constraint firstAttribute="bottom" secondItem="Y6P-wS-8gF" secondAttribute="bottom" constant="10" id="Pbu-EZ-4Ic"/>
+                                    <constraint firstItem="HmI-o4-zXz" firstAttribute="centerX" secondItem="Kin-Gu-FwY" secondAttribute="centerX" id="RRk-eT-tCo"/>
+                                    <constraint firstItem="Y6P-wS-8gF" firstAttribute="centerX" secondItem="Kin-Gu-FwY" secondAttribute="centerX" id="RcM-Fw-5ak"/>
+                                    <constraint firstItem="KrN-6u-S3l" firstAttribute="centerX" secondItem="Kin-Gu-FwY" secondAttribute="centerX" id="Vsi-f1-aBQ"/>
+                                    <constraint firstItem="aFy-Eo-huc" firstAttribute="top" secondItem="BWH-Ws-Ade" secondAttribute="bottom" constant="15" id="ZpR-vq-XUA"/>
+                                    <constraint firstItem="TwZ-XB-Znq" firstAttribute="top" secondItem="HmI-o4-zXz" secondAttribute="bottom" constant="15" id="dvB-x4-8pO"/>
+                                    <constraint firstItem="BWH-Ws-Ade" firstAttribute="top" secondItem="TwZ-XB-Znq" secondAttribute="bottom" constant="15" id="fPA-2O-rr0"/>
+                                    <constraint firstItem="HmI-o4-zXz" firstAttribute="top" secondItem="Kin-Gu-FwY" secondAttribute="top" constant="10" id="hqW-VH-dzv"/>
+                                    <constraint firstAttribute="width" constant="80" id="q3J-RR-Buc"/>
+                                    <constraint firstItem="BWH-Ws-Ade" firstAttribute="centerX" secondItem="Kin-Gu-FwY" secondAttribute="centerX" id="qNj-My-3bM"/>
+                                    <constraint firstItem="TwZ-XB-Znq" firstAttribute="top" secondItem="HmI-o4-zXz" secondAttribute="bottom" constant="15" id="tXW-3e-AFc"/>
+                                    <constraint firstItem="aFy-Eo-huc" firstAttribute="top" secondItem="BWH-Ws-Ade" secondAttribute="bottom" constant="15" id="zhz-Aj-Y9j"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="q3J-RR-Buc"/>
+                                    </mask>
+                                </variation>
+                            </view>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="7ff-Xc-zej">
-                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
+                                <rect key="frame" x="80" y="20" width="520" height="580"/>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="7ff-Xc-zej" secondAttribute="trailing" constant="-20" id="Jhj-m1-sAo"/>
-                            <constraint firstItem="7ff-Xc-zej" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="20" id="Ui2-ko-VyU"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="7ff-Xc-zej" secondAttribute="bottom" id="ZDK-g2-8LW"/>
-                            <constraint firstItem="7ff-Xc-zej" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="qid-t4-Flq"/>
+                            <constraint firstItem="Kin-Gu-FwY" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="CwO-HS-Zzo"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="7ff-Xc-zej" secondAttribute="trailing" constant="-20" id="EUs-Vh-afO"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="7ff-Xc-zej" secondAttribute="trailing" constant="-20" id="HCW-yq-Orx"/>
+                            <constraint firstItem="Kin-Gu-FwY" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="ILl-YL-bD7"/>
+                            <constraint firstItem="7ff-Xc-zej" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="20" id="MxC-0h-hDc"/>
+                            <constraint firstItem="7ff-Xc-zej" firstAttribute="leading" secondItem="Kin-Gu-FwY" secondAttribute="trailing" id="QpR-kQ-NWv"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Kin-Gu-FwY" secondAttribute="bottom" id="jPc-gJ-zCq"/>
+                            <constraint firstItem="7ff-Xc-zej" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="20" id="jgu-7o-6cp"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="7ff-Xc-zej" secondAttribute="bottom" id="yH5-X5-WmP"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="7ff-Xc-zej" secondAttribute="bottom" id="zWY-g8-7M6"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="dy4-Ba-rea"/>
                     <connections>
+                        <outlet property="btnCamera" destination="KrN-6u-S3l" id="C7j-zh-41D"/>
+                        <outlet property="btnClock" destination="TwZ-XB-Znq" id="Tq6-0g-x7k"/>
+                        <outlet property="btnMicrophone" destination="aFy-Eo-huc" id="MeE-4B-TNc"/>
+                        <outlet property="btnNote" destination="HmI-o4-zXz" id="o55-ih-6qa"/>
+                        <outlet property="btnPencil" destination="Y6P-wS-8gF" id="Ive-Cq-4V1"/>
+                        <outlet property="btnTag" destination="BWH-Ws-Ade" id="ILV-23-BZ6"/>
                         <outlet property="map" destination="7ff-Xc-zej" id="20z-rm-tck"/>
                         <segue destination="Ul9-b0-Vb1" kind="show" identifier="moveToListViewSegue" id="Yq6-si-8Xr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="245" y="317"/>
+            <point key="canvasLocation" x="249" y="350"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="lBU-fQ-ueQ">
@@ -98,4 +219,24 @@
             <point key="canvasLocation" x="1682" y="317"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="icon_camera.png" width="512" height="512"/>
+        <image name="icon_camera_d.png" width="512" height="512"/>
+        <image name="icon_camera_s.png" width="512" height="512"/>
+        <image name="icon_clock.png" width="512" height="512"/>
+        <image name="icon_clock_d.png" width="512" height="512"/>
+        <image name="icon_clock_s.png" width="512" height="512"/>
+        <image name="icon_microphone.png" width="512" height="512"/>
+        <image name="icon_microphone_d.png" width="512" height="512"/>
+        <image name="icon_microphone_s.png" width="512" height="512"/>
+        <image name="icon_note.png" width="512" height="512"/>
+        <image name="icon_note_d.png" width="512" height="512"/>
+        <image name="icon_note_s.png" width="512" height="512"/>
+        <image name="icon_pencil.png" width="512" height="512"/>
+        <image name="icon_pencil_d.png" width="512" height="512"/>
+        <image name="icon_pencil_s.png" width="512" height="512"/>
+        <image name="icon_tag.png" width="512" height="512"/>
+        <image name="icon_tag_d.png" width="512" height="512"/>
+        <image name="icon_tag_s.png" width="512" height="512"/>
+    </resources>
 </document>

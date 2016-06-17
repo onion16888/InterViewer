@@ -128,5 +128,25 @@
       <DependentUpon>DetailViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\icon_note_d.png" />
+    <BundleResource Include="Resources\icon_note_s.png" />
+    <BundleResource Include="Resources\icon_note.png" />
+    <BundleResource Include="Resources\icon_pencil_d.png" />
+    <BundleResource Include="Resources\icon_pencil_s.png" />
+    <BundleResource Include="Resources\icon_pencil.png" />
+    <BundleResource Include="Resources\icon_camera_d.png" />
+    <BundleResource Include="Resources\icon_camera_s.png" />
+    <BundleResource Include="Resources\icon_camera.png" />
+    <BundleResource Include="Resources\icon_tag_d.png" />
+    <BundleResource Include="Resources\icon_tag_s.png" />
+    <BundleResource Include="Resources\icon_tag.png" />
+    <BundleResource Include="Resources\icon_microphone_d.png" />
+    <BundleResource Include="Resources\icon_microphone_s.png" />
+    <BundleResource Include="Resources\icon_microphone.png" />
+    <BundleResource Include="Resources\icon_clock_d.png" />
+    <BundleResource Include="Resources\icon_clock_s.png" />
+    <BundleResource Include="Resources\icon_clock.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
