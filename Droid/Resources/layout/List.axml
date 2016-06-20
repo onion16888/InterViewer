@@ -3,82 +3,117 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/command"
-        android:layout_width="80dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="#ffffff">
-        <ImageButton
-            android:id="@+id/btnNote"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="#ffffff"
-            android:contentDescription="button_note"
-            android:scaleType="centerInside"
-            android:src="@drawable/icon_note" />
-        <ImageButton
-            android:id="@+id/btnClock"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/btnNote"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="#ffffff"
-            android:contentDescription="button_clock"
-            android:scaleType="centerInside"
-            android:src="@drawable/icon_clock" />
-        <ImageButton
-            android:id="@+id/btnTag"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/btnClock"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="#ffffff"
-            android:contentDescription="button_tag"
-            android:scaleType="centerInside"
-            android:src="@drawable/icon_tag" />
-        <ImageButton
-            android:id="@+id/btnMicrophone"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/btnTag"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="#ffffff"
-            android:contentDescription="button_microphone"
-            android:scaleType="centerInside"
-            android:src="@drawable/icon_microphone" />
-        <ImageButton
-            android:id="@+id/btnCamera"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/btnMicrophone"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="#ffffff"
-            android:contentDescription="button_camera"
-            android:scaleType="centerInside"
-            android:src="@drawable/icon_camera" />
-        <ImageButton
-            android:id="@+id/btnPencil"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:background="#ffffff"
-            android:contentDescription="button_pencil"
-            android:scaleType="centerInside"
-            android:src="@drawable/icon_pencil" />
-    </RelativeLayout>
+        android:layout_weight="1.0"
+        android:background="#ffffff"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1.0">
+            <ImageButton
+                android:id="@+id/btnNote"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:contentDescription="button_note"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_note" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1.0">
+            <ImageButton
+                android:id="@+id/btnClock"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:contentDescription="button_clock"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_clock" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1.0">
+            <ImageButton
+                android:id="@+id/btnTag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:contentDescription="button_tag"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_tag" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1.0">
+            <ImageButton
+                android:id="@+id/btnMicrophone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:contentDescription="button_microphone"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_microphone" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1.0">
+            <ImageButton
+                android:id="@+id/btnCamera"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:contentDescription="button_camera"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_camera" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1.0">
+            <ImageButton
+                android:id="@+id/btnPencil"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:contentDescription="button_pencil"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_pencil" />
+        </LinearLayout>
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="9.0">
         <TextView
             android:id="@+id/lbSelect"
             android:layout_width="match_parent"
@@ -94,10 +129,10 @@
             android:id="@+id/gridContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/lbSelect"
+            android:layout_alignBottom="@+id/sub_command"
             android:layout_alignLeft="@+id/lbSelect"
             android:layout_alignTop="@+id/sub_command"
-            android:layout_alignBottom="@+id/sub_command"
+            android:layout_below="@+id/lbSelect"
             android:layout_toLeftOf="@+id/sub_command">
             <GridView
                 android:layout_width="match_parent"
@@ -122,10 +157,10 @@
                     android:id="@+id/btnTemplate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/sub_command_shape"
                     android:text="範本"
-                    android:textSize="20sp"
                     android:textColor="#ffffff"
-                    android:background="@drawable/sub_command_shape" />
+                    android:textSize="20sp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -136,10 +171,10 @@
                     android:id="@+id/btnDocuments"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/sub_command_shape"
                     android:text="文件"
-                    android:textSize="20sp"
                     android:textColor="#ffffff"
-                    android:background="@drawable/sub_command_shape" />
+                    android:textSize="20sp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -150,10 +185,10 @@
                     android:id="@+id/btnImages"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/sub_command_shape"
                     android:text="圖片"
-                    android:textSize="20sp"
                     android:textColor="#ffffff"
-                    android:background="@drawable/sub_command_shape" />
+                    android:textSize="20sp" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -164,10 +199,10 @@
                     android:id="@+id/btnAdd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/sub_command_shape"
                     android:text="＋"
-                    android:textSize="20sp"
                     android:textColor="#ffffff"
-                    android:background="@drawable/sub_command_shape" />
+                    android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
