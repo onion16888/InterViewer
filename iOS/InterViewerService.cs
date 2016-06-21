@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace InterViewer.iOS
 {
@@ -140,7 +142,16 @@ namespace InterViewer.iOS
 
 		public void SaveAsJson(Document entity)
 		{
-			throw new NotImplementedException();
+			if (string.IsNullOrWhiteSpace(entity.Name))
+			{
+				entity.Name = string.Format("{0:yyyyMMddHHmmss}.json", DateTime.Now);
+			}
+
+			var json = JsonConvert.SerializeObject(entity, Newtonsoft.Json.Formatting.Indented);
+
+			var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			var filename = Path.Combine(documents, entity.Name);
+			File.WriteAllText(filename, json);
 		}
 	}
 }
