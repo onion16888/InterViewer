@@ -101,6 +101,17 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="UnitTestAppDelegate.cs" />
+    <Compile Include="DocumentTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\InterViewer\InterViewer.csproj">
+      <Project>{E6A33D47-1328-493C-A62E-AFEE9029F40C}</Project>
+      <Name>InterViewer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\iOS\InterViewer.iOS.csproj">
+      <Project>{13607AE4-B602-470D-900A-55B0F1B350BD}</Project>
+      <Name>InterViewer.iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
