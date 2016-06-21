@@ -23,9 +23,17 @@ namespace InterViewer.iOS
 
 		[Outlet]
 		UIKit.UIButton btnTemplate { get; set; }
+
+		[Outlet]
+		UIKit.UICollectionView MyCollectionView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (MyCollectionView != null) {
+				MyCollectionView.Dispose ();
+				MyCollectionView = null;
+			}
+
 			if (btnAdd != null) {
 				btnAdd.Dispose ();
 				btnAdd = null;
