@@ -114,21 +114,10 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="9.0">
-        <FrameLayout
-            android:id="@+id/mapWithOverlay"
+        <HorizontalScrollView
+            android:id="@+id/imageScrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/map"
-                class="com.google.android.gms.maps.MapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:tag="map"
-                map:cameraBearing="0"
-                map:cameraTargetLat="23.9737437408"
-                map:cameraTargetLng="120.981806398"
-                map:cameraTilt="3.0"
-                map:cameraZoom="7.5" />
-        </FrameLayout>
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical" />
     </LinearLayout>
 </LinearLayout>

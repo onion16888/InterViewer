@@ -109,26 +109,101 @@
                 android:src="@drawable/icon_pencil" />
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/content"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="9.0">
-        <FrameLayout
-            android:id="@+id/mapWithOverlay"
+        <TextView
+            android:id="@+id/lbSelect"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/map"
-                class="com.google.android.gms.maps.MapFragment"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"
+            android:text="Select Document"
+            android:textSize="28sp" />
+        <LinearLayout
+            android:id="@+id/gridContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/sub_command"
+            android:layout_alignLeft="@+id/lbSelect"
+            android:layout_alignTop="@+id/sub_command"
+            android:layout_below="@+id/lbSelect"
+            android:layout_toLeftOf="@+id/sub_command">
+            <GridView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:tag="map"
-                map:cameraBearing="0"
-                map:cameraTargetLat="23.9737437408"
-                map:cameraTargetLng="120.981806398"
-                map:cameraTilt="3.0"
-                map:cameraZoom="7.5" />
-        </FrameLayout>
-    </LinearLayout>
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/sub_command"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/lbSelect"
+            android:layout_marginBottom="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center_vertical">
+                <Button
+                    android:id="@+id/btnTemplate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/sub_command_shape"
+                    android:text="範本"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center_vertical">
+                <Button
+                    android:id="@+id/btnDocuments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/sub_command_shape"
+                    android:text="文件"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center_vertical">
+                <Button
+                    android:id="@+id/btnImages"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/sub_command_shape"
+                    android:text="圖片"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center_vertical">
+                <Button
+                    android:id="@+id/btnAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/sub_command_shape"
+                    android:text="＋"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
