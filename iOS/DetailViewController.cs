@@ -40,12 +40,27 @@ namespace InterViewer.iOS
 
 			Initial();
 
+			// Perform any additional setup after loading the view, typically from a nib.
+
 			this.View.BackgroundColor = UIColor.Gray;
 
 			imageView.Image = GetThumbForPage();
 			scrollView.ContentSize = imageView.Image.Size;
 
-			// Perform any additional setup after loading the view, typically from a nib.
+		/*	pdfToolbar.Items[0].Clicked += delegate
+			{
+				this.PageNumber--;
+				imageView.Image = GetThumbForPage();
+				scrollView.ScrollRectToVisible(new CGRect(0, 0, 1, 1), false);
+			};
+
+			pdfToolbar.Items[2].Clicked += delegate
+			{
+				this.PageNumber++;
+				imageView.Image = GetThumbForPage();
+				scrollView.ScrollRectToVisible(new CGRect(0, 0, 1, 1), false);
+			};*/
+
 		}
 
 		public override void DidReceiveMemoryWarning()

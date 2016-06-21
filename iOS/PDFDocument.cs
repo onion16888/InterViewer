@@ -5,7 +5,7 @@ using CoreGraphics;
 using Foundation;
 using UIKit;
 
-namespace PDFToImage.iOS
+namespace InterViewer.iOS
 {
 	public class PDFDocument
 	{
