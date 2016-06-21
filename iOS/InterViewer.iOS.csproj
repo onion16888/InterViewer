@@ -138,6 +138,7 @@
       <DependentUpon>MyCollectionViewCell.cs</DependentUpon>
     </Compile>
     <Compile Include="InterViewerService.cs" />
+    <Compile Include="PDFDocument.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_note_d.png" />
@@ -186,6 +187,8 @@
     <BundleResource Include="Resources\InterView\Sliders\ubuntu-128.png" />
     <BundleResource Include="Resources\InterView\Sliders\vmware-128.png" />
     <BundleResource Include="Resources\InterView\Sliders\windows-128.png" />
+    <BundleResource Include="Resources\0200B9.pdf" />
+    <BundleResource Include="Resources\InterViewer.pdf" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

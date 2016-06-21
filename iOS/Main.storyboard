@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ul9-b0-Vb1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="gcc-Rz-UfT">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -594,7 +594,27 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D21-IC-G6c">
                                 <rect key="frame" x="80" y="20" width="520" height="580"/>
+                                <subviews>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HY5-g8-caH">
+                                        <rect key="frame" x="0.0" y="43" width="520" height="537"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PUe-Eq-7EW">
+                                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                            </imageView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="PUe-Eq-7EW" firstAttribute="leading" secondItem="HY5-g8-caH" secondAttribute="leading" id="2kD-2j-GSe"/>
+                                            <constraint firstItem="PUe-Eq-7EW" firstAttribute="top" secondItem="HY5-g8-caH" secondAttribute="top" id="RiN-vu-6H3"/>
+                                        </constraints>
+                                    </scrollView>
+                                </subviews>
                                 <color key="backgroundColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="HY5-g8-caH" firstAttribute="top" secondItem="D21-IC-G6c" secondAttribute="top" constant="43" id="8GJ-ao-ptT"/>
+                                    <constraint firstItem="HY5-g8-caH" firstAttribute="leading" secondItem="D21-IC-G6c" secondAttribute="leading" id="Ma9-xZ-eza"/>
+                                    <constraint firstAttribute="trailing" secondItem="HY5-g8-caH" secondAttribute="trailing" id="PFZ-Lq-Lc1"/>
+                                    <constraint firstAttribute="bottom" secondItem="HY5-g8-caH" secondAttribute="bottom" id="asL-vA-fxg"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -616,6 +636,8 @@
                         <outlet property="btnNote" destination="AQr-DV-oc0" id="o7m-f1-UZQ"/>
                         <outlet property="btnPencil" destination="Wgq-7d-dcX" id="FPp-Ey-Ty8"/>
                         <outlet property="btnTag" destination="3XH-Zp-vDr" id="jb4-YQ-sGb"/>
+                        <outlet property="imageView" destination="PUe-Eq-7EW" id="VxU-q1-9FW"/>
+                        <outlet property="scrollView" destination="HY5-g8-caH" id="cM0-cC-eCD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dRX-rw-hD8" userLabel="First Responder" sceneMemberID="firstResponder"/>

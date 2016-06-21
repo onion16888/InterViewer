@@ -29,9 +29,25 @@ namespace InterViewer.iOS
 
 		[Outlet]
 		UIKit.UIButton btnTag { get; set; }
+
+		[Outlet]
+		UIKit.UIImageView imageView { get; set; }
+
+		[Outlet]
+		UIKit.UIScrollView scrollView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (imageView != null) {
+				imageView.Dispose ();
+				imageView = null;
+			}
+
+			if (scrollView != null) {
+				scrollView.Dispose ();
+				scrollView = null;
+			}
+
 			if (btnCamera != null) {
 				btnCamera.Dispose ();
 				btnCamera = null;
