@@ -66,9 +66,9 @@ namespace InterViewer.Droid
 				var count = pdf.Count;
 
 				iv.SetImageBitmap(pdf.Images[0]);
-				iv.SetOnTouchListener(this);
-			}
 
+			}
+			iv.SetOnTouchListener(this);
 
 		
 		}
@@ -80,12 +80,13 @@ namespace InterViewer.Droid
 			{
 				case MotionEventActions.Down:
 					startX = e.GetX();
+					Debug.WriteLine("D");
 					break;
 				case MotionEventActions.Move:
 
 					break;
 
-				case MotionEventActions.Up:
+				case MotionEventActions.Cancel:
 					endX = e.GetX();
 					float diff = startX - endX;
 					Debug.WriteLine(diff.ToString());
@@ -100,6 +101,7 @@ namespace InterViewer.Droid
 					ImageView iv = FindViewById<ImageView>(Resource.Id.imageView1);
 					iv.SetImageBitmap(pdf.Images[PageNumber]);
 					startX = endX = 0;
+					Debug.WriteLine(PageNumber);
 					break;
 
 			}

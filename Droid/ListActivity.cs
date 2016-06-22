@@ -82,10 +82,10 @@ namespace InterViewer.Droid
 				Toast.MakeText(this, ReturnIcons[args.Position-1].FullName, ToastLength.Short).Show();
 				//Intent DetailAc = new Intent(this, typeof(DetailActivity));
 				document = new Document();
-				document.Name = ReturnIcons[args.Position - 1].FullName.Replace(".png", ".pdf");
+				document.Reference = ReturnIcons[args.Position - 1].FullName.Replace(".png", ".pdf");
 
 				//DetailAc.PutExtra("DocumentObject",document);
-				//DetailActivity = this.document;
+				DetailActivity.document = this.document;
 				StartActivity(typeof(DetailActivity));
 				this.Finish();
 			};
@@ -97,6 +97,7 @@ namespace InterViewer.Droid
 			btnDocuments = FindViewById<Button>(Resource.Id.btnDocuments);
 			btnImages = FindViewById<Button>(Resource.Id.btnImages);
 			btnAdd = FindViewById<Button>(Resource.Id.btnAdd);
+			gridviewShow = FindViewById<GridView>(Resource.Id.gridviewShow);
 		}
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
 		{
@@ -291,6 +292,23 @@ namespace InterViewer.Droid
 				}
 			}
 			return visibleThings;
+		}
+		/// <summary>
+		/// Queries the name of the files.
+		/// </summary>
+		/// <returns>The files name.</returns>
+		/// <param name="FolderName">Folder name. for example,if the source is in "Slides" path folder,set string "Slides" here</param>
+		private string[] queryFilesName(string FolderName)
+		{
+			//Debug.WriteLine("files:");
+
+			var files = Directory.EnumerateFiles(Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).ToString() + @"/InterView/" + FolderName + "/").ToArray();
+			foreach (string file in files)
+			{
+				//Debug.WriteLine(file);
+			}
+
+			return files;
 		}
 	}
 }

@@ -18,7 +18,8 @@ using Geolocator.Plugin;
 
 namespace InterViewer.Droid
 {
-	[Activity(Label = "Test", MainLauncher = true, Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Landscape)]
+	[Activity(Label = "Test"//, MainLauncher = true
+	          , Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Landscape)]
 	public class MainActivity : Activity
 	, ILocationListener
 	, GoogleMap.IOnCameraChangeListener
