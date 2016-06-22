@@ -41,8 +41,25 @@ namespace InterViewer.Droid
 
 		public List<Document> GetDocuments()
 		{
-			//TODO: 整合後要修改為提供實際資料
+			var list = new List<Document>();
 
+			var path = GetDocumentDirectory();
+			var files = Directory.EnumerateFiles(path, ".json");
+
+			foreach (var file in files)
+			{
+				var jsonText = File.ReadAllText(file);
+
+				var document = JsonConvert.DeserializeObject<Document>(jsonText);
+
+				list.Add(document);
+			}
+
+			return list;
+		}
+
+		public List<Document> GetDocumentsForMap()
+		{
 			var list = new List<Document>();
 
 			#region 生日公園

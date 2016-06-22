@@ -178,7 +178,7 @@ namespace InterViewer.Droid
 						Latitude = CenterLocation.Latitude,
 						Longitude = CenterLocation.Longitude,
 						Title = ProjectNameEditText.Text
-					}; ;
+					};
 
 					StartActivity(typeof(ListActivity));
 				};
