@@ -17,7 +17,8 @@ using Java.IO;
 
 namespace InterViewer.Droid
 {
-	[Activity(Label = "ListActivity",MainLauncher = true ,ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
+	[Activity(Label = "ListActivity"//,MainLauncher = true 
+	          ,ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
 	public class ListActivity : Activity
 	{
 		public static Document Doc { set; get; }
