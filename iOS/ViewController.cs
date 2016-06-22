@@ -10,6 +10,8 @@ namespace InterViewer.iOS
 {
 	public partial class ViewController : UIViewController
 	{
+		public Document Doc { get; set; }
+
 		private CLLocationCoordinate2D CenterLocation { get; set; }
 
 		private Boolean CanvasEnable { get; set; } = false;
@@ -49,6 +51,16 @@ namespace InterViewer.iOS
 		{
 			base.DidReceiveMemoryWarning();
 			// Release any cached data, images, etc that aren't in use.		
+		}
+
+		public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
+		{
+			base.PrepareForSegue(segue, sender);
+			if (segue.Identifier == "moveToListViewSegue")
+			{
+				var view = (ListViewController)segue.DestinationViewController;
+				view.Doc = Doc;
+			}
 		}
 
 		public void ViewInit()
@@ -478,6 +490,14 @@ namespace InterViewer.iOS
 				Console.WriteLine(String.Format("TextField:{0}", TextField.Text));
 				Console.WriteLine(String.Format("{0}, {1}", CenterLocation.Latitude, CenterLocation.Longitude));
 
+				Doc = new Document()
+				{
+					Latitude = CenterLocation.Latitude,
+					Longitude = CenterLocation.Longitude,
+					Title = TextField.Text
+				};
+
+				PerformSegue("moveToListViewSegue", this);
 			})
 			{
 				NumberOfTapsRequired = 1
