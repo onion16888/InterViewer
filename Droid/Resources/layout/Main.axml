@@ -1,134 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
-    <LinearLayout
-        android:id="@+id/command"
-        android:layout_width="0dp"
+    android:id="@+id/test">
+    <FrameLayout
+        android:id="@+id/mapWithOverlay"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/map"
+            android:tag="map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.google.android.gms.maps.MapFragment"
+            map:cameraBearing="0"
+            map:cameraTargetLat="23.9737437408"
+            map:cameraTargetLng="120.981806398"
+            map:cameraTilt="3.0"
+            map:cameraZoom="7.5" />
+    </FrameLayout>
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="80dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.0"
-        android:background="#ffffff"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1.0">
-            <ImageButton
-                android:id="@+id/btnNote"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffffff"
-                android:contentDescription="button_note"
-                android:scaleType="centerInside"
-                android:src="@drawable/icon_note" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1.0">
-            <ImageButton
-                android:id="@+id/btnClock"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffffff"
-                android:contentDescription="button_clock"
-                android:scaleType="centerInside"
-                android:src="@drawable/icon_clock" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1.0">
-            <ImageButton
-                android:id="@+id/btnTag"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffffff"
-                android:contentDescription="button_tag"
-                android:scaleType="centerInside"
-                android:src="@drawable/icon_tag" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1.0">
-            <ImageButton
-                android:id="@+id/btnMicrophone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffffff"
-                android:contentDescription="button_microphone"
-                android:scaleType="centerInside"
-                android:src="@drawable/icon_microphone" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1.0">
-            <ImageButton
-                android:id="@+id/btnCamera"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffffff"
-                android:contentDescription="button_camera"
-                android:scaleType="centerInside"
-                android:src="@drawable/icon_camera" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.0" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.0" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1.0">
-            <ImageButton
-                android:id="@+id/btnPencil"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#ffffff"
-                android:contentDescription="button_pencil"
-                android:scaleType="centerInside"
-                android:src="@drawable/icon_pencil" />
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/content"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="9.0">
-        <FrameLayout
-            android:id="@+id/mapWithOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/map"
-                class="com.google.android.gms.maps.MapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:tag="map"
-                map:cameraBearing="0"
-                map:cameraTargetLat="23.9737437408"
-                map:cameraTargetLng="120.981806398"
-                map:cameraTilt="3.0"
-                map:cameraZoom="7.5" />
-        </FrameLayout>
-    </LinearLayout>
-</LinearLayout>
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="0dp"
+        android:background="#E5E5FF"
+        android:alpha="0.7">
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imageButton1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#E5E5FF"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_note" />
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imageButton2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@+id/imageButton1"
+            android:background="#E5E5FF"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_clock_d" />
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imageButton3"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@+id/imageButton2"
+            android:background="#E5E5FF"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_tag_d" />
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imageButton4"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@+id/imageButton3"
+            android:background="#E5E5FF"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_microphone_d" />
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imageButton5"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:background="#E5E5FF"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_pencil" />
+    </RelativeLayout>
+</RelativeLayout>
