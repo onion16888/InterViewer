@@ -10,6 +10,7 @@ namespace InterViewer.iOS
 	{
 		public InterViewerService()
 		{
+			
 		}
 
 		public List<PdfTemplate> GetPdfTemplates()
@@ -18,7 +19,7 @@ namespace InterViewer.iOS
 
 			var exts = new[] { "pdf" };
 
-			var documentsDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			var documentsDir = GetDocumentDirectory();
 			var files = Directory.EnumerateFiles(documentsDir, "*.*", SearchOption.AllDirectories)
 								 .Where(file => exts.Any(x => file.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
 
@@ -173,6 +174,35 @@ namespace InterViewer.iOS
 			var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			var filename = Path.Combine(documents, entity.Name);
 			File.WriteAllText(filename, json);
+		}
+
+		public string GetPdfDirectory()
+		{
+			var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			CheckDirectory(dir);
+			return dir;
+		}
+
+		public string GetDocumentDirectory()
+		{
+			var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			CheckDirectory(dir);
+			return dir;
+		}
+
+		public string GetImageDirectory()
+		{
+			var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+			CheckDirectory(dir);
+			return dir;
+		}
+
+		private void CheckDirectory(string path)
+		{
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(path);
+			}
 		}
 	}
 }
