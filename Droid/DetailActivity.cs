@@ -61,16 +61,15 @@ namespace InterViewer.Droid
 				alertDialog1.Show();
 			}
 			else
-			{ 
-			    pdf = new PDFDocument(this, document.Reference);
+			{
+				pdf = new PDFDocument(this, document.Reference);
 				var count = pdf.Count;
 
 				iv.SetImageBitmap(pdf.Images[0]);
-				iv.SetOnTouchListener(this);
 			}
 
 
-		
+			iv.SetOnTouchListener(this);
 		}
 
 
@@ -79,27 +78,41 @@ namespace InterViewer.Droid
 			switch (e.Action)
 			{
 				case MotionEventActions.Down:
+					Debug.WriteLine("D");
 					startX = e.GetX();
 					break;
 				case MotionEventActions.Move:
-
+					//startX = e.GetX();
 					break;
 
-				case MotionEventActions.Up:
+				case MotionEventActions.Cancel:
+					Debug.WriteLine("C");    
 					endX = e.GetX();
 					float diff = startX - endX;
 					Debug.WriteLine(diff.ToString());
 					//-left to right
-					if (diff < 0)
+					if (startX < endX)
 					{
+						if (PageNumber == pdf.Count - 1)
+						{
+							Toast.MakeText(this, "此為最後一頁", ToastLength.Long).Show();
+						}
+
 						PageNumber++;
 					}
 					else {
+						if (PageNumber == 0)
+						{
+							Toast.MakeText(this, "此為第一頁", ToastLength.Long).Show();
+						}
+
 						PageNumber--;
 					}
 					ImageView iv = FindViewById<ImageView>(Resource.Id.imageView1);
 					iv.SetImageBitmap(pdf.Images[PageNumber]);
+
 					startX = endX = 0;
+					Debug.WriteLine(PageNumber);
 					break;
 
 			}
