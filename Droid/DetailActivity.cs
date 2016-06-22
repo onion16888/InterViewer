@@ -23,7 +23,7 @@ namespace InterViewer.Droid
 		PDFDocument pdf;
 		Bitmap bitmap;
 		int _pageNumber = 0;
-
+		public Document document { get; set; }
 		private float _viewX;
 		private string pdfFilepath;
 		private float startX, endX = 0;
@@ -35,7 +35,7 @@ namespace InterViewer.Droid
 
 			ImageView iv = FindViewById<ImageView>(Resource.Id.imageView1);
 			ScrollView sc = FindViewById<ScrollView>(Resource.Id.scrollView1);
-			var dir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+			/*var dir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
 			pdfFilepath = System.IO.Path.Combine(dir, "0200B9.pdf");
 
 			if (!File.Exists(pdfFilepath))
@@ -45,13 +45,31 @@ namespace InterViewer.Droid
 				{
 					source.CopyTo(dest);
 				}
+			}*/
+
+			if (!File.Exists(document.Reference))
+			{
+				var alertDialog1 = new AlertDialog.Builder(this).Create();
+				// 設定Title
+				alertDialog1.SetTitle("警告");
+				// 內文
+				alertDialog1.SetMessage("PDF檔案不存在!");
+
+				//第一顆按鈕
+				alertDialog1.SetButton("確認", (sender, args) => Toast.MakeText(this, "請確認PDF檔案位置!", ToastLength.Short).Show());
+
+				alertDialog1.Show();
+			}
+			else
+			{ 
+			    pdf = new PDFDocument(this, document.Reference);
+				var count = pdf.Count;
+
+				iv.SetImageBitmap(pdf.Images[0]);
+				iv.SetOnTouchListener(this);
 			}
 
-			pdf = new PDFDocument(this, pdfFilepath);
-			var count = pdf.Count;
 
-			iv.SetImageBitmap(pdf.Images[0]);
-			iv.SetOnTouchListener(this);
 		
 		}
 
