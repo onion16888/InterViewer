@@ -50,6 +50,7 @@ namespace InterViewer.Droid
 
 			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Slides"));
 			gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+			//gridviewShow.Adapter = new ImageAdapter(this, AppDir, ReturnIcons);
 
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
@@ -314,6 +315,66 @@ namespace InterViewer.Droid
 			}
 
 			return files;
+		}
+		public class ImageAdapter : BaseAdapter
+		{
+			List<FileSystemInfo> _visibleThings;
+
+
+			//		int[] thumbIds = {
+			//			Resource.Drawable.sample_0, Resource.Drawable.sample_1,
+			//			Resource.Drawable.sample_2, Resource.Drawable.sample_3,
+			//			Resource.Drawable.sample_4, Resource.Drawable.sample_5,
+			//			Resource.Drawable.sample_6, Resource.Drawable.sample_7
+			//		};
+			private Activity _context;
+
+			public ImageAdapter(Activity context, string icoopath, List<FileSystemInfo> visibleThings)
+			{
+				_context = context;
+				_visibleThings = visibleThings;
+				var HowManyFile = visibleThings.Count;
+			}
+
+			public override int Count
+			{
+				get { return _visibleThings.Count; }
+			}
+
+			public override Java.Lang.Object GetItem(int position)
+			{
+				return null;
+			}
+
+			public override long GetItemId(int position)
+			{
+				return 0;
+			}
+			// create a new ImageView for each item referenced by the Adapter
+			public override View GetView(int position, View convertView, ViewGroup parent)
+			{
+				ImageView imageView;
+
+				if (convertView == null)
+				{  // if it's not recycled, initialize some attributes
+					imageView = new ImageView(_context);
+					imageView.LayoutParameters = new GridView.LayoutParams(85, 85);
+					imageView.SetScaleType(ImageView.ScaleType.CenterCrop);
+					imageView.SetPadding(8, 8, 8, 8);
+				}
+				else {
+					imageView = (ImageView)convertView;
+				}
+				var filepath = _visibleThings[position];
+				Bitmap bmp = BitmapFactory.DecodeFile(filepath.FullName);
+
+				//imageView.SetImageResource (thumbIds[position]);
+				imageView.SetImageBitmap(bmp);
+				return imageView;
+			}
+
+			// references to our images
+
 		}
 	}
 }

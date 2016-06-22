@@ -46,9 +46,9 @@ namespace InterViewer.Droid
 
 			if (convertView == null) {  // if it's not recycled, initialize some attributes
 				imageView = new ImageView (context);
-				imageView.LayoutParameters = new GridView.LayoutParams (85, 85);
+				imageView.LayoutParameters = new GridView.LayoutParams (125, 125);
 				imageView.SetScaleType (ImageView.ScaleType.CenterCrop);
-				imageView.SetPadding (8, 8, 8, 8);
+				imageView.SetPadding (3, 3, 3, 3);
 			} else {
 				imageView = (ImageView)convertView;
 			}

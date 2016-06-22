@@ -114,7 +114,8 @@ namespace InterViewer.iOS
 
 			public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
 			{
-				var qq=ListViewController.GetDirFileList("PdfFile2");
+				
+
 				var data = Source[indexPath.Row];
 				collectionView.DeselectItem(indexPath, true);
 
@@ -136,8 +137,11 @@ namespace InterViewer.iOS
 		//GridView ItemTouch
 		private void ItemOnSelected(Object sender, TableSource.SelectedEventArgs e)
 		{
+			var qq = ListViewController.GetDirFileList("PdfFile2");
+
 			Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Documents2","PdfFile2").Replace("Silders2","PdfFile2");
 			Console.WriteLine(Doc.Reference);
+
 
 			InvokeOnMainThread(() =>
 			{
