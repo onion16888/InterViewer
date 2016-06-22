@@ -85,7 +85,7 @@ namespace InterViewer.Droid
 				document.Name = ReturnIcons[args.Position - 1].FullName.Replace(".png", ".pdf");
 
 				//DetailAc.PutExtra("DocumentObject",document);
-				DetailActivity.document = this.document;
+				//DetailActivity = this.document;
 				StartActivity(typeof(DetailActivity));
 				this.Finish();
 			};
