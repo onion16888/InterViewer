@@ -38,7 +38,7 @@ namespace InterViewer.Droid
 			base.OnCreate(savedInstanceState);
 
 			SetContentView(Resource.Layout.List);
-
+			StartActivity(typeof(DetailActivity));
 			init();
 
 			btnTemplate.Click += (object sender, EventArgs e) =>
