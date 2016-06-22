@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="390dp"
+    android:layout_height="100dp"
+    android:background="@drawable/shape_plus">
+    <RelativeLayout
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/PlusButton"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape_button_plus">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/PlusImageView"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:src="@drawable/plus" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="190dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape_input">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/ProjectNameEditText"
+            android:layout_marginLeft="10dp"
+            android:singleLine="true"
+            android:textSize="36dp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:text="TextView"
+            android:background="@android:color/transparent" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/AddButton"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/shape_button_add">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="36dp"
+            android:text="Add"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</LinearLayout>

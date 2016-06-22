@@ -77,6 +77,9 @@
     <Reference Include="Xamarin.GooglePlayServices.Basement">
       <HintPath>..\packages\Xamarin.GooglePlayServices.Basement.29.0.0.1\lib\MonoAndroid41\Xamarin.GooglePlayServices.Basement.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\InterViewer\InterViewer.csproj">
@@ -93,6 +96,7 @@
     <Compile Include="PDFDocument.cs" />
     <Compile Include="GridViewAdapter.cs" />
     <Compile Include="PDFImageAdapter.cs" />
+    <Compile Include="InterViewerService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -102,13 +106,27 @@
     <None Include="PluginsHelp\GeolocatorReadme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\Main.axml" />
     <AndroidResource Include="Resources\values\Strings.xml" />
     <AndroidResource Include="Resources\mipmap-hdpi\Icon.png" />
     <AndroidResource Include="Resources\mipmap-mdpi\Icon.png" />
     <AndroidResource Include="Resources\mipmap-xhdpi\Icon.png" />
     <AndroidResource Include="Resources\mipmap-xxhdpi\Icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\Icon.png" />
+    <AndroidResource Include="Resources\layout\List.axml" />
+    <AndroidResource Include="Resources\drawable\sub_command_shape.xml" />
+    <AndroidResource Include="Resources\layout\Detail.axml" />
+    <AndroidResource Include="Resources\layout\marker_view_layout.axml" />
+    <AndroidResource Include="Resources\layout\rectangle_view_layout.axml" />
+    <AndroidResource Include="Resources\layout\side_view_layout.axml" />
+    <AndroidResource Include="Resources\layout\Main.axml" />
+    <AndroidResource Include="Resources\drawable\shape_button_add.axml" />
+    <AndroidResource Include="Resources\drawable\shape_button_plus.axml" />
+    <AndroidResource Include="Resources\drawable\shape_input.axml" />
+    <AndroidResource Include="Resources\drawable\shape_marker.axml" />
+    <AndroidResource Include="Resources\drawable\shape_plus.axml" />
+    <AndroidResource Include="Resources\drawable\minus.png" />
+    <AndroidResource Include="Resources\drawable\plus.png" />
+    <AndroidResource Include="Resources\values\Ids.axml" />
     <AndroidResource Include="Resources\drawable\icon_camera_d.png" />
     <AndroidResource Include="Resources\drawable\icon_camera_s.png" />
     <AndroidResource Include="Resources\drawable\icon_camera.png" />
@@ -127,9 +145,6 @@
     <AndroidResource Include="Resources\drawable\icon_tag_d.png" />
     <AndroidResource Include="Resources\drawable\icon_tag_s.png" />
     <AndroidResource Include="Resources\drawable\icon_tag.png" />
-    <AndroidResource Include="Resources\layout\List.axml" />
-    <AndroidResource Include="Resources\drawable\sub_command_shape.xml" />
-    <AndroidResource Include="Resources\layout\Detail.axml" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="xamandroidsupportv4-18">
@@ -140,12 +155,16 @@
       <Version>29.0.0.1</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
-    <XamarinComponentReference Include="googleplayservices-location">
-      <Version>29.0.0.1</Version>
+    <XamarinComponentReference Include="json.net">
+      <Version>7.0.1</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
     <XamarinComponentReference Include="GeolocatorPlugin">
       <Version>1.0.3</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="googleplayservices-location">
+      <Version>29.0.0.1</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
   </ItemGroup>

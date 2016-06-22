@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>   
+	<item name="triangle_view" type="id"/> 
+	<item name="rectangle_view" type="id"/>
+	<item name="side_view" type="id"/>
+</resources>

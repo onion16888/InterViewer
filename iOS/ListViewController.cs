@@ -10,6 +10,8 @@ namespace InterViewer.iOS
 {
 	public partial class ListViewController : UIViewController
 	{
+		public Document Doc { get; set; }
+
 		public ListViewController(IntPtr handle) : base(handle)
 		{
 		}
