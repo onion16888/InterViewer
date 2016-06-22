@@ -21,6 +21,7 @@ namespace InterViewer.iOS
 			IEnumerable<string> fileOrDirectory = GetIconPath("Documents");
 
 			CollectionViewInit(fileOrDirectory);
+						var qwe = Directory.EnumerateFileSystemEntries("./InterView/Sliders");
 
 			btnTemplate.TouchUpInside += (object sender, EventArgs e) =>
 			{
