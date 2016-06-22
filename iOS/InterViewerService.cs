@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace InterViewer.iOS
 {
@@ -40,8 +41,25 @@ namespace InterViewer.iOS
 
 		public List<Document> GetDocuments()
 		{
-			//TODO: 整合後要修改為提供實際資料
+			var list = new List<Document>();
 
+			var path = GetDocumentDirectory();
+			var files = Directory.EnumerateFiles(path, ".json");
+
+			foreach (var file in files)
+			{
+				var jsonText = File.ReadAllText(file);
+
+				var document = JsonConvert.DeserializeObject<Document>(jsonText);
+
+				list.Add(document);
+			}
+
+			return list;
+		}
+
+		public List<Document> GetDocumentsForMap()
+		{
 			var list = new List<Document>();
 
 			#region 生日公園
@@ -158,7 +176,6 @@ namespace InterViewer.iOS
 			});
 
 			#endregion
-
 			return list;
 		}
 
@@ -204,6 +221,8 @@ namespace InterViewer.iOS
 				Directory.CreateDirectory(path);
 			}
 		}
+
+
 	}
 }
 

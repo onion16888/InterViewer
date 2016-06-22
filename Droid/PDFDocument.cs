@@ -25,7 +25,6 @@ namespace InterViewer.Droid
 			Count = Doc.CountPages();
 			ConvertToImages();
 		}
-
 		private List<Bitmap> ConvertToImages()
 		{
 			Images = new List<Bitmap>();

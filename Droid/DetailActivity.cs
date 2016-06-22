@@ -20,12 +20,9 @@ namespace InterViewer.Droid
 	[Activity(Label = "DetailActivity", MainLauncher = true, ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
 	public class DetailActivity : Activity, View.IOnTouchListener
 	{
-		PDFDocument pdf;
-		Bitmap bitmap;
+		PDFDocument pdf;Bitmap bitmap;
 		int _pageNumber = 0;
 		public static Document document { get; set; }
-		private float _viewX;
-		private string pdfFilepath;
 		private float startX, endX = 0;
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -34,7 +31,7 @@ namespace InterViewer.Droid
 			SetContentView(Resource.Layout.Detail);
 
 			ImageView iv = FindViewById<ImageView>(Resource.Id.imageView1);
-			ScrollView sc = FindViewById<ScrollView>(Resource.Id.scrollView1);
+			//ScrollView sc = FindViewById<ScrollView>(Resource.Id.scrollView1);
 			/*var dir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
 			pdfFilepath = System.IO.Path.Combine(dir, "0200B9.pdf");
 
@@ -66,8 +63,8 @@ namespace InterViewer.Droid
 				var count = pdf.Count;
 
 				iv.SetImageBitmap(pdf.Images[0]);
-			}
 
+			}
 
 			iv.SetOnTouchListener(this);
 		}
@@ -87,6 +84,7 @@ namespace InterViewer.Droid
 
 				case MotionEventActions.Cancel:
 					Debug.WriteLine("C");    
+
 					endX = e.GetX();
 					float diff = startX - endX;
 					Debug.WriteLine(diff.ToString());
