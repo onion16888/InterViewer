@@ -23,7 +23,7 @@ namespace InterViewer.Droid
 		PDFDocument pdf;
 		Bitmap bitmap;
 		int _pageNumber = 0;
-		public Document document { get; set; }
+		public static Document document { get; set; }
 		private float _viewX;
 		private string pdfFilepath;
 		private float startX, endX = 0;
