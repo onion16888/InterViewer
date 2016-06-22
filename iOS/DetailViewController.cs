@@ -33,7 +33,7 @@ namespace InterViewer.iOS
 			String filename = Path.Combine(NibBundle.ResourcePath, "0200B9.pdf");
 			_pdf = CGPDFDocument.FromFile(filename);
 		}
-
+		private nfloat startX, endX = 0;
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
@@ -43,23 +43,15 @@ namespace InterViewer.iOS
 			// Perform any additional setup after loading the view, typically from a nib.
 
 			this.View.BackgroundColor = UIColor.Gray;
-
+			Debug.WriteLine(PageNumber);
 			imageView.Image = GetThumbForPage();
 			scrollView.ContentSize = imageView.Image.Size;
 
-		/*	pdfToolbar.Items[0].Clicked += delegate
-			{
-				this.PageNumber--;
-				imageView.Image = GetThumbForPage();
-				scrollView.ScrollRectToVisible(new CGRect(0, 0, 1, 1), false);
-			};
+			this.scrollView.UserInteractionEnabled = true;
 
-			pdfToolbar.Items[2].Clicked += delegate
-			{
-				this.PageNumber++;
-				imageView.Image = GetThumbForPage();
-				scrollView.ScrollRectToVisible(new CGRect(0, 0, 1, 1), false);
-			};*/
+			UIPanGestureRecognizer changPanGesture = setScrollViewChangPanGesture();
+			this.scrollView.AddGestureRecognizer(changPanGesture);
+		
 
 		}
 
@@ -144,6 +136,28 @@ namespace InterViewer.iOS
 						break;
 				}
 			}
+		}
+
+		private UIPanGestureRecognizer setScrollViewChangPanGesture()
+		{
+			return	new UIPanGestureRecognizer((pen) =>
+			{
+				if (pen.State == UIGestureRecognizerState.Began)
+				{
+					startX = pen.LocationInView(scrollView).X;
+				}
+				else if (pen.State == UIGestureRecognizerState.Ended)
+				{
+					endX = pen.LocationInView(scrollView).X;
+					nfloat diff = startX - endX;
+
+					PageNumber = diff < 0 ? PageNumber + 1 : PageNumber - 1;
+					imageView.Image = GetThumbForPage();
+					scrollView.ScrollRectToVisible(new CGRect(0, 0, 100, 100), true);
+					startX = endX = 0;
+				}
+			});
+
 		}
 
 		private void Initial()
