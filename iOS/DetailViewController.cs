@@ -47,10 +47,15 @@ namespace InterViewer.iOS
 			imageView.Image = GetThumbForPage();
 			scrollView.ContentSize = imageView.Image.Size;
 
-			this.scrollView.UserInteractionEnabled = true;
 
-			UIPanGestureRecognizer changPanGesture = setScrollViewChangPanGesture();
-			this.scrollView.AddGestureRecognizer(changPanGesture);
+			this.scrollView.UserInteractionEnabled = true;
+			UISwipeGestureRecognizer rightSwipeGes = setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection.Right);
+			rightSwipeGes.Direction = UISwipeGestureRecognizerDirection.Right;
+			this.scrollView.AddGestureRecognizer(rightSwipeGes);
+
+			UISwipeGestureRecognizer leftSwipeGes = setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection.Left);
+			leftSwipeGes.Direction = UISwipeGestureRecognizerDirection.Left;
+			this.scrollView.AddGestureRecognizer(leftSwipeGes);
 		
 
 		}
@@ -138,25 +143,28 @@ namespace InterViewer.iOS
 			}
 		}
 
-		private UIPanGestureRecognizer setScrollViewChangPanGesture()
-		{
-			return	new UIPanGestureRecognizer((pen) =>
-			{
-				if (pen.State == UIGestureRecognizerState.Began)
-				{
-					startX = pen.LocationInView(scrollView).X;
-				}
-				else if (pen.State == UIGestureRecognizerState.Ended)
-				{
-					endX = pen.LocationInView(scrollView).X;
-					nfloat diff = startX - endX;
 
-					PageNumber = diff < 0 ? PageNumber + 1 : PageNumber - 1;
-					imageView.Image = GetThumbForPage();
-					scrollView.ScrollRectToVisible(new CGRect(0, 0, 100, 100), true);
-					startX = endX = 0;
-				}
-			});
+		private UISwipeGestureRecognizer setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection direction)
+		{
+			return	new UISwipeGestureRecognizer((swipeDirection) =>
+		   {
+			  
+			   switch (direction)
+			   {
+				   case UISwipeGestureRecognizerDirection.Right:
+					   PageNumber++;   
+					break;
+				   case UISwipeGestureRecognizerDirection.Left:
+					   PageNumber--;
+					break;
+			   }
+
+				imageView.Image = GetThumbForPage();
+			   
+				scrollView.ScrollRectToVisible(new CGRect(0, 0, 100, 100), true);
+
+				Debug.WriteLine(direction.ToString());
+		   });
 
 		}
 
