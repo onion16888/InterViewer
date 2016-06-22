@@ -8,33 +8,35 @@ namespace InterViewer.Droid
 {
 	public class InterViewerService : IService
 	{
+		private const string appName = "InterViewer";
+		private string rootPath;
+		private string appPath;
+
 		public InterViewerService()
 		{
+			rootPath = Android.OS.Environment.ExternalStorageDirectory.Path;
+			appPath = Path.Combine(rootPath, appName);
+			CheckDirectory(appPath);
 		}
 
-		public List<PdfTemplate> GetPdfTemplates()
+		#region Implementation IService
+
+		public string GetDocumentDirectory()
 		{
-			var templates = new List<PdfTemplate>();
+			var dirName = "Documents";
+			return GetPath(dirName);
+		}
 
-			var exts = new[] { "pdf" };
+		public string GetImageDirectory()
+		{
+			var dirName = "Images";
+			return GetPath(dirName);
+		}
 
-			var documentsDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			var files = Directory.EnumerateFiles(documentsDir, "*.*", SearchOption.AllDirectories)
-								 .Where(file => exts.Any(x => file.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
-
-			foreach (var filePath in files)
-			{
-				if (File.Exists(filePath))
-				{
-					templates.Add(new PdfTemplate
-					{
-						Name = Path.GetFileName(filePath),
-						Path = filePath
-					});
-				}
-			}
-
-			return templates;
+		public string GetPdfDirectory()
+		{
+			var dirName = "Pdf";
+			return GetPath(dirName);
 		}
 
 		public List<Document> GetDocuments()
@@ -161,6 +163,31 @@ namespace InterViewer.Droid
 			return list;
 		}
 
+		public List<PdfTemplate> GetPdfTemplates()
+		{
+			var templates = new List<PdfTemplate>();
+
+			var exts = new[] { "pdf" };
+
+			var path = GetPdfDirectory();
+			var files = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories)
+								 .Where(file => exts.Any(x => file.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
+
+			foreach (var filePath in files)
+			{
+				if (File.Exists(filePath))
+				{
+					templates.Add(new PdfTemplate
+					{
+						Name = Path.GetFileName(filePath),
+						Path = filePath
+					});
+				}
+			}
+
+			return templates;
+		}
+
 		public void SaveAsJson(Document entity)
 		{
 			if (string.IsNullOrWhiteSpace(entity.Name))
@@ -170,10 +197,26 @@ namespace InterViewer.Droid
 
 			var json = JsonConvert.SerializeObject(entity, Newtonsoft.Json.Formatting.Indented);
 
-			var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			var filename = Path.Combine(documents, entity.Name);
+			var path = GetDocumentDirectory();
+			var filename = Path.Combine(path, entity.Name);
 			File.WriteAllText(filename, json);
+		}
+
+		#endregion
+
+		private void CheckDirectory(string path)
+		{
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(path);
+			}
+		}
+
+		private string GetPath(string directoryName)
+		{
+			var path = Path.Combine(appPath, directoryName);
+			CheckDirectory(path);
+			return path;
 		}
 	}
 }
-

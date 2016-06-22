@@ -14,8 +14,6 @@ using Android.Views;
 using Android.Widget;
 using Java.IO;
 
-using Debug = System.Diagnostics.Debug;
-
 namespace InterViewer.Droid
 {
 	[Activity(Label = "ListActivity",MainLauncher = true ,ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
@@ -31,8 +29,6 @@ namespace InterViewer.Droid
 		Button btnDocuments;
 		Button btnImages;
 		Button btnAdd;
-		GridView gridviewShow;
-
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
@@ -41,18 +37,6 @@ namespace InterViewer.Droid
 
 			init();
 
-			btnTemplate.Click += (object sender, EventArgs e) =>
-			{
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Documents"));
-				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
-			};
-
-			btnDocuments.Click += (object sender, EventArgs e) =>
-			{
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Slides"));
-				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
-			};
-				
 			btnImages.Click+= (object sender, EventArgs e) => 
 			{
 				var imageIntent = new Intent(Intent.ActionPick, uri);
@@ -72,11 +56,6 @@ namespace InterViewer.Droid
 				Intent destIntent = Intent.CreateChooser(fileintent, "選取Pdf");
 				StartActivityForResult(destIntent, PdfPick);
 			};
-
-			gridviewShow.ItemClick += (object sender, AdapterView.ItemClickEventArgs args) =>
-			{
-				Toast.MakeText(this, args.Position.ToString(), ToastLength.Short).Show();
-			};
 		}
 
 		void init()
@@ -85,7 +64,6 @@ namespace InterViewer.Droid
 			btnDocuments = FindViewById<Button>(Resource.Id.btnDocuments);
 			btnImages = FindViewById<Button>(Resource.Id.btnImages);
 			btnAdd = FindViewById<Button>(Resource.Id.btnAdd);
-			gridviewShow = FindViewById<GridView>(Resource.Id.gridviewShow);
 		}
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
 		{
@@ -193,6 +171,7 @@ namespace InterViewer.Droid
 					//ShowAlert ("以完成搬移檔案至DownLoad資料夾下",null);
 				}
 			}
+
 		}
 		public void copy(Java.IO.File src, Java.IO.File dst)
 		{
@@ -251,39 +230,6 @@ namespace InterViewer.Droid
 				}
 			}
 			return visibleThings;
-		}
-		/// <summary>
-		/// Queries the name of the files.(This method is used to be the example)
-		/// </summary>
-		/// <returns>The files name.</returns>
-		private string[] queryFilesName()
-		{
-			Debug.WriteLine("files:");
-
-			var files = Directory.EnumerateFiles(Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).ToString() + @"/InterView/Slides/").ToArray();
-			foreach (string file in files)
-			{
-				Debug.WriteLine(file);
-			}
-
-			return files;
-		}
-		/// <summary>
-		/// Queries the name of the files.
-		/// </summary>
-		/// <returns>The files name.</returns>
-		/// <param name="FolderName">Folder name. for example,if the source is in "Slides" path folder,set string "Slides" here</param>
-		private string[] queryFilesName(string FolderName)
-		{
-			Debug.WriteLine("files:");
-
-			var files = Directory.EnumerateFiles(Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).ToString() + @"/InterView/" + FolderName + "/").ToArray();
-			foreach (string file in files)
-			{
-				Debug.WriteLine(file);
-			}
-
-			return files;
 		}
 	}
 }
