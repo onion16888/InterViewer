@@ -26,7 +26,7 @@ namespace InterViewer.Droid
 		private const int PdfPick = 2000;
 		Android.Net.Uri uri = Android.Provider.MediaStore.Images.Media.ExternalContentUri;
 		//public string icon=Android.OS.Environment.ExternalStorageDirectory+"/Download/Template";
-		public string IconPath = Android.OS.Environment.ExternalStorageDirectory + "/Download/InterView/Pdf";
+		public string AppDir = Android.OS.Environment.ExternalStorageDirectory + "/Download/InterView/Slides";
 		List<FileSystemInfo> visibleThings = new List<FileSystemInfo>();
 		Button btnTemplate;
 		Button btnDocuments;
@@ -34,6 +34,7 @@ namespace InterViewer.Droid
 		Button btnAdd;
 		GridView gridviewShow;
 		PDFDocument Pdf;
+		Document document;
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -42,6 +43,9 @@ namespace InterViewer.Droid
 			SetContentView(Resource.Layout.List);
 
 			init();
+
+			this.DirCheck(new Java.IO.File(AppDir));
+			var ReturnIcons = this.FindTemplateIcon(AppDir, visibleThings);
 
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
@@ -77,7 +81,15 @@ namespace InterViewer.Droid
 
 			gridviewShow.ItemClick += (object sender, AdapterView.ItemClickEventArgs args) =>
 			{
-				Toast.MakeText(this, args.Position.ToString(), ToastLength.Short).Show();
+				Toast.MakeText(this, ReturnIcons[args.Position-1].FullName, ToastLength.Short).Show();
+				//Intent DetailAc = new Intent(this, typeof(DetailActivity));
+				document = new Document();
+				document.Name = ReturnIcons[args.Position - 1].FullName.Replace(".png", ".pdf");
+
+				//DetailAc.PutExtra("DocumentObject",document);
+				DetailActivity.document = this.document;
+				StartActivity(typeof(DetailActivity));
+				this.Finish();
 			};
 		}
 
@@ -92,7 +104,7 @@ namespace InterViewer.Droid
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
 		{
 
-			string publicDir = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/Download/InterView/";
+			string SaveImageDir = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/Download/InterView/Image";
 			base.OnActivityResult(requestCode, resultCode, data);
 
 			//如果使用者要選Image
@@ -100,11 +112,12 @@ namespace InterViewer.Droid
 			{
 				if (data.Data != null)
 				{
+					this.DirCheck(new Java.IO.File(SaveImageDir));
 					//var imageView = FindViewById<ImageView> (Resource.Id.myImageView);
 					//imageView.SetImageURI (data.Data);
 					string Source = GetPathToImage(data.Data);
 
-					string Des = System.IO.Path.Combine(publicDir, new Java.IO.File(Source).Name);
+					string Des = System.IO.Path.Combine(SaveImageDir, new Java.IO.File(Source).Name);
 					if (new Java.IO.File(Des).Exists())
 					{
 						this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
@@ -122,7 +135,7 @@ namespace InterViewer.Droid
 						{
 							uris[i] = clipData.GetItemAt(i).Uri;
 							string Source = GetPathToImage(uris[i]);
-							string Des = System.IO.Path.Combine(publicDir, new Java.IO.File(Source).Name);
+							string Des = System.IO.Path.Combine(SaveImageDir, new Java.IO.File(Source).Name);
 							if (new Java.IO.File(Des).Exists())
 							{
 								this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
@@ -152,17 +165,14 @@ namespace InterViewer.Droid
 					if (FileDes.Exists())
 					{
 						//ShowAlert ("相同檔案名稱"+FileDes.Name+"已存在", null);
+						//先寫入檔案 給來源路徑跟目的地路徑
 						this.copy(FileSou, FileDes);
-						Pdf = new PDFDocument(this, Source);
-						var BitmapIcon = Pdf.Images[0];
-
-						var stream = new FileStream(Des.Replace(".pdf",".png"), FileMode.Create);
-						BitmapIcon.Compress(Bitmap.CompressFormat.Png, 100, stream);
-						stream.Close();
-							return;
+						this.WritePngToDir(Source, Des);
+						return;
 					}
 
 					this.copy(FileSou, FileDes);
+					this.WritePngToDir(Source, Des);
 				}
 				//複選
 				else
@@ -191,17 +201,33 @@ namespace InterViewer.Droid
 							{
 								//ShowAlert ("相同檔案名"+FileDes.Name+"稱已存在", null);
 								this.copy(FileSou, FileDes);
+								this.WritePngToDir(Source, Des);
 								continue;
 							}
 
 							this.copy(FileSou, FileDes);
-
+							this.WritePngToDir(Source, Des);
 						}
 					}
 					//ShowAlert ("以完成搬移檔案至DownLoad資料夾下",null);
 				}
 			}
 		}
+
+		void WritePngToDir(string Source, string Des)
+		{
+			//把PDF初始化被給予檔案路徑
+			Pdf = new PDFDocument(this, Source);
+			//接收第一張Bitmap
+			var BitmapIcon = Pdf.Images[0];
+			//把.PDF轉成.PNG 開啟建檔
+			var stream = new FileStream(Des.Replace(".pdf", ".png"), FileMode.Create);
+
+			//寫成PNG.100%.關閉
+			BitmapIcon.Compress(Bitmap.CompressFormat.Png, 100, stream);
+			stream.Close();
+		}
+
 		public void copy(Java.IO.File src, Java.IO.File dst)
 		{
 			InputStream sou = new FileInputStream(src);
@@ -230,6 +256,14 @@ namespace InterViewer.Droid
 			{
 				alert.Show();
 			});
+		}
+		private void DirCheck(Java.IO.File dir)
+		{
+			if (!dir.Exists())
+			{
+				dir.Mkdirs();
+				return;
+			}
 		}
 		private String GetPathToImage(Android.Net.Uri uri)
 		{

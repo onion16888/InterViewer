@@ -23,16 +23,17 @@ namespace InterViewer.Droid
 		PDFDocument pdf;
 		Bitmap bitmap;
 		int _pageNumber;
+		public static Document document { get; set;}
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
 
 			SetContentView(Resource.Layout.Detail);
-
+			var d = document.Name;
 			ImageView iv = FindViewById<ImageView>(Resource.Id.imageView1);
 
-			var dir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+			/*var dir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
 			var pdfFilepath = System.IO.Path.Combine(dir, "0200B9.pdf");
 
 			if (!File.Exists(pdfFilepath))
@@ -42,9 +43,9 @@ namespace InterViewer.Droid
 				{
 					source.CopyTo(dest);
 				}
-			}
+			}*/
 
-			pdf = new PDFDocument(this, pdfFilepath);
+			pdf = new PDFDocument(this, document.Name);
 			var count = pdf.Count;
 
 			iv.SetImageBitmap(pdf.Images[0]);
