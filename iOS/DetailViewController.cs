@@ -33,7 +33,7 @@ namespace InterViewer.iOS
 			String filename = Path.Combine(NibBundle.ResourcePath, "0200B9.pdf");
 			_pdf = CGPDFDocument.FromFile(filename);
 		}
-
+		private nfloat startX, endX = 0;
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
@@ -43,23 +43,20 @@ namespace InterViewer.iOS
 			// Perform any additional setup after loading the view, typically from a nib.
 
 			this.View.BackgroundColor = UIColor.Gray;
-
+			Debug.WriteLine(PageNumber);
 			imageView.Image = GetThumbForPage();
 			scrollView.ContentSize = imageView.Image.Size;
 
-		/*	pdfToolbar.Items[0].Clicked += delegate
-			{
-				this.PageNumber--;
-				imageView.Image = GetThumbForPage();
-				scrollView.ScrollRectToVisible(new CGRect(0, 0, 1, 1), false);
-			};
 
-			pdfToolbar.Items[2].Clicked += delegate
-			{
-				this.PageNumber++;
-				imageView.Image = GetThumbForPage();
-				scrollView.ScrollRectToVisible(new CGRect(0, 0, 1, 1), false);
-			};*/
+			this.scrollView.UserInteractionEnabled = true;
+			UISwipeGestureRecognizer rightSwipeGes = setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection.Right);
+			rightSwipeGes.Direction = UISwipeGestureRecognizerDirection.Right;
+			this.scrollView.AddGestureRecognizer(rightSwipeGes);
+
+			UISwipeGestureRecognizer leftSwipeGes = setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection.Left);
+			leftSwipeGes.Direction = UISwipeGestureRecognizerDirection.Left;
+			this.scrollView.AddGestureRecognizer(leftSwipeGes);
+		
 
 		}
 
@@ -144,6 +141,31 @@ namespace InterViewer.iOS
 						break;
 				}
 			}
+		}
+
+
+		private UISwipeGestureRecognizer setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection direction)
+		{
+			return	new UISwipeGestureRecognizer((swipeDirection) =>
+		   {
+			  
+			   switch (direction)
+			   {
+				   case UISwipeGestureRecognizerDirection.Right:
+					   PageNumber++;   
+					break;
+				   case UISwipeGestureRecognizerDirection.Left:
+					   PageNumber--;
+					break;
+			   }
+
+				imageView.Image = GetThumbForPage();
+			   
+				scrollView.ScrollRectToVisible(new CGRect(0, 0, 100, 100), true);
+
+				Debug.WriteLine(direction.ToString());
+		   });
+
 		}
 
 		private void Initial()

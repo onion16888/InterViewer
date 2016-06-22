@@ -15,13 +15,13 @@ using Android.Widget;
 using Android.Graphics;
 using Java.IO;
 
-using Debug = System.Diagnostics.Debug;
-
 namespace InterViewer.Droid
 {
 	[Activity(Label = "ListActivity",MainLauncher = true ,ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
 	public class ListActivity : Activity
 	{
+		public static Document Doc { set; get; }
+
 		private const int ImagePick = 1000;
 		private const int PdfPick = 2000;
 		Android.Net.Uri uri = Android.Provider.MediaStore.Images.Media.ExternalContentUri;
@@ -35,7 +35,6 @@ namespace InterViewer.Droid
 		GridView gridviewShow;
 		PDFDocument Pdf;
 		Document document;
-
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
@@ -78,7 +77,6 @@ namespace InterViewer.Droid
 				Intent destIntent = Intent.CreateChooser(fileintent, "選取Pdf");
 				StartActivityForResult(destIntent, PdfPick);
 			};
-
 			gridviewShow.ItemClick += (object sender, AdapterView.ItemClickEventArgs args) =>
 			{
 				Toast.MakeText(this, ReturnIcons[args.Position-1].FullName, ToastLength.Short).Show();
@@ -99,7 +97,6 @@ namespace InterViewer.Droid
 			btnDocuments = FindViewById<Button>(Resource.Id.btnDocuments);
 			btnImages = FindViewById<Button>(Resource.Id.btnImages);
 			btnAdd = FindViewById<Button>(Resource.Id.btnAdd);
-			gridviewShow = FindViewById<GridView>(Resource.Id.gridviewShow);
 		}
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
 		{
@@ -212,6 +209,7 @@ namespace InterViewer.Droid
 					//ShowAlert ("以完成搬移檔案至DownLoad資料夾下",null);
 				}
 			}
+
 		}
 
 		void WritePngToDir(string Source, string Des)
@@ -293,39 +291,6 @@ namespace InterViewer.Droid
 				}
 			}
 			return visibleThings;
-		}
-		/// <summary>
-		/// Queries the name of the files.(This method is used to be the example)
-		/// </summary>
-		/// <returns>The files name.</returns>
-		private string[] queryFilesName()
-		{
-			Debug.WriteLine("files:");
-
-			var files = Directory.EnumerateFiles(Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).ToString() + @"/InterView/Slides/").ToArray();
-			foreach (string file in files)
-			{
-				Debug.WriteLine(file);
-			}
-
-			return files;
-		}
-		/// <summary>
-		/// Queries the name of the files.
-		/// </summary>
-		/// <returns>The files name.</returns>
-		/// <param name="FolderName">Folder name. for example,if the source is in "Slides" path folder,set string "Slides" here</param>
-		private string[] queryFilesName(string FolderName)
-		{
-			Debug.WriteLine("files:");
-
-			var files = Directory.EnumerateFiles(Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).ToString() + @"/InterView/" + FolderName + "/").ToArray();
-			foreach (string file in files)
-			{
-				Debug.WriteLine(file);
-			}
-
-			return files;
 		}
 	}
 }
