@@ -12,6 +12,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Android.Graphics;
 using Java.IO;
 
 using Debug = System.Diagnostics.Debug;
@@ -32,6 +33,7 @@ namespace InterViewer.Droid
 		Button btnImages;
 		Button btnAdd;
 		GridView gridviewShow;
+		PDFDocument Pdf;
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -43,13 +45,13 @@ namespace InterViewer.Droid
 
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Documents"));
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Slides"));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
 
 			btnDocuments.Click += (object sender, EventArgs e) =>
 			{
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Slides"));
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Documents"));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
 				
@@ -90,7 +92,7 @@ namespace InterViewer.Droid
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
 		{
 
-			string publicDir = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/Download/";
+			string publicDir = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/Download/InterView/";
 			base.OnActivityResult(requestCode, resultCode, data);
 
 			//如果使用者要選Image
@@ -144,14 +146,20 @@ namespace InterViewer.Droid
 					var SourcePath = System.Net.WebUtility.UrlDecode(data.Data.ToString());
 					var PathArray = SourcePath.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
 					var Source = System.IO.Path.Combine(ForPdfDir, PathArray[2]);
-					var Des = System.IO.Path.Combine(ForPdfDir, "DownLoad/" + new Java.IO.File(Source).Name);
+					var Des = System.IO.Path.Combine(ForPdfDir, "DownLoad/InterView/Slides/" + new Java.IO.File(Source).Name);
 					Java.IO.File FileSou = new Java.IO.File(Source);
 					Java.IO.File FileDes = new Java.IO.File(Des);
 					if (FileDes.Exists())
 					{
 						//ShowAlert ("相同檔案名稱"+FileDes.Name+"已存在", null);
 						this.copy(FileSou, FileDes);
-						return;
+						Pdf = new PDFDocument(this, Source);
+						var BitmapIcon = Pdf.Images[0];
+
+						var stream = new FileStream(Des.Replace(".pdf",".png"), FileMode.Create);
+						BitmapIcon.Compress(Bitmap.CompressFormat.Png, 100, stream);
+						stream.Close();
+							return;
 					}
 
 					this.copy(FileSou, FileDes);
@@ -174,7 +182,7 @@ namespace InterViewer.Droid
 							var Source = System.IO.Path.Combine(ForPdfDir, PathArray[1]);
 
 							//FromFileName = new Java.IO.File (Source);
-							var Des = System.IO.Path.Combine(ForPdfDir, "DownLoad/" + new Java.IO.File(Source).Name);
+							var Des = System.IO.Path.Combine(ForPdfDir, "DownLoad/InterView/Slides/" + new Java.IO.File(Source).Name);
 
 							Java.IO.File FileSou = new Java.IO.File(Source);
 							Java.IO.File FileDes = new Java.IO.File(Des);
