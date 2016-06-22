@@ -171,6 +171,15 @@ namespace InterViewer.Droid
 
 					Console.WriteLine("{0}, {1}", CenterLocation.Latitude, CenterLocation.Longitude);
 
+
+					ListActivity.Doc = new Document()
+					{
+						Latitude = CenterLocation.Latitude,
+						Longitude = CenterLocation.Longitude,
+						Title = ProjectNameEditText.Text
+					}; ;
+
+					StartActivity(typeof(ListActivity));
 				};
 			}
 

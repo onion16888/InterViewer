@@ -19,6 +19,8 @@ namespace InterViewer.Droid
 	[Activity(Label = "ListActivity",MainLauncher = true ,ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
 	public class ListActivity : Activity
 	{
+		public static Document Doc { set; get; }
+
 		private const int ImagePick = 1000;
 		private const int PdfPick = 2000;
 		Android.Net.Uri uri = Android.Provider.MediaStore.Images.Media.ExternalContentUri;
