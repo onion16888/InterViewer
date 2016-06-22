@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Linq;
 using UIKit;
 using CoreGraphics;
 using System.Collections.Generic;
@@ -21,30 +21,30 @@ namespace InterViewer.iOS
 		{
 			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
-			IEnumerable<string> fileOrDirectory = GetIconPath("Documents");
+			IEnumerable<string> fileOrDirectory = GetDirFileList("Sliders2");
 
 			CollectionViewInit(fileOrDirectory);
-						var qwe = Directory.EnumerateFileSystemEntries("./InterView/Sliders");
+			//var qwe = Directory.EnumerateFileSystemEntries("./InterView/Sliders");
 
 			btnTemplate.TouchUpInside += (object sender, EventArgs e) =>
 			{
 				InvokeOnMainThread(() =>
 				{
-					CollectionViewInit(GetIconPath("Sliders"));
+					CollectionViewInit(GetDirFileList("Sliders2"));
 				});
 			};
 			btnDocuments.TouchUpInside+= (object sender, EventArgs e) => 
 			{
 				InvokeOnMainThread(() =>
 				{
-					CollectionViewInit(GetIconPath("Documents"));
+					CollectionViewInit(GetDirFileList("Documents2"));
 				});
 			};
 		}
 
-		static IEnumerable<string> GetIconPath(string Whichfolder)
+		public static  IEnumerable<string> GetDirFileList(string Whichfolder)
 		{
-			var fileOrDirectory = Directory.EnumerateFileSystemEntries("./InterView/"+Whichfolder);
+			var fileOrDirectory = Directory.EnumerateFileSystemEntries("./InterView/" + Whichfolder);
 			foreach (var entry in fileOrDirectory)
 			{
 				Console.WriteLine(entry);
@@ -60,13 +60,15 @@ namespace InterViewer.iOS
 		}
 		public void CollectionViewInit(IEnumerable<string> PngSource)
 		{
-			List<Int32> temp = new List<Int32>();
+			//List<Int32> temp = new List<Int32>();
 
-			for (Int32 i = 0; i < 500; i++)
-			{
-				temp.Add(i);
-			}
-
+			//for (Int32 i = 0; i < 500; i++)
+			//{
+			//	temp.Add(i);
+			//}
+			List<string> ss = new List<string>();
+			ss.AddRange(PngSource);
+			//var v=from qwe in ss where 
 			var source = new TableSource(PngSource);
 			MyCollectionView.Source = source;
 
@@ -112,6 +114,7 @@ namespace InterViewer.iOS
 
 			public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
 			{
+				var qq=ListViewController.GetDirFileList("PdfFile2");
 				var data = Source[indexPath.Row];
 				collectionView.DeselectItem(indexPath, true);
 
@@ -122,7 +125,6 @@ namespace InterViewer.iOS
 				{
 					var args = new SelectedEventArgs { Selected = data };
 					handle(this, args);
-
 				}
 			}
 
@@ -134,7 +136,36 @@ namespace InterViewer.iOS
 		//GridView ItemTouch
 		private void ItemOnSelected(Object sender, TableSource.SelectedEventArgs e)
 		{
-			Console.WriteLine(e.Selected);
+			Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Documents2","PdfFile2").Replace("Silders2","PdfFile2");
+			Console.WriteLine(Doc.Reference);
+
+			InvokeOnMainThread(() =>
+			{
+				PerformSegue("moveToDetailViewSegue", this);
+			});
+		}
+		public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
+		{
+			base.PrepareForSegue(segue, sender);
+			switch (segue.Identifier)
+			{
+				case @"moveToDetailViewSegue":
+					{
+						if (segue.DestinationViewController is DetailViewController)
+						{
+							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
+							//把這個頁面的值傳給新頁面的屬性
+							Detailviewcontroller.doc = this.Doc;
+							//destviewcontroller.cStoreName=StoreName;
+							//destviewcontroller.cRating = Rating;
+							//destviewcontroller.cAddress = Address;
+							//destviewcontroller.cPhone = Phone;
+							//destviewcontroller.cStoreTime = StoreTime;
+						}
+						break;
+					}
+					break;
+			}
 		}
 	}
 }

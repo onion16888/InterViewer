@@ -107,6 +107,9 @@
   <ItemGroup>
     <Folder Include="Resources\" />
     <Folder Include="Resources\InterView\" />
+    <Folder Include="Resources\InterView\Documents2\" />
+    <Folder Include="Resources\InterView\Sliders2\" />
+    <Folder Include="Resources\InterView\PdfFile2\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -155,7 +158,6 @@
     <BundleResource Include="Resources\icon_pencil.png" />
     <BundleResource Include="Resources\icon_camera_d.png" />
     <BundleResource Include="Resources\icon_camera_s.png" />
-    <BundleResource Include="Resources\icon_camera.png" />
     <BundleResource Include="Resources\icon_tag_d.png" />
     <BundleResource Include="Resources\icon_tag_s.png" />
     <BundleResource Include="Resources\icon_tag.png" />
@@ -165,38 +167,12 @@
     <BundleResource Include="Resources\icon_clock_d.png" />
     <BundleResource Include="Resources\icon_clock_s.png" />
     <BundleResource Include="Resources\icon_clock.png" />
-    <BundleResource Include="Resources\InterView\Documents\sample_0.png" />
-    <BundleResource Include="Resources\InterView\Documents\sample_1.png" />
-    <BundleResource Include="Resources\InterView\Documents\sample_2.png" />
-    <BundleResource Include="Resources\InterView\Documents\sample_3.png" />
-    <BundleResource Include="Resources\InterView\Documents\sample_4.png" />
-    <BundleResource Include="Resources\InterView\Documents\sample_5.png" />
-    <BundleResource Include="Resources\InterView\Documents\sample_6.png" />
-    <BundleResource Include="Resources\InterView\Documents\sample_7.png" />
-    <BundleResource Include="Resources\InterView\Sliders\apple-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\archlinux-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\blackberry-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\chrome_browser-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\chrome-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\debian-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\fedora-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\firefox-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\freebsd_daemon-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\iOS-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\java-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\linux_tox-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\mac_os_X-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\microsoft_windows-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\opensuse-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\raspberry-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\tor-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\ubuntu-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\vmware-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\windows-128.png" />
-    <BundleResource Include="Resources\0200B9.pdf" />
-    <BundleResource Include="Resources\InterViewer.pdf" />
     <BundleResource Include="Resources\minus.png" />
     <BundleResource Include="Resources\plus.png" />
+    <BundleResource Include="Resources\InterView\Documents2\icon_camera_d.png" />
+    <BundleResource Include="Resources\InterView\Sliders2\icon_clock.png" />
+    <BundleResource Include="Resources\InterView\PdfFile2\icon_camera_d.pdf" />
+    <BundleResource Include="Resources\InterView\PdfFile2\icon_clock.pdf" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

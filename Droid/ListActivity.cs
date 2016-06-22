@@ -48,6 +48,9 @@ namespace InterViewer.Droid
 			this.DirCheck(new Java.IO.File(AppDir));
 			var ReturnIcons = this.FindTemplateIcon(AppDir, visibleThings);
 
+			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Slides"));
+			gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
 				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Slides"));

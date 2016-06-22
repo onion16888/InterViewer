@@ -13,6 +13,7 @@ namespace InterViewer.iOS
 	{
 		private CGPDFDocument _pdf;
 		private int _pageNumber;
+		public Document doc;
 
 		public int PageNumber
 		{
