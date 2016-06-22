@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace InterViewer.iOS
@@ -13,7 +14,27 @@ namespace InterViewer.iOS
 
 		public List<PdfTemplate> GetPdfTemplates()
 		{
-			throw new NotImplementedException();
+			var templates = new List<PdfTemplate>();
+
+			var exts = new[] { "pdf" };
+
+			var documentsDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			var files = Directory.EnumerateFiles(documentsDir, "*.*", SearchOption.AllDirectories)
+								 .Where(file => exts.Any(x => file.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
+
+			foreach (var filePath in files)
+			{
+				if (File.Exists(filePath))
+				{
+					templates.Add(new PdfTemplate
+					{
+						Name = Path.GetFileName(filePath),
+						Path = filePath
+					});
+				}
+			}
+
+			return templates;
 		}
 
 		public List<Document> GetDocuments()

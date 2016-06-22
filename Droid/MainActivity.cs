@@ -9,7 +9,7 @@ using Android.Gms.Maps;
 
 namespace InterViewer.Droid
 {
-	[Activity(Label = "InterViewer", MainLauncher = true, Icon = "@mipmap/icon", ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
+	[Activity(Label = "InterViewer", Icon = "@mipmap/icon", ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
 	public class MainActivity : Activity
 	, Android.Locations.ILocationListener
 	, Android.Gms.Maps.GoogleMap.IOnMyLocationButtonClickListener
