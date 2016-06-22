@@ -34,6 +34,8 @@ namespace InterViewer.Droid
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.Main);
 
+			//StartActivity(typeof(DetailActivity));
+
 			// 預設座標
 			defaultLocation = new LatLng(23.9737437408, 120.981806398);
 
