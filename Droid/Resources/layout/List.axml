@@ -134,9 +134,23 @@
             android:layout_alignTop="@+id/sub_command"
             android:layout_below="@+id/lbSelect"
             android:layout_toLeftOf="@+id/sub_command">
-            <GridView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <LinearLayout
+                android:id="@+id/LinearGridview"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:layout_alignParentLeft="true"
+                android:layout_weight="5">
+                <GridView
+                    android:id="@+id/gridviewShow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:columnWidth="90dp"
+                    android:numColumns="auto_fit"
+                    android:verticalSpacing="10dp"
+                    android:horizontalSpacing="10dp"
+                    android:stretchMode="columnWidth" />
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/sub_command"
