@@ -31,10 +31,18 @@ namespace InterViewer.iOS
 		UIKit.UIButton btnTag { get; set; }
 
 		[Outlet]
+		UIKit.UICollectionView CollectionView { get; set; }
+
+		[Outlet]
 		MapKit.MKMapView map { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (CollectionView != null) {
+				CollectionView.Dispose ();
+				CollectionView = null;
+			}
+
 			if (btnCamera != null) {
 				btnCamera.Dispose ();
 				btnCamera = null;

@@ -1,11 +1,21 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using CoreGraphics;
+using CoreLocation;
+using Foundation;
+using MapKit;
 using UIKit;
 
 namespace InterViewer.iOS
 {
 	public partial class ViewController : UIViewController
 	{
+		private CLLocationCoordinate2D CenterLocation { get; set; }
+
+		private Boolean CanvasEnable { get; set; } = false;
+
+		private Boolean CollectionViewIsOpen { get; set; } = false;
+
 		public ViewController(IntPtr handle) : base(handle)
 		{
 		}
@@ -14,9 +24,25 @@ namespace InterViewer.iOS
 		{
 			base.ViewDidLoad();
 
-			Initial();
+			ViewInit();
 
-			// Perform any additional setup after loading the view, typically from a nib.
+			CollectionViewInit();
+
+			MapViewInit();
+
+			AddAnnotations();
+
+			CreatePlusButton();
+
+		}
+
+		public override void ViewDidLayoutSubviews()
+		{
+			CollectionView.Frame = new CGRect(
+				new CGPoint(CollectionViewIsOpen ? View.Frame.Size.Width - 430 : View.Frame.Size.Width, CollectionView.Frame.Y),
+				CollectionView.Frame.Size
+			);
+			View.LayoutIfNeeded();
 		}
 
 		public override void DidReceiveMemoryWarning()
@@ -25,24 +51,591 @@ namespace InterViewer.iOS
 			// Release any cached data, images, etc that aren't in use.		
 		}
 
-		protected void ChangeButtonState(object sender, EventArgs e)
+		public void ViewInit()
 		{
-			var btn = sender as UIButton;
-			if (btn != null)
-			{
-				btn.Selected = !btn.Selected;
-			}
-		}
-
-		private void Initial()
-		{
-			btnNote.Enabled = false;
+			btnNote.Enabled = true;
 			btnClock.Enabled = false;
 			btnTag.Enabled = false;
 			btnMicrophone.Enabled = false;
 			btnCamera.Enabled = false;
+			btnPencil.Enabled = true;
 
-			btnPencil.TouchUpInside += ChangeButtonState;
+
+			btnNote.UserInteractionEnabled = true;
+			btnNote.AddGestureRecognizer(new UITapGestureRecognizer(tap =>
+			{
+				CGPoint CollectionViewLocation = CollectionView.Frame.Location;
+
+				if (CollectionViewLocation.X >= View.Frame.Size.Width)
+				{
+					UIView.Animate(0.5,
+					() =>
+					{
+						CollectionView.Frame = new CGRect(
+							new CGPoint(CollectionView.Frame.Location.X - 430, CollectionView.Frame.Location.Y),
+							CollectionView.Frame.Size
+						);
+						View.LayoutIfNeeded();
+					});
+
+					btnNote.Selected = CollectionViewIsOpen = true;
+				}
+				else
+				{
+					UIView.Animate(0.5,
+					() =>
+					{
+						CollectionView.Frame = new CGRect(
+							new CGPoint(CollectionView.Frame.Location.X + 430, CollectionView.Frame.Location.Y),
+							CollectionView.Frame.Size
+						);
+						View.LayoutIfNeeded();
+					});
+
+					btnNote.Selected = CollectionViewIsOpen = false;
+				}
+			})
+			{
+				NumberOfTapsRequired = 1
+			});
+
+
+			btnPencil.UserInteractionEnabled = true;
+			btnPencil.AddGestureRecognizer(new UITapGestureRecognizer(tap =>
+			{
+				if (!CanvasEnable)
+				{
+					MapCanvasView canvasView = new MapCanvasView
+					{
+						MapView = map,
+						Frame = UIScreen.MainScreen.Bounds,
+						Tag = 7
+					};
+
+					map.AddSubview(canvasView);
+
+					map.BringSubviewToFront(View.ViewWithTag(1));
+
+					btnPencil.Selected = CanvasEnable = true;
+				}
+				else
+				{
+					MapCanvasView canvasView = View.ViewWithTag(7) as MapCanvasView;
+
+					//canvasView.GetLineList().ForEach(Line =>
+					//{
+
+					//	List<CLLocationCoordinate2D> CoordinateList = new List<CLLocationCoordinate2D>();
+
+					//	Line.ForEach(Point =>
+					//	{
+					//		CoordinateList.Add(map.ConvertPoint(Point, map));
+					//	});
+
+					//	map.AddOverlay(MKPolyline.FromCoordinates(CoordinateList.ToArray()));
+
+					//	View.SetNeedsDisplay();
+					//});
+
+					canvasView.RemoveFromSuperview();
+
+					btnPencil.Selected = CanvasEnable = false;
+				}
+			})
+			{
+				NumberOfTapsRequired = 1
+			});
 		}
+
+		public void CollectionViewInit()
+		{
+			List<Int32> temp = new List<Int32>();
+
+			for (Int32 i = 0; i < 20; i++)
+			{
+				temp.Add(i);
+			}
+
+			var source = new TableSource(temp);
+
+			CollectionView.Source = source;
+
+			CollectionView.SetCollectionViewLayout(new UICollectionViewFlowLayout
+			{
+				SectionInset = new UIEdgeInsets(10, 10, 10, 10),
+				ItemSize = new CGSize(200, 200),
+				//MinimumInteritemSpacing = 20,
+				ScrollDirection = UICollectionViewScrollDirection.Vertical
+			}, true);
+
+			source.Selected += ItemOnSelected;
+
+		}
+
+		public void MapViewInit()
+		{
+			var manager = new CLLocationManager();
+			manager.RequestWhenInUseAuthorization();
+			/*
+			Button.TouchUpInside += async delegate {
+				var locator = CrossGeolocator.Current;
+				locator.DesiredAccuracy = 50;
+
+				var position = await locator.GetPositionAsync (timeoutMilliseconds: 10000);
+
+				Console.WriteLine ("Position Status: {0}", position.Timestamp);
+				Console.WriteLine ("Position Latitude: {0}", position.Latitude);
+				Console.WriteLine ("Position Longitude: {0}", position.Longitude);
+			};
+			*/
+
+			CLLocationCoordinate2D mapCenter = new CLLocationCoordinate2D(22.617193, 120.3032346);
+			//CLLocationCoordinate2D mapCenter = new CLLocationCoordinate2D(45.00, -111.00);
+			map.CenterCoordinate = mapCenter;
+
+			var mapRegion = MKCoordinateRegion.FromDistance(mapCenter, 1000, 1000);
+			map.Region = mapRegion;
+
+			map.ShowsUserLocation = true;
+
+
+			CustomMapViewDelegate customDelegate = new CustomMapViewDelegate();
+			customDelegate.OnRegionChanged += MapViewOnRegionChanged;
+			map.Delegate = customDelegate;
+
+			map.UserInteractionEnabled = true;
+
+			UISwipeGestureRecognizer swipeGestureRecognizer = new UISwipeGestureRecognizer(sw =>
+			{
+
+			})
+			{
+				NumberOfTouchesRequired = 3
+			};
+
+			map.AddGestureRecognizer(swipeGestureRecognizer);
+
+		}
+
+		public void AddAnnotations()
+		{
+			InterViewerService DocumentManager = new InterViewerService();
+
+			List<Document> DocumentList = DocumentManager.GetDocuments();
+
+			for (Int32 i = 0; i < DocumentList.Count; i++)
+			{
+				Document Doc = DocumentList[i];
+
+				map.AddAnnotation(new CustomAnnotation()
+				{
+					Location = new CLLocationCoordinate2D(Doc.Latitude, Doc.Longitude),
+					Count = i
+				});
+			}
+
+
+			//map.AddAnnotation(new CustomAnnotation()
+			//{
+			//	Location = new CLLocationCoordinate2D(22.6115547, 120.2912767),
+			//	Count = 2
+			//});
+
+			//map.AddAnnotations(new MKPointAnnotation()
+			//{
+			//	Coordinate = new CLLocationCoordinate2D(22.6115547, 120.2912767)
+			//});
+
+			//map.AddAnnotations(new MKPointAnnotation()
+			//{
+			//	Coordinate = new CLLocationCoordinate2D(22.617193, 120.3032346)
+			//});
+		}
+
+		public void CreatePlusButton()
+		{
+			UIImageView ImageView = new UIImageView();
+			UIView DrawView = new UIView();
+			UIView BufferView = new UIView();
+			UIView triangle = new UIView();
+			UIView RectangleView = new UIView();
+			UITextField TextField = new UITextField();
+			UIButton AddButton = new UIButton();
+
+			DrawView.Tag = 1;
+			//RectangoView.Tag = 2;
+			//TextField.Tag = 3;
+			//AddButton.Tag = 4;
+			//BufferView.Tag = 5;
+			//ImageView.Tag = 6;
+
+			BufferView.AddSubview(ImageView);
+			RectangleView.AddSubview(BufferView);
+			RectangleView.AddSubview(TextField);
+			RectangleView.AddSubview(AddButton);
+
+			UIBezierPath path = new UIBezierPath();
+			path.MoveTo(new CGPoint(0, 0));
+			path.AddLineTo(new CGPoint(15, 30));
+			path.AddLineTo(new CGPoint(30, 0));
+			path.AddLineTo(new CGPoint(0, 0));
+
+			CoreAnimation.CAShapeLayer msaklayer = new CoreAnimation.CAShapeLayer();
+			msaklayer.Path = path.CGPath;
+
+			triangle.Frame = new CGRect(50 - 15, 0, 30, 30);
+			triangle.Layer.Mask = msaklayer;
+			triangle.Transform = CGAffineTransform.MakeRotation((Single)Math.PI);
+			triangle.BackgroundColor = UIColor.White;
+
+
+			DrawView.Frame = new CGRect((View.Frame.Size.Width / 2) - 50, (View.Frame.Size.Height / 2) - 8, 100, 122);
+			DrawView.AddSubview(triangle);
+			DrawView.AddSubview(RectangleView);
+
+			//DrawView.BackgroundColor = UIColor.Blue;
+			//DrawView.Center = new CGPoint(View.Frame.Size.Width / 2, View.Frame.Size.Height / 2);
+
+			DrawView.Layer.MasksToBounds = false;
+			DrawView.Layer.ShadowOffset = new CGSize(0, 10);
+			DrawView.Layer.ShadowRadius = 8;
+			DrawView.Layer.ShadowOpacity = 0.4f;
+
+			map.AddSubview(DrawView);
+
+			BufferView.Frame = new CGRect(10, 10, 80, 80);
+			BufferView.BackgroundColor = UIColor.LightGray;
+			BufferView.Layer.CornerRadius = 8;
+
+			ImageView.Frame = new CGRect(25, 25, 30, 30);
+			ImageView.Image = UIImage.FromBundle("plus.png");
+
+			RectangleView.Frame = new CGRect(0, 22, 100, 100);
+			RectangleView.BackgroundColor = UIColor.White;
+			RectangleView.Layer.CornerRadius = 3;
+
+			TextField.Frame = new CGRect(100, 10, 0, 80);
+			TextField.Layer.CornerRadius = 8;
+			TextField.Font = UIFont.BoldSystemFontOfSize(35f);
+			TextField.BackgroundColor = UIColor.Green;
+			TextField.ReturnKeyType = UIReturnKeyType.Done;
+			TextField.Text = "TextField";
+
+			//TextField.Delegate = UITextFieldDelegate;
+			//UIView.AnimationsEnabled = false;
+
+			TextField.EditingDidBegin += (object sender, EventArgs e) =>
+			{
+				Console.WriteLine("EditingDidBegin");
+
+				UIView.Animate(0.5, () =>
+				{
+					CGPoint temp = DrawView.Frame.Location;
+
+					DrawView.Frame = new CGRect(
+						new CGPoint(temp.X, temp.Y - 100),
+						DrawView.Frame.Size
+					);
+
+					View.LayoutIfNeeded();
+				});
+			};
+
+			TextField.EditingDidEnd += (object sender, EventArgs e) =>
+			{
+				Console.WriteLine("EditingDidEnd");
+
+				UIView.Animate(0.5, () =>
+				{
+					CGPoint temp = DrawView.Frame.Location;
+
+					DrawView.Frame = new CGRect(
+						new CGPoint(temp.X, temp.Y + 100),
+						DrawView.Frame.Size
+					);
+
+					View.LayoutIfNeeded();
+				});
+			};
+
+			TextField.ShouldReturn += (textField) =>
+			{
+				Console.WriteLine("ShouldReturn");
+
+				textField.ResignFirstResponder();
+				return true;
+			};
+
+			AddButton.Frame = new CGRect(400, 10, 0, 80);
+			AddButton.Layer.CornerRadius = 8;
+			AddButton.SetTitle("Add", UIControlState.Normal);
+			AddButton.Font = UIFont.BoldSystemFontOfSize(35f);
+			AddButton.SetTitleColor(UIColor.White, UIControlState.Normal);
+			AddButton.BackgroundColor = UIColor.Red;
+
+
+			BufferView.UserInteractionEnabled = true;
+			BufferView.AddGestureRecognizer(new UITapGestureRecognizer(tap =>
+			{
+
+				Console.WriteLine("Tap");
+
+				InvokeOnMainThread(() =>
+				{
+					if (DrawView.Frame.Size.Width == 100)
+					{
+						Console.WriteLine("Open");
+
+						TextField.Text = "";
+
+						UIView.Animate(0.25,
+						() =>
+						{
+							BufferView.Transform = CGAffineTransform.MakeRotation((Single)Math.PI / 2);
+							View.LayoutIfNeeded();
+						},
+						() =>
+						{
+							BufferView.Transform = CGAffineTransform.MakeRotation(0);
+							ImageView.Image = UIImage.FromBundle("minus.png");
+						});
+
+						UIView.Animate(0.5,
+						() =>
+						{
+							DrawView.Frame = new CGRect(DrawView.Frame.Location, new CGSize(400, 122));
+							RectangleView.Frame = new CGRect(RectangleView.Frame.Location, new CGSize(400, 100));
+							TextField.Frame = new CGRect(TextField.Frame.Location, new CGSize(290, 80));
+							View.LayoutIfNeeded();
+						}, null);
+
+						UIView.Animate(0.25, 0.5, UIViewAnimationOptions.CurveLinear,
+						() =>
+						{
+							DrawView.Frame = new CGRect(DrawView.Frame.Location, new CGSize(490, 122));
+							RectangleView.Frame = new CGRect(RectangleView.Frame.Location, new CGSize(490, 100));
+							AddButton.Frame = new CGRect(AddButton.Frame.Location, new CGSize(80, 80));
+							View.LayoutIfNeeded();
+						},
+						() =>
+						{
+
+						});
+					}
+					else
+					{
+						Console.WriteLine("Close");
+
+						UIView.Animate(0.25,
+						() =>
+						{
+							BufferView.Transform = CGAffineTransform.MakeRotation((Single)Math.PI / -2);
+							View.LayoutIfNeeded();
+						},
+						() =>
+						{
+							BufferView.Transform = CGAffineTransform.MakeRotation(0);
+							ImageView.Image = UIImage.FromBundle("plus.png");
+						});
+
+						UIView.Animate(0.25,
+						() =>
+						{
+							DrawView.Frame = new CGRect(DrawView.Frame.Location, new CGSize(400, 122));
+							RectangleView.Frame = new CGRect(RectangleView.Frame.Location, new CGSize(400, 100));
+							AddButton.Frame = new CGRect(AddButton.Frame.Location, new CGSize(0, 80));
+							View.LayoutIfNeeded();
+						}, null);
+
+						UIView.Animate(0.5, 0.25, UIViewAnimationOptions.CurveLinear,
+						() =>
+						{
+							DrawView.Frame = new CGRect(DrawView.Frame.Location, new CGSize(100, 122));
+							RectangleView.Frame = new CGRect(RectangleView.Frame.Location, new CGSize(100, 100));
+							TextField.Frame = new CGRect(TextField.Frame.Location, new CGSize(0, 80));
+							View.LayoutIfNeeded();
+						},
+						() =>
+						{
+
+						});
+					}
+				});
+			})
+			{
+				NumberOfTapsRequired = 1
+			});
+
+
+			AddButton.UserInteractionEnabled = true;
+			AddButton.AddGestureRecognizer(new UITapGestureRecognizer(tap =>
+			{
+				if (TextField.IsFirstResponder)
+				{
+					TextField.ResignFirstResponder();
+				}
+
+				Console.WriteLine(String.Format("TextField:{0}", TextField.Text));
+				Console.WriteLine(String.Format("{0}, {1}", CenterLocation.Latitude, CenterLocation.Longitude));
+
+			})
+			{
+				NumberOfTapsRequired = 1
+			});
+		}
+
+		private void MapViewOnRegionChanged(Object sender, MKMapViewChangeEventArgs e)
+		{
+
+			CenterLocation = map.Region.Center;
+
+			//var latitude = CenterLocation.Latitude;
+			//var longitude = CenterLocation.Longitude;
+
+			//Console.WriteLine(String.Format("{0}, {1}", latitude, longitude));
+		}
+
+		private void ItemOnSelected(Object sender, TableSource.SelectedEventArgs e)
+		{
+			Console.WriteLine(e.Selected);
+		}
+
+		public class CustomMapViewDelegate : MKMapViewDelegate
+		{
+
+			public event EventHandler<MKMapViewChangeEventArgs> OnRegionChanged;
+
+			public override void RegionChanged(MKMapView mapView, Boolean animated)
+			{
+				if (OnRegionChanged != null)
+				{
+					OnRegionChanged(mapView, new MKMapViewChangeEventArgs(animated));
+				}
+			}
+
+			String pId = "PinAnnotation";
+			String cId = "CustomAnnotation";
+
+			public override MKAnnotationView GetViewForAnnotation(MKMapView mapView, IMKAnnotation annotation)
+			{
+				MKAnnotationView anView;
+
+				Int32 annotationType =
+					Convert.ToInt32(annotation is MKUserLocation) * 1 +
+					Convert.ToInt32(annotation is CustomAnnotation) * 2;
+
+				switch (annotationType)
+				{
+					case 1:
+						{
+							return null;
+						}
+					case 2:
+						{
+							CustomAnnotation customAnnotation = annotation as CustomAnnotation;
+
+							anView = new MKAnnotationView(annotation, cId);
+
+							UILabel DocCountLabel = new UILabel();
+
+							DocCountLabel.Frame = new CGRect(-25, -25, 50, 50);
+							DocCountLabel.BackgroundColor = UIColor.Red;
+							DocCountLabel.TextColor = UIColor.White;
+							DocCountLabel.TextAlignment = UITextAlignment.Center;
+							DocCountLabel.Font = UIFont.BoldSystemFontOfSize(25f);
+							DocCountLabel.Text = customAnnotation.Count.ToString();
+							DocCountLabel.Layer.MasksToBounds = true;
+							DocCountLabel.Layer.CornerRadius = 8;
+							//DocCountLabel.Alpha = 0.5f;
+
+							anView.AddSubview(DocCountLabel);
+
+							anView.CanShowCallout = true;
+
+							break;
+						}
+					default:
+						{
+							anView = (MKPinAnnotationView)mapView.DequeueReusableAnnotation(pId);
+
+							if (anView == null)
+							{
+								anView = new MKPinAnnotationView(annotation, pId);
+							}
+
+							((MKPinAnnotationView)anView).PinColor = MKPinAnnotationColor.Green;
+							anView.CanShowCallout = true;
+							break;
+						}
+				}
+
+				return anView;
+			}
+
+			public override MKOverlayRenderer OverlayRenderer(MKMapView mapView, IMKOverlay overlay)
+			{
+				MKPolylineRenderer polylineRenderer = new MKPolylineRenderer(overlay as MKPolyline);
+
+				polylineRenderer.StrokeColor = UIColor.Black;
+				polylineRenderer.FillColor = UIColor.Clear;
+				polylineRenderer.LineWidth = 1.4f;
+
+				return polylineRenderer;
+			}
+
+		}
+
+		public class TableSource : UICollectionViewSource
+		{
+			const String CollectionViewCellIdentifier = "CollectionViewCell";
+
+			public List<Int32> Source { get; set; }
+
+			public TableSource(List<Int32> list)
+			{
+				Source = new List<Int32>();
+				Source.AddRange(list);
+			}
+
+			public override nint GetItemsCount(UICollectionView collectionView, nint section)
+			{
+				return Source.Count;
+			}
+
+			public override UICollectionViewCell GetCell(UICollectionView collectionView, NSIndexPath indexPath)
+			{
+				var cell = collectionView.DequeueReusableCell(CollectionViewCellIdentifier, indexPath) as CollectionViewCell;
+
+				var data = Source[indexPath.Row];
+
+				cell.UpdateCellData(data);
+
+				return cell;
+			}
+
+			public event EventHandler<SelectedEventArgs> Selected;
+
+			public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
+			{
+				var data = Source[indexPath.Row];
+				collectionView.DeselectItem(indexPath, true);
+
+				// Raise Event
+				EventHandler<SelectedEventArgs> handle = Selected;
+
+				if (null != handle)
+				{
+					var args = new SelectedEventArgs { Selected = data };
+					handle(this, args);
+
+				}
+			}
+
+			public class SelectedEventArgs : EventArgs
+			{
+				public Int32 Selected { get; set; }
+			}
+		}
+
 	}
 }
