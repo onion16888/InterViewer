@@ -25,37 +25,53 @@ namespace InterViewer.iOS
 			base.ViewDidLoad();
 
 			// Perform any additional setup after loading the view, typically from a nib.
-			IEnumerable<string> fileOrDirectory = GetDirPngFile("Sliders");
+			//練習用
+			var documents = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/Documents";
 
-			CheckButtonIsSelected(btnTemplate);
+			//把共用目錄路徑丟進去檢查公用目錄下的/Interview是否存在
+			CheckDir(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
 
-			CollectionViewInit(fileOrDirectory);
-			//var qwe = Directory.EnumerateFileSystemEntries("./InterView/Sliders");
-			var documents =Environment.GetFolderPath(Environment.SpecialFolder.Personal)+"/InterView/Documents";
+			//練習用
 			var filename = Path.Combine(documents, "Write.txt");
 			File.WriteAllText(filename, "Write this text into a file");
 
+			//預設先撈Sliders
+			IEnumerable<string> fileOrDirectory = GetDirPngFile("Sliders");
 
+			CheckButtonIsSelected(btnTemplate);
+			//把Sliders下的.png集合發給grid
+			CollectionViewInit(fileOrDirectory);
+
+			//Slider按鈕
 			btnTemplate.TouchUpInside += (object sender, EventArgs e) =>
 			{
 				InvokeOnMainThread(() =>
 				{
 					CheckButtonIsSelected(btnTemplate);
-
+					//取得Sliders下的.png送給grid
 					CollectionViewInit(GetDirPngFile("Sliders"));
 				});
 			};
+			//Doc按鈕
 			btnDocuments.TouchUpInside+= (object sender, EventArgs e) => 
 			{
 				InvokeOnMainThread(() =>
 				{
 					CheckButtonIsSelected(btnDocuments);
-
+					//取得Documents下的.png送給grid
 					CollectionViewInit(GetDirPngFile("Documents"));
 				});
 			};
 		}
-
+		//檢查範例檔案是否存在,不存在就從Resources匯入
+		public void CheckDir(string Path)
+		{
+			if(!Directory.Exists(Path + "/InterView"))
+			{
+				Directory.Move("./InterView", Path+"/InterView");
+			}
+		}
+		//暫時用不到
 		public static  IEnumerable<string> GetDirFileList(string Whichfolder)
 		{
 			var fileOrDirectory = Directory.EnumerateFileSystemEntries("./InterView/" + Whichfolder);
@@ -67,8 +83,10 @@ namespace InterViewer.iOS
 
 			return fileOrDirectory;
 		}
+		//撈出資料夾下所有.Png檔案
 		public static IEnumerable<string>GetDirPngFile(string Whichfolder)
 		{
+			//看送過來的是哪個資料夾 撈出底下所有的.png 回傳
 			var PngFileList = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/" + Whichfolder);
 
 			var result = PngFileList.Where(FilePath => Path.GetExtension(FilePath) == ".png");
@@ -168,6 +186,7 @@ namespace InterViewer.iOS
 				PerformSegue("moveToDetailViewSegue", this);
 			});
 		}
+		//準備傳值
 		public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
 		{
 			base.PrepareForSegue(segue, sender);
@@ -179,17 +198,7 @@ namespace InterViewer.iOS
 						{
 							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
 
-							
-						//把這個頁面的值傳給新頁面的屬性
 							Detailviewcontroller.Doc = this.Doc;
-							//destviewcontroller.cStoreName=StoreName;
-							//destviewcontroller.cRating = Rating;
-							//destviewcontroller.cAddress = Address;
-							//destviewcontroller.cPhone = Phone;
-							//destviewcontroller.cStoreTime = StoreTime;
-						//}
-
-
 						}
 						break;
 					}
