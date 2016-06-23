@@ -139,7 +139,7 @@ namespace InterViewer.iOS
 		{
 			var qq = ListViewController.GetDirFileList("PdfFile2");
 
-			Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Documents2","PdfFile2").Replace("Silders2","PdfFile2");
+			Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Sliders2","PdfFile2").Replace("Documents2","PdfFile2");
 			Console.WriteLine(Doc.Reference);
 
 
@@ -160,15 +160,11 @@ namespace InterViewer.iOS
 							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
 							//把這個頁面的值傳給新頁面的屬性
 							Detailviewcontroller.doc = this.Doc;
-							//destviewcontroller.cStoreName=StoreName;
-							//destviewcontroller.cRating = Rating;
-							//destviewcontroller.cAddress = Address;
-							//destviewcontroller.cPhone = Phone;
-							//destviewcontroller.cStoreTime = StoreTime;
+
 						}
 						break;
 					}
-					break;
+					//break;
 			}
 		}
 	}
