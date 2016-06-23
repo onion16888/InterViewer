@@ -97,6 +97,7 @@
     <Compile Include="GridViewAdapter.cs" />
     <Compile Include="PDFImageAdapter.cs" />
     <Compile Include="InterViewerService.cs" />
+    <Compile Include="MapCanvasView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
