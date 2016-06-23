@@ -16,7 +16,6 @@ namespace InterViewer.iOS
 		{
 			
 		}
-
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
@@ -114,8 +113,6 @@ namespace InterViewer.iOS
 
 			public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
 			{
-				
-
 				var data = Source[indexPath.Row];
 				collectionView.DeselectItem(indexPath, true);
 
@@ -141,7 +138,6 @@ namespace InterViewer.iOS
 
 			Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Sliders2","PdfFile2").Replace("Documents2","PdfFile2");
 			Console.WriteLine(Doc.Reference);
-
 
 			InvokeOnMainThread(() =>
 			{
