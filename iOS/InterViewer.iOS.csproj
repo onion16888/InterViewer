@@ -148,6 +148,7 @@
     </Compile>
     <Compile Include="MapCanvasView.cs" />
     <Compile Include="CustomAnnotation.cs" />
+    <Compile Include="GetPngClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_note_d.png" />

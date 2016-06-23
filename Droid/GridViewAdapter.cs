@@ -49,7 +49,7 @@ namespace InterViewer.Droid
 				imageView = new ImageView (context);
 				imageView.LayoutParameters = new GridView.LayoutParams (125, 125);
 				imageView.SetScaleType (ImageView.ScaleType.CenterCrop);
-				imageView.SetPadding (3, 3, 3, 3);
+				imageView.SetPadding (1, 1, 1, 1);
 			} 
 			else 
 			{

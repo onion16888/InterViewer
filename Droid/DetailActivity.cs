@@ -17,7 +17,8 @@ using Android.Graphics;
 using Debug = System.Diagnostics.Debug;
 namespace InterViewer.Droid
 {
-	[Activity(Label = "DetailActivity", MainLauncher = true, ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
+	[Activity(Label = "DetailActivity"//, MainLauncher = true
+	          , ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
 	public class DetailActivity : Activity, View.IOnTouchListener
 	{
 		PDFDocument pdf;
