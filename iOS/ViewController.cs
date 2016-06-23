@@ -215,17 +215,16 @@ namespace InterViewer.iOS
 			customDelegate.OnRegionChanged += MapViewOnRegionChanged;
 			map.Delegate = customDelegate;
 
-			map.UserInteractionEnabled = true;
+			//map.UserInteractionEnabled = true;
+			//UISwipeGestureRecognizer swipeGestureRecognizer = new UISwipeGestureRecognizer(sw =>
+			//{
 
-			UISwipeGestureRecognizer swipeGestureRecognizer = new UISwipeGestureRecognizer(sw =>
-			{
+			//})
+			//{
+			//	NumberOfTouchesRequired = 3
+			//};
 
-			})
-			{
-				NumberOfTouchesRequired = 3
-			};
-
-			map.AddGestureRecognizer(swipeGestureRecognizer);
+			//map.AddGestureRecognizer(swipeGestureRecognizer);
 
 		}
 
