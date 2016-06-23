@@ -14,7 +14,9 @@ namespace InterViewer.iOS
 		
 		private CGPDFDocument _pdf;
 		private int _pageNumber;
-		public Document document { get; set; }
+
+		public Document Doc { get; set; }
+
 		public int PageNumber
 		{
 			get { return this._pageNumber; }
@@ -33,7 +35,7 @@ namespace InterViewer.iOS
 			
 			_pageNumber = 1;
 			//String filename = Path.Combine(NibBundle.ResourcePath, "0200B9.pdf");
-			_pdf = CGPDFDocument.FromFile(document.Reference);
+			_pdf = CGPDFDocument.FromFile(Doc.Reference);
 		}
 
 		public override void ViewDidLoad()
