@@ -155,10 +155,10 @@ namespace InterViewer.iOS
 			{
 				case @"moveToDetailViewSegue":
 					{
-						//if (segue.DestinationViewController is DetailViewController)
-						//{
+						if (segue.DestinationViewController is DetailViewController)
+						{
 							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
-<<<<<<< HEAD
+
 							
 						//把這個頁面的值傳給新頁面的屬性
 							Detailviewcontroller.Doc = this.Doc;
@@ -169,13 +169,9 @@ namespace InterViewer.iOS
 							//destviewcontroller.cStoreTime = StoreTime;
 						//}
 
-=======
-							//把這個頁面的值傳給新頁面的屬性
-							Detailviewcontroller.doc = this.Doc;
 
 						}
 						break;
->>>>>>> 28f6e20269d8971157a33dd7f474f200bbe366ed
 					}
 					//break;
 			}
