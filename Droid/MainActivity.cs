@@ -313,7 +313,7 @@ namespace InterViewer.Droid
 
 			InterViewerService DocumentManager = new InterViewerService();
 
-			List<Document> DocumentList = DocumentManager.GetDocuments();
+			List<Document> DocumentList = DocumentManager.GetDocumentsForMap();
 
 			for (Int32 i = 0; i < DocumentList.Count; i++)
 			{
