@@ -139,7 +139,7 @@ namespace InterViewer.iOS
 		{
 			var qq = ListViewController.GetDirFileList("PdfFile2");
 
-			Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Documents2","PdfFile2").Replace("Silders2","PdfFile2");
+			Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Sliders2","PdfFile2").Replace("Documents2","PdfFile2");
 			Console.WriteLine(Doc.Reference);
 
 
@@ -158,6 +158,7 @@ namespace InterViewer.iOS
 						//if (segue.DestinationViewController is DetailViewController)
 						//{
 							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
+<<<<<<< HEAD
 							
 						//把這個頁面的值傳給新頁面的屬性
 							Detailviewcontroller.Doc = this.Doc;
@@ -168,8 +169,15 @@ namespace InterViewer.iOS
 							//destviewcontroller.cStoreTime = StoreTime;
 						//}
 
+=======
+							//把這個頁面的值傳給新頁面的屬性
+							Detailviewcontroller.doc = this.Doc;
+
+						}
+						break;
+>>>>>>> 28f6e20269d8971157a33dd7f474f200bbe366ed
 					}
-					break;
+					//break;
 			}
 		}
 	}
