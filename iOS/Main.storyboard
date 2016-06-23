@@ -646,6 +646,7 @@
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="PUe-Eq-7EW" firstAttribute="leading" secondItem="HY5-g8-caH" secondAttribute="leading" id="2kD-2j-GSe"/>
+                                            <constraint firstAttribute="trailing" secondItem="PUe-Eq-7EW" secondAttribute="trailing" id="P2I-fK-Pwa"/>
                                             <constraint firstItem="PUe-Eq-7EW" firstAttribute="top" secondItem="HY5-g8-caH" secondAttribute="top" id="RiN-vu-6H3"/>
                                         </constraints>
                                     </scrollView>
@@ -653,8 +654,10 @@
                                 <color key="backgroundColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="HY5-g8-caH" firstAttribute="top" secondItem="D21-IC-G6c" secondAttribute="top" constant="43" id="8GJ-ao-ptT"/>
-                                    <constraint firstItem="HY5-g8-caH" firstAttribute="leading" secondItem="D21-IC-G6c" secondAttribute="leading" id="Ma9-xZ-eza"/>
-                                    <constraint firstAttribute="trailing" secondItem="HY5-g8-caH" secondAttribute="trailing" id="PFZ-Lq-Lc1"/>
+                                    <constraint firstItem="HY5-g8-caH" firstAttribute="leading" secondItem="D21-IC-G6c" secondAttribute="leading" id="CrD-Dc-Ibi"/>
+                                    <constraint firstAttribute="trailing" secondItem="PUe-Eq-7EW" secondAttribute="trailing" id="F90-Rn-G3g"/>
+                                    <constraint firstItem="PUe-Eq-7EW" firstAttribute="leading" secondItem="D21-IC-G6c" secondAttribute="leading" id="FQp-c8-BDb"/>
+                                    <constraint firstAttribute="trailing" secondItem="HY5-g8-caH" secondAttribute="trailing" id="OX7-Bq-pUS"/>
                                     <constraint firstAttribute="bottom" secondItem="HY5-g8-caH" secondAttribute="bottom" id="asL-vA-fxg"/>
                                 </constraints>
                             </view>

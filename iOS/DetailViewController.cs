@@ -14,9 +14,8 @@ namespace InterViewer.iOS
 		
 		private CGPDFDocument _pdf;
 		private int _pageNumber;
-
+		//public Document document { get; set; }
 		public Document Doc { get; set; }
-
 		public int PageNumber
 		{
 			get { return this._pageNumber; }
@@ -35,7 +34,7 @@ namespace InterViewer.iOS
 			
 			_pageNumber = 1;
 			//String filename = Path.Combine(NibBundle.ResourcePath, "0200B9.pdf");
-			_pdf = CGPDFDocument.FromFile(Doc.Reference);
+
 		}
 
 		public override void ViewDidLoad()
@@ -46,13 +45,14 @@ namespace InterViewer.iOS
 
 			// Perform any additional setup after loading the view, typically from a nib.
 
+			_pdf = CGPDFDocument.FromFile(Doc.Reference);
 			this.View.BackgroundColor = UIColor.Gray;
 			Debug.WriteLine(PageNumber);
 			imageView.Image = GetThumbForPage();
 			scrollView.ContentSize = imageView.Image.Size;
 
 
-			btnNote.TouchUpInside += delegate
+			/*btnNote.TouchUpInside += delegate
 			{
 
 
@@ -96,7 +96,7 @@ namespace InterViewer.iOS
 				NoteList.Add(Identifier, textNote);
 				this.scrollView.InsertSubview(textNote, 1);
 
-			};
+			};*/
 
 			this.scrollView.UserInteractionEnabled = true;
 			UISwipeGestureRecognizer rightSwipeGes = setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection.Right);
