@@ -12,16 +12,23 @@ namespace InterViewer.iOS
 	{
 		public Document Doc { get; set; }
 
+		private UIColor selectedColor;
+		private UIColor normalColor;
+
 		public ListViewController(IntPtr handle) : base(handle)
 		{
-			
+			selectedColor = new UIColor(red: 0.95f, green: 0.52f, blue: 0.00f, alpha: 1.0f);
+			normalColor = new UIColor(red: 0.70f, green: 0.70f, blue: 0.70f, alpha: 1.0f);
 		}
 
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
+
 			// Perform any additional setup after loading the view, typically from a nib.
 			IEnumerable<string> fileOrDirectory = GetDirFileList("Sliders2");
+
+			CheckButtonIsSelected(btnTemplate);
 
 			CollectionViewInit(fileOrDirectory);
 			//var qwe = Directory.EnumerateFileSystemEntries("./InterView/Sliders");
@@ -30,6 +37,8 @@ namespace InterViewer.iOS
 			{
 				InvokeOnMainThread(() =>
 				{
+					CheckButtonIsSelected(btnTemplate);
+
 					CollectionViewInit(GetDirFileList("Sliders2"));
 				});
 			};
@@ -37,6 +46,8 @@ namespace InterViewer.iOS
 			{
 				InvokeOnMainThread(() =>
 				{
+					CheckButtonIsSelected(btnDocuments);
+
 					CollectionViewInit(GetDirFileList("Documents2"));
 				});
 			};
@@ -166,6 +177,20 @@ namespace InterViewer.iOS
 					}
 					//break;
 			}
+		}
+
+		private void CheckButtonIsSelected(UIButton button)
+		{
+			UIButton otherBtn = button.CurrentTitle == "範本" ? btnDocuments : btnTemplate;
+
+			if (otherBtn.Selected)
+			{
+				otherBtn.Selected = false;
+				otherBtn.BackgroundColor = normalColor;
+			}
+
+			button.Selected = true;
+			button.BackgroundColor = selectedColor;
 		}
 	}
 }
