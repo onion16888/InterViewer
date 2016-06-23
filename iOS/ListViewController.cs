@@ -165,8 +165,17 @@ namespace InterViewer.iOS
 						if (segue.DestinationViewController is DetailViewController)
 						{
 							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
-							//把這個頁面的值傳給新頁面的屬性
-							Detailviewcontroller.doc = this.Doc;
+
+							
+						//把這個頁面的值傳給新頁面的屬性
+							Detailviewcontroller.Doc = this.Doc;
+							//destviewcontroller.cStoreName=StoreName;
+							//destviewcontroller.cRating = Rating;
+							//destviewcontroller.cAddress = Address;
+							//destviewcontroller.cPhone = Phone;
+							//destviewcontroller.cStoreTime = StoreTime;
+						//}
+
 
 						}
 						break;

@@ -11,10 +11,11 @@ namespace InterViewer.iOS
 {
 	public partial class DetailViewController : UIViewController
 	{
+		
 		private CGPDFDocument _pdf;
 		private int _pageNumber;
-		public Document doc;
-
+		//public Document document { get; set; }
+		public Document Doc { get; set; }
 		public int PageNumber
 		{
 			get { return this._pageNumber; }
@@ -27,14 +28,15 @@ namespace InterViewer.iOS
 				}
 			}
 		}
-
+		Dictionary<string, object> NoteList = new Dictionary<string, object>();
 		public DetailViewController(IntPtr handle) : base(handle)
 		{
+			
 			_pageNumber = 1;
-			String filename = Path.Combine(NibBundle.ResourcePath, "0200B9.pdf");
-			_pdf = CGPDFDocument.FromFile(filename);
+			//String filename = Path.Combine(NibBundle.ResourcePath, "0200B9.pdf");
+
 		}
-		private nfloat startX, endX = 0;
+
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
@@ -43,11 +45,58 @@ namespace InterViewer.iOS
 
 			// Perform any additional setup after loading the view, typically from a nib.
 
+			_pdf = CGPDFDocument.FromFile(Doc.Reference);
 			this.View.BackgroundColor = UIColor.Gray;
 			Debug.WriteLine(PageNumber);
 			imageView.Image = GetThumbForPage();
 			scrollView.ContentSize = imageView.Image.Size;
 
+
+			/*btnNote.TouchUpInside += delegate
+			{
+
+
+				var textNote = new UITextView();
+				textNote.BackgroundColor = UIColor.FromRGB(242, 255, 0);
+				textNote.Frame = new CoreGraphics.CGRect(740, 85, 225, 225);
+				textNote.Font = UIFont.FromName("Helvetica-Bold", 30f);
+				//textNote.Text = string.Format("text{0}", DateTime.Now.Ticks.ToString());
+				string Identifier = string.Format("key{0}", DateTime.Now.Ticks.ToString());
+				textNote.AccessibilityIdentifier = Identifier;
+				nfloat dx = 0;
+				nfloat dy = 0;
+
+				UIPanGestureRecognizer panGesture = new UIPanGestureRecognizer((pen) =>
+				{
+					if ((pen.State == UIGestureRecognizerState.Began || pen.State == UIGestureRecognizerState.Changed) && (pen.NumberOfTouches == 1))
+					{
+						
+						var p0 = pen.LocationInView(scrollView);
+
+						if (dx == 0) dx = p0.X - textNote.Center.X;
+
+						if (dy == 0) dy = p0.Y - textNote.Center.Y;
+
+						var p1 = new CGPoint(p0.X - dx, p0.Y - dy);
+
+						textNote.Center = p1;
+					}
+					else if (pen.State == UIGestureRecognizerState.Ended)
+					{
+						dx = 0;
+						dy = 0;
+						NoteList[textNote.AccessibilityIdentifier] = textNote;
+						UITextView a = (UITextView)NoteList[textNote.AccessibilityIdentifier];
+						Debug.WriteLine(a.Center.X);
+					}
+				});
+				textNote.UserInteractionEnabled = true;
+				textNote.AddGestureRecognizer(panGesture);
+
+				NoteList.Add(Identifier, textNote);
+				this.scrollView.InsertSubview(textNote, 1);
+
+			};*/
 
 			this.scrollView.UserInteractionEnabled = true;
 			UISwipeGestureRecognizer rightSwipeGes = setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection.Right);
@@ -179,6 +228,8 @@ namespace InterViewer.iOS
 			btnMicrophone.TouchUpInside += ChangeButtonState;
 			btnPencil.TouchUpInside += ChangeButtonState;
 		}
+
+
 	}
 }
 
