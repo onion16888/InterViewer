@@ -18,6 +18,8 @@ namespace InterViewer.iOS
 
 		private Boolean CollectionViewIsOpen { get; set; } = false;
 
+		private ClusteringManager AnnotationsClusteringManager { get; set; }
+
 		public ViewController(IntPtr handle) : base(handle)
 		{
 		}
@@ -234,17 +236,37 @@ namespace InterViewer.iOS
 
 			List<Document> DocumentList = DocumentManager.GetDocumentsForMap();
 
+			List<IMKAnnotation> AnnotationsList = new List<IMKAnnotation>();
+
 			for (Int32 i = 0; i < DocumentList.Count; i++)
 			{
 				Document Doc = DocumentList[i];
 
-				map.AddAnnotation(new CustomAnnotation()
+				//map.AddAnnotation(new CustomAnnotation()
+				//{
+				//	Location = new CLLocationCoordinate2D(Doc.Latitude, Doc.Longitude),
+				//	Count = i
+				//});
+
+				AnnotationsList.Add(new CustomAnnotation()
 				{
 					Location = new CLLocationCoordinate2D(Doc.Latitude, Doc.Longitude),
-					Count = i
+					Count = 1
 				});
 			}
 
+			//Random rnd = new Random();
+			//for (int i = 1; i <= 500; i++)
+			//{
+			//	double lat = 22.6183757 + rnd.NextDouble();
+			//	double lon = 120.3028114 + rnd.NextDouble();
+			//	AnnotationsList.Add(new MKPointAnnotation()
+			//	{
+			//		Coordinate = new CLLocationCoordinate2D(lat, lon),
+			//	});
+			//}
+
+			AnnotationsClusteringManager = new ClusteringManager(AnnotationsList);
 
 			//map.AddAnnotation(new CustomAnnotation()
 			//{
@@ -257,10 +279,6 @@ namespace InterViewer.iOS
 			//	Coordinate = new CLLocationCoordinate2D(22.6115547, 120.2912767)
 			//});
 
-			//map.AddAnnotations(new MKPointAnnotation()
-			//{
-			//	Coordinate = new CLLocationCoordinate2D(22.617193, 120.3032346)
-			//});
 		}
 
 		public void CreatePlusButton()
@@ -512,6 +530,10 @@ namespace InterViewer.iOS
 			//var longitude = CenterLocation.Longitude;
 
 			//Console.WriteLine(String.Format("{0}, {1}", latitude, longitude));
+
+			Double scale = map.Bounds.Size.Width / map.VisibleMapRect.Size.Width;
+			List<IMKAnnotation> annotationsToDisplay = AnnotationsClusteringManager.ClusteredAnnotationsWithinMapRect(map.VisibleMapRect, scale);
+			AnnotationsClusteringManager.DisplayAnnotations(annotationsToDisplay, map);
 		}
 
 		private void ItemOnSelected(Object sender, TableSource.SelectedEventArgs e)
@@ -562,7 +584,14 @@ namespace InterViewer.iOS
 							DocCountLabel.TextColor = UIColor.White;
 							DocCountLabel.TextAlignment = UITextAlignment.Center;
 							DocCountLabel.Font = UIFont.BoldSystemFontOfSize(25f);
-							DocCountLabel.Text = customAnnotation.Count.ToString();
+							if (null == customAnnotation.Annotations)
+							{
+								DocCountLabel.Text = customAnnotation.Count.ToString();
+							}
+							else 
+							{
+								DocCountLabel.Text = customAnnotation.Annotations.Count.ToString();
+							}
 							DocCountLabel.Layer.MasksToBounds = true;
 							DocCountLabel.Layer.CornerRadius = 8;
 							//DocCountLabel.Alpha = 0.5f;
@@ -582,7 +611,7 @@ namespace InterViewer.iOS
 								anView = new MKPinAnnotationView(annotation, pId);
 							}
 
-							((MKPinAnnotationView)anView).PinColor = MKPinAnnotationColor.Green;
+							((MKPinAnnotationView)anView).PinColor = MKPinAnnotationColor.Red;
 							anView.CanShowCallout = true;
 							break;
 						}

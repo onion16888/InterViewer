@@ -14,9 +14,17 @@ namespace InterViewer.iOS
 	{
 		[Outlet]
 		UIKit.UITableView FileManagerTableView { get; set; }
+
+		[Outlet]
+		UIKit.UIButton ReturnButton { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (ReturnButton != null) {
+				ReturnButton.Dispose ();
+				ReturnButton = null;
+			}
+
 			if (FileManagerTableView != null) {
 				FileManagerTableView.Dispose ();
 				FileManagerTableView = null;

@@ -13,6 +13,7 @@ namespace InterViewer.iOS
 	{
 		FileManagerTableSource source;
 		List<FileListAttributes> listFilePathName;
+		FileListAttributes pathRightNow;
 		public FileManagerController (IntPtr handle) : base (handle)
 		{
 		}
@@ -27,11 +28,38 @@ namespace InterViewer.iOS
 			FileManagerTableView.Source = source;
 			source.ItemClick += ListButtonClick;
 			FileManagerTableView.ReloadData();
+
+			ReturnButton.TouchUpInside += ReturnButton_Click;
 		}
 		public override void DidReceiveMemoryWarning()
 		{
 			base.DidReceiveMemoryWarning();
 			// Release any cached data, images, etc that aren't in use.
+		}
+		private void ReturnButton_Click(object sender, EventArgs e)
+		{
+			char[] seperater = { '/' };
+			string[] pathTemp = pathRightNow.Name.Split(seperater);
+			string pathForQuery = string.Empty;
+			if (pathTemp.Length > 2)
+			{
+				for (int i = 1; i < pathTemp.Length - 1; i++)
+				{
+					pathForQuery += pathTemp[i];
+					if (i != pathTemp.Length - 2)
+						pathForQuery += "/";
+				}
+			}
+			else
+			{
+				pathForQuery += "/";
+			}
+			listFilePathName = getFileAndPathList(pathForQuery);
+			source = new FileManagerTableSource(listFilePathName);
+			FileManagerTableView.Source = source;
+			source.ItemClick += ListButtonClick;
+			FileManagerTableView.ReloadData();
+			ReturnButton.SetTitle("<< " + pathForQuery, UIControlState.Normal);
 		}
 		/// <summary>
 		/// The list button clicked
@@ -44,8 +72,10 @@ namespace InterViewer.iOS
 			if (e.SelectedName.IsFile == true)
 			{
 				//Debug.WriteLine(e.SelectedName.Name);
-				string savingPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal)+@"/IntervView/Slides";
+				File.Copy(e.SelectedName.Name, Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/IntervView/Slides");
 				showAlert("新增範本", e.SelectedName.Name + @" 新增成功!!", @"確定", this);
+				ReturnButton.SetTitle("<< "+e.SelectedName.Name, UIControlState.Normal);
+				pathRightNow = e.SelectedName;
 			}
 			else
 			{
@@ -54,6 +84,8 @@ namespace InterViewer.iOS
 				FileManagerTableView.Source = source;
 				source.ItemClick += ListButtonClick;
 				FileManagerTableView.ReloadData();
+				ReturnButton.SetTitle("<< "+e.SelectedName.Name, UIControlState.Normal);
+				pathRightNow = e.SelectedName;
 			}
 		}
 		/// <summary>
