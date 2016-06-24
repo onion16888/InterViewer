@@ -152,12 +152,9 @@
     </Compile>
     <Compile Include="MapCanvasView.cs" />
     <Compile Include="CustomAnnotation.cs" />
-<<<<<<< HEAD
     <Compile Include="CameraCapture.cs" />
     <Compile Include="CameraPickerController.cs" />
-=======
     <Compile Include="ClusteringManager.cs" />
->>>>>>> e4ceb786f5aa2ae9d312aca473610ce07c92f4dd
     <Compile Include="FileManagerController.cs" />
     <Compile Include="FileManagerController.designer.cs">
       <DependentUpon>FileManagerController.cs</DependentUpon>
