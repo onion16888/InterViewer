@@ -25,6 +25,14 @@ namespace InterViewer.Droid
 			Count = Doc.CountPages();
 			ConvertToImages();
 		}
+
+		public PDFDocument(Context ctxt, String FileName, int PageIndex)
+		{
+			Doc = new MuPDFCore(ctxt, FileName);
+			Count = Doc.CountPages();
+			ConvertToImages(PageIndex);
+		}
+
 		private List<Bitmap> ConvertToImages()
 		{
 			Images = new List<Bitmap>();
@@ -48,6 +56,29 @@ namespace InterViewer.Droid
 				Doc.DrawPage(bitmap, i, pageWidth, pageHeight, 0, 0, ScreenWidth, ScreenHeight, cookie);
 				Images.Add(bitmap);
 			}
+			return Images;
+		}
+
+		private List<Bitmap> ConvertToImages(int i)
+		{
+			Images = new List<Bitmap>();
+
+			if (Doc == null)
+			{
+				throw new Exception("Could not load document");
+			}
+			var cookie = new MuPDFCore.Cookie(Doc);
+				var size = Doc.GetPageSize(i);
+
+				int pageWidth = (int)size.X;
+				int pageHeight = (int)size.Y;
+
+				int ScreenWidth = pageWidth;
+				int ScreenHeight = pageHeight;
+
+				Bitmap bitmap = Bitmap.CreateBitmap(ScreenWidth, ScreenHeight, Bitmap.Config.Argb8888);
+				Doc.DrawPage(bitmap, i, pageWidth, pageHeight, 0, 0, ScreenWidth, ScreenHeight, cookie);
+				Images.Add(bitmap);
 			return Images;
 		}
 	}

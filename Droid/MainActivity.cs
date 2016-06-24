@@ -223,11 +223,28 @@ namespace InterViewer.Droid
 				{
 					if (!CanvasEnable)
 					{
+						MapCanvasView mapCanvasView = new MapCanvasView(this, _map);
+
+						mapCanvasView.Id = Resource.Id.map_canvas_view;
+						mapCanvasView.LayoutParameters = new ViewGroup.LayoutParams(
+							ViewGroup.LayoutParams.MatchParent,
+							ViewGroup.LayoutParams.MatchParent
+						);
+
+						relativeLayout.AddView(mapCanvasView);
+
+						relativeLayout.FindViewById(Resource.Id.item_bar).BringToFront();
+						relativeLayout.FindViewById(Resource.Id.triangle_view).BringToFront();
+						relativeLayout.FindViewById(Resource.Id.rectangle_view).BringToFront();
+						relativeLayout.FindViewById(Resource.Id.side_view).BringToFront();
+
+						relativeLayout.RequestLayout();
 
 						CanvasEnable = true;
 					}
 					else
 					{
+						relativeLayout.RemoveView(FindViewById(Resource.Id.map_canvas_view));
 
 						CanvasEnable = false;
 					}

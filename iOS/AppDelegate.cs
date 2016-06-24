@@ -62,6 +62,15 @@ namespace InterViewer.iOS
 		{
 			// Called when the application is about to terminate. Save data, if needed. See also DidEnterBackground.
 		}
+
+		public override bool OpenUrl(UIApplication application, NSUrl url, string sourceApplication, NSObject annotation)
+		{	if (url != null && url.IsFileUrl)
+			{
+				PdfUtils.DisplayPdf(url.Path, this.Window.RootViewController as UINavigationController);
+			}
+
+			return true;
+		}
 	}
 }
 
