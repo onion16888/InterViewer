@@ -41,11 +41,18 @@ namespace InterViewer.iOS
 			char[] seperater = { '/' };
 			string[] pathTemp = pathRightNow.Name.Split(seperater);
 			string pathForQuery = string.Empty;
-			for (int i = 0; i < pathTemp.Length-1; i++)
+			if (pathTemp.Length > 2)
 			{
-				pathForQuery += pathTemp[i];
-				if (i != pathTemp.Length - 2)
-					pathForQuery += "/";
+				for (int i = 1; i < pathTemp.Length - 1; i++)
+				{
+					pathForQuery += pathTemp[i];
+					if (i != pathTemp.Length - 2)
+						pathForQuery += "/";
+				}
+			}
+			else
+			{
+				pathForQuery += "/";
 			}
 			listFilePathName = getFileAndPathList(pathForQuery);
 			source = new FileManagerTableSource(listFilePathName);

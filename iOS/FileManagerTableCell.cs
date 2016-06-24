@@ -9,7 +9,6 @@ namespace InterViewer.iOS
 {
 	public partial class FileManagerTableCell : UITableViewCell
 	{
-		public event EventHandler ReloadDataCompleted;
 		public FileManagerTableCell (IntPtr handle) : base (handle)
 		{
 		}
