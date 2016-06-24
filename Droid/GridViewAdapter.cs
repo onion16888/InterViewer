@@ -44,15 +44,17 @@ namespace InterViewer.Droid
 		{
 			ImageView imageView;
 
-			if (convertView == null) {  // if it's not recycled, initialize some attributes
+			if (convertView == null) 
+			{  // if it's not recycled, initialize some attributes
 				imageView = new ImageView (context);
 				imageView.LayoutParameters = new GridView.LayoutParams (125, 125);
 				imageView.SetScaleType (ImageView.ScaleType.CenterCrop);
-				imageView.SetPadding (3, 3, 3, 3);
-			} else {
+				imageView.SetPadding (1, 1, 1, 1);
+			} 
+			else 
+			{
 				imageView = (ImageView)convertView;
 			}
-
 			imageView.SetImageURI (Android.Net.Uri.Parse(fileName[position]));
 
 			return imageView;

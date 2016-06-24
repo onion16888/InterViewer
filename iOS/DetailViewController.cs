@@ -130,7 +130,8 @@ namespace InterViewer.iOS
 				pageRect.Height = swithWidth;*/
 				scale = (this.View.Frame.Width-80.0f) / pageRect.Width;
 			}
-			else {
+			else 
+			{
 				scale = this.View.Frame.Height / pageRect.Height;
 			}
 

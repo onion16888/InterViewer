@@ -159,6 +159,7 @@
     <Compile Include="FileListAttributes.cs" />
     <Compile Include="FileManagerTableSource.cs" />
     <Compile Include="AlertViewControllerHelper.cs" />
+    <Compile Include="GetPngClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_note_d.png" />

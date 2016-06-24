@@ -20,18 +20,21 @@ namespace InterViewer.iOS
 			selectedColor = new UIColor(red: 0.95f, green: 0.52f, blue: 0.00f, alpha: 1.0f);
 			normalColor = new UIColor(red: 0.70f, green: 0.70f, blue: 0.70f, alpha: 1.0f);
 		}
-
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 
 			// Perform any additional setup after loading the view, typically from a nib.
-			IEnumerable<string> fileOrDirectory = GetDirFileList("Sliders2");
+			IEnumerable<string> fileOrDirectory = GetDirPngFile("Sliders");
 
 			CheckButtonIsSelected(btnTemplate);
 
 			CollectionViewInit(fileOrDirectory);
 			//var qwe = Directory.EnumerateFileSystemEntries("./InterView/Sliders");
+			var documents =Environment.GetFolderPath(Environment.SpecialFolder.Personal)+"/InterView/Documents";
+			var filename = Path.Combine(documents, "Write.txt");
+			File.WriteAllText(filename, "Write this text into a file");
+
 
 			btnTemplate.TouchUpInside += (object sender, EventArgs e) =>
 			{
@@ -39,7 +42,7 @@ namespace InterViewer.iOS
 				{
 					CheckButtonIsSelected(btnTemplate);
 
-					CollectionViewInit(GetDirFileList("Sliders2"));
+					CollectionViewInit(GetDirPngFile("Sliders"));
 				});
 			};
 			btnDocuments.TouchUpInside += (object sender, EventArgs e) => 
@@ -48,7 +51,7 @@ namespace InterViewer.iOS
 				{
 					CheckButtonIsSelected(btnDocuments);
 
-					CollectionViewInit(GetDirFileList("Documents2"));
+					CollectionViewInit(GetDirPngFile("Documents"));
 				});
 			};
 			btnAdd.TouchUpInside += (object sender, EventArgs e) =>
@@ -63,12 +66,21 @@ namespace InterViewer.iOS
 		public static  IEnumerable<string> GetDirFileList(string Whichfolder)
 		{
 			var fileOrDirectory = Directory.EnumerateFileSystemEntries("./InterView/" + Whichfolder);
+
 			foreach (var entry in fileOrDirectory)
 			{
 				Console.WriteLine(entry);
 			}
 
 			return fileOrDirectory;
+		}
+		public static IEnumerable<string>GetDirPngFile(string Whichfolder)
+		{
+			var PngFileList = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/" + Whichfolder);
+
+			var result = PngFileList.Where(FilePath => Path.GetExtension(FilePath) == ".png");
+
+			return result;
 		}
 
 		public override void DidReceiveMemoryWarning()
@@ -132,8 +144,6 @@ namespace InterViewer.iOS
 
 			public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
 			{
-				
-
 				var data = Source[indexPath.Row];
 				collectionView.DeselectItem(indexPath, true);
 
@@ -155,11 +165,10 @@ namespace InterViewer.iOS
 		//GridView ItemTouch
 		private void ItemOnSelected(Object sender, TableSource.SelectedEventArgs e)
 		{
-			var qq = ListViewController.GetDirFileList("PdfFile2");
+			//var qq = ListViewController.GetDirFileList("PdfFile2");
 
 			Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Sliders2","PdfFile2").Replace("Documents2","PdfFile2");
 			Console.WriteLine(Doc.Reference);
-
 
 			InvokeOnMainThread(() =>
 			{
@@ -209,6 +218,7 @@ namespace InterViewer.iOS
 			button.Selected = true;
 			button.BackgroundColor = selectedColor;
 		}
+
 	}
 }
 
