@@ -148,6 +148,8 @@
     </Compile>
     <Compile Include="MapCanvasView.cs" />
     <Compile Include="CustomAnnotation.cs" />
+    <Compile Include="CameraCapture.cs" />
+    <Compile Include="CameraPickerController.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_note_d.png" />

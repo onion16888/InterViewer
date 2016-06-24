@@ -16,6 +16,14 @@ namespace InterViewer.iOS
 			set;
 		}
 
+		public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations(UIApplication application, UIWindow forWindow)
+		{
+			if (CameraCapture.IsOpenCamera)
+				return UIInterfaceOrientationMask.All;
+			else
+				return UIInterfaceOrientationMask.Landscape;
+		}
+
 		public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
 		{
 			// Override point for customization after application launch.
