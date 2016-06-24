@@ -106,6 +106,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Resources\InterView\" />
+    <Folder Include="Resources\InterView\Documents2\" />
+    <Folder Include="Resources\InterView\Sliders2\" />
+    <Folder Include="Resources\InterView\PdfFile2\" />
     <Folder Include="Resources\InterView2\" />
     <Folder Include="Resources\InterView2\Documents2\" />
     <Folder Include="Resources\InterView2\Sliders2\" />
@@ -148,6 +152,9 @@
     </Compile>
     <Compile Include="MapCanvasView.cs" />
     <Compile Include="CustomAnnotation.cs" />
+    <Compile Include="CameraCapture.cs" />
+    <Compile Include="CameraPickerController.cs" />
+    <Compile Include="ClusteringManager.cs" />
     <Compile Include="FileManagerController.cs" />
     <Compile Include="FileManagerController.designer.cs">
       <DependentUpon>FileManagerController.cs</DependentUpon>
@@ -160,6 +167,7 @@
     <Compile Include="FileManagerTableSource.cs" />
     <Compile Include="AlertViewControllerHelper.cs" />
     <Compile Include="GetPngClass.cs" />
+    <Compile Include="PDFUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_note_d.png" />

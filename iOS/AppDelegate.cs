@@ -16,6 +16,14 @@ namespace InterViewer.iOS
 			set;
 		}
 
+		public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations(UIApplication application, UIWindow forWindow)
+		{
+			if (CameraCapture.IsOpenCamera)
+				return UIInterfaceOrientationMask.All;
+			else
+				return UIInterfaceOrientationMask.Landscape;
+		}
+
 		public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
 		{
 			// Override point for customization after application launch.
@@ -53,6 +61,15 @@ namespace InterViewer.iOS
 		public override void WillTerminate(UIApplication application)
 		{
 			// Called when the application is about to terminate. Save data, if needed. See also DidEnterBackground.
+		}
+
+		public override bool OpenUrl(UIApplication application, NSUrl url, string sourceApplication, NSObject annotation)
+		{	if (url != null && url.IsFileUrl)
+			{
+				PdfUtils.DisplayPdf(url.Path, this.Window.RootViewController as UINavigationController);
+			}
+
+			return true;
 		}
 	}
 }

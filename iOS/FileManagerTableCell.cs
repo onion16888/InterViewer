@@ -14,7 +14,9 @@ namespace InterViewer.iOS
 		}
 		public void ReloadData(string filePath, bool fileOrFolder)
 		{
-			LabelFilePath.Text = filePath;
+			char[] seperater = { '/' };
+			string[] filePathTemp = filePath.Split(seperater);
+			LabelFilePath.Text = filePathTemp[filePathTemp.Length - 1];
 			if (fileOrFolder == true)
 				ButtonSelected.SetTitle("File",UIControlState.Normal);
 			else
