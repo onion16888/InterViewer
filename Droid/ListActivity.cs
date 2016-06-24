@@ -27,7 +27,7 @@ namespace InterViewer.Droid
 		private const int PdfPick = 2000;
 		Android.Net.Uri uri = Android.Provider.MediaStore.Images.Media.ExternalContentUri;
 		//public string icon=Android.OS.Environment.ExternalStorageDirectory+"/Download/Template";
-		public string AppDir = Android.OS.Environment.ExternalStorageDirectory + "/Download/InterView/Slides";
+		public string AppDir = Android.OS.Environment.ExternalStorageDirectory + "/Download/InterView/";
 		List<FileSystemInfo> visibleThings = new List<FileSystemInfo>();
 		Button btnTemplate;
 		Button btnDocuments;
@@ -46,21 +46,29 @@ namespace InterViewer.Droid
 			init();
 
 			this.DirCheck(new Java.IO.File(AppDir));
-			var ReturnIcons = this.FindTemplateIcon(AppDir, visibleThings);
+			var ReturnIcons = this.FindTemplateIcon(AppDir+"Slides", visibleThings);
+			List<string> hh=new List<string>(); ;
 
-			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Slides"));
+			var h = from qwe in ReturnIcons select new {qwe.FullName};
+			foreach(var v in h)
+			{
+				hh.Add(v.FullName);
+			}
+			var cc=hh.Count;
+
+			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindTemplateIcon(AppDir + "Slides", visibleThings)));
 			gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			//gridviewShow.Adapter = new ImageAdapter(this, AppDir, ReturnIcons);
 
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Slides"));
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindTemplateIcon(AppDir + "Slides", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
 
 			btnDocuments.Click += (object sender, EventArgs e) =>
 			{
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName("Documents"));
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindTemplateIcon(AppDir + "Documents", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
 				
@@ -85,10 +93,10 @@ namespace InterViewer.Droid
 			};
 			gridviewShow.ItemClick += (object sender, AdapterView.ItemClickEventArgs args) =>
 			{
-				Toast.MakeText(this, ReturnIcons[args.Position-1].FullName, ToastLength.Short).Show();
+				Toast.MakeText(this, ReturnIcons[args.Position].FullName, ToastLength.Short).Show();
 				//Intent DetailAc = new Intent(this, typeof(DetailActivity));
 				document = new Document();
-				document.Reference = ReturnIcons[args.Position - 1].FullName.Replace(".png", ".pdf");
+				document.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
 
 				//DetailAc.PutExtra("DocumentObject",document);
 				DetailActivity.document = this.document;
@@ -288,6 +296,7 @@ namespace InterViewer.Droid
 		}
 		private List<FileSystemInfo> FindTemplateIcon(string icoopath, List<FileSystemInfo> visibleThings)
 		{
+			visibleThings.Clear();
 			DirectoryInfo DirInfo = new DirectoryInfo(icoopath);
 			foreach (var AllFile in DirInfo.GetFileSystemInfos().Where(item => item.Exists))
 			{
@@ -311,10 +320,22 @@ namespace InterViewer.Droid
 			var files = Directory.EnumerateFiles(Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).ToString() + @"/InterView/" + FolderName + "/").ToArray();
 			foreach (string file in files)
 			{
-				//Debug.WriteLine(file);
+				System.Console.WriteLine(file);
 			}
 
 			return files;
+		}
+		private string[] queryFilesName(List<FileSystemInfo> visibleThings)
+		{
+			List<string> hh = new List<string>(); ;
+
+			var h = from qwe in visibleThings select new { qwe.FullName };
+			foreach (var v in h)
+			{
+				hh.Add(v.FullName);
+			}
+
+			return hh.ToArray();
 		}
 		public class ImageAdapter : BaseAdapter
 		{

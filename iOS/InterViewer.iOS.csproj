@@ -110,6 +110,10 @@
     <Folder Include="Resources\InterView\Documents2\" />
     <Folder Include="Resources\InterView\Sliders2\" />
     <Folder Include="Resources\InterView\PdfFile2\" />
+    <Folder Include="Resources\InterView2\" />
+    <Folder Include="Resources\InterView2\Documents2\" />
+    <Folder Include="Resources\InterView2\Sliders2\" />
+    <Folder Include="Resources\InterView2\PdfFile2\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -149,6 +153,19 @@
     <Compile Include="MapCanvasView.cs" />
     <Compile Include="CustomAnnotation.cs" />
     <Compile Include="ClusteringManager.cs" />
+    <Compile Include="FileManagerController.cs" />
+    <Compile Include="FileManagerController.designer.cs">
+      <DependentUpon>FileManagerController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileManagerTableCell.cs" />
+    <Compile Include="FileManagerTableCell.designer.cs">
+      <DependentUpon>FileManagerTableCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileListAttributes.cs" />
+    <Compile Include="FileManagerTableSource.cs" />
+    <Compile Include="AlertViewControllerHelper.cs" />
+    <Compile Include="GetPngClass.cs" />
+    <Compile Include="PDFUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_note_d.png" />
@@ -170,10 +187,31 @@
     <BundleResource Include="Resources\icon_clock.png" />
     <BundleResource Include="Resources\minus.png" />
     <BundleResource Include="Resources\plus.png" />
-    <BundleResource Include="Resources\InterView\Documents2\icon_camera_d.png" />
-    <BundleResource Include="Resources\InterView\Sliders2\icon_clock.png" />
-    <BundleResource Include="Resources\InterView\PdfFile2\icon_camera_d.pdf" />
-    <BundleResource Include="Resources\InterView\PdfFile2\icon_clock.pdf" />
+    <BundleResource Include="Resources\InterView2\Documents2\icon_camera_d.png" />
+    <BundleResource Include="Resources\InterView2\Sliders2\icon_clock.png" />
+    <BundleResource Include="Resources\InterView2\PdfFile2\icon_camera_d.pdf" />
+    <BundleResource Include="Resources\InterView2\PdfFile2\icon_clock.pdf" />
+    <BundleResource Include="Resources\InterView\Documents\Write.txt" />
+    <BundleResource Include="Resources\InterView\Documents\blackberry-128.pdf" />
+    <BundleResource Include="Resources\InterView\Documents\blackberry-128.png" />
+    <BundleResource Include="Resources\InterView\Documents\chrome_browser-128.pdf" />
+    <BundleResource Include="Resources\InterView\Documents\chrome_browser-128.png" />
+    <BundleResource Include="Resources\InterView\Documents\ubuntu-128.pdf" />
+    <BundleResource Include="Resources\InterView\Documents\ubuntu-128.png" />
+    <BundleResource Include="Resources\InterView\Documents\vmware-128.pdf" />
+    <BundleResource Include="Resources\InterView\Documents\vmware-128.png" />
+    <BundleResource Include="Resources\InterView\Documents\windows-128.pdf" />
+    <BundleResource Include="Resources\InterView\Documents\windows-128.png" />
+    <BundleResource Include="Resources\InterView\Sliders\sample_0.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\sample_0.png" />
+    <BundleResource Include="Resources\InterView\Sliders\sample_1.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\sample_1.png" />
+    <BundleResource Include="Resources\InterView\Sliders\sample_2.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\sample_2.png" />
+    <BundleResource Include="Resources\InterView\Sliders\sample_3.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\sample_3.png" />
+    <BundleResource Include="Resources\InterView\Sliders\sample_4.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\sample_4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
