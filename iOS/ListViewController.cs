@@ -42,13 +42,20 @@ namespace InterViewer.iOS
 					CollectionViewInit(GetDirFileList("Sliders2"));
 				});
 			};
-			btnDocuments.TouchUpInside+= (object sender, EventArgs e) => 
+			btnDocuments.TouchUpInside += (object sender, EventArgs e) => 
 			{
 				InvokeOnMainThread(() =>
 				{
 					CheckButtonIsSelected(btnDocuments);
 
 					CollectionViewInit(GetDirFileList("Documents2"));
+				});
+			};
+			btnAdd.TouchUpInside += (object sender, EventArgs e) =>
+			{
+				InvokeOnMainThread(() =>
+				{
+					PerformSegue(@"moveToFileManagerSegue", this);
 				});
 			};
 		}
@@ -165,26 +172,27 @@ namespace InterViewer.iOS
 			switch (segue.Identifier)
 			{
 				case @"moveToDetailViewSegue":
+					if (segue.DestinationViewController is DetailViewController)
 					{
-						if (segue.DestinationViewController is DetailViewController)
-						{
-							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
-
-							
+						var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
 						//把這個頁面的值傳給新頁面的屬性
-							Detailviewcontroller.Doc = this.Doc;
-							//destviewcontroller.cStoreName=StoreName;
-							//destviewcontroller.cRating = Rating;
-							//destviewcontroller.cAddress = Address;
-							//destviewcontroller.cPhone = Phone;
-							//destviewcontroller.cStoreTime = StoreTime;
+						Detailviewcontroller.Doc = this.Doc;
+						//destviewcontroller.cStoreName=StoreName;
+						//destviewcontroller.cRating = Rating;
+						//destviewcontroller.cAddress = Address;
+						//destviewcontroller.cPhone = Phone;
+						//destviewcontroller.cStoreTime = StoreTime;
 						//}
-
-
-						}
-						break;
 					}
-					//break;
+					break;
+				case @"moveToFileManagerSegue":
+					if (segue.DestinationViewController is FileManagerController)
+					{
+						
+					}
+					break;
+				default:
+					break;
 			}
 		}
 
