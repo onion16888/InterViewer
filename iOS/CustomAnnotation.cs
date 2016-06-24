@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CoreLocation;
 using MapKit;
 
@@ -10,6 +11,8 @@ namespace InterViewer.iOS
 		private CLLocationCoordinate2D _coord { set; get; }
 
 		public Int32 Count { set; get; }
+
+		public List<IMKAnnotation> Annotations { set; get; }
 
 		public CLLocationCoordinate2D Location { 
 			get

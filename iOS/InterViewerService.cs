@@ -176,6 +176,23 @@ namespace InterViewer.iOS
 			});
 
 			#endregion
+
+			list.Add(new Document
+			{
+				Title = "073392470",
+				Name = "20160216163312.json",
+				Latitude = 25.0477376,
+				Longitude = 121.5149763
+			});
+
+			list.Add(new Document
+			{
+				Title = "073392470",
+				Name = "20160216163312.json",
+				Latitude = 24.998855,
+				Longitude = 121.581069
+			});
+
 			return list;
 		}
 
