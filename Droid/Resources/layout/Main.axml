@@ -21,6 +21,7 @@
             map:cameraZoom="7.5" />
     </FrameLayout>
     <RelativeLayout
+        android:id="@+id/item_bar"
         android:orientation="vertical"
         android:layout_width="80dp"
         android:layout_height="match_parent"
