@@ -91,7 +91,7 @@ namespace InterViewer.iOS
 			return fileOrDirectory;
 		}
 		//撈出資料夾下所有.Png檔案
-		public static IEnumerable<string>GetDirPngFile(string Whichfolder)
+		public static IEnumerable<string> GetDirPngFile(string Whichfolder)
 		{
 			//看送過來的是哪個資料夾 撈出底下所有的.png 回傳
 			var PngFileList = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/" + Whichfolder);
