@@ -534,8 +534,16 @@
                                     <navigationItem title="Title" id="0SX-Fi-GKW"/>
                                 </items>
                             </navigationBar>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bic-8n-jvx">
+                                <rect key="frame" x="0.0" y="555" width="600" height="45"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="GCG-Ye-FFO"/>
+                                </constraints>
+                                <state key="normal" title="&lt;&lt;Previou Page"/>
+                            </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="vKV-Z1-pIY">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="491"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="FileManagerTableCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="FileManagerTableCell" id="44J-9Q-85K" customClass="FileManagerTableCell">
@@ -591,17 +599,21 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="7ki-az-X4R" firstAttribute="top" secondItem="nDz-Uf-usV" secondAttribute="topMargin" id="3lz-zr-csB"/>
-                            <constraint firstItem="vKV-Z1-pIY" firstAttribute="leading" secondItem="nDz-Uf-usV" secondAttribute="leadingMargin" constant="-20" id="Bap-2H-KRL"/>
+                            <constraint firstItem="vKV-Z1-pIY" firstAttribute="top" secondItem="9g4-FU-NCt" secondAttribute="bottom" id="Dhc-wN-6v7"/>
+                            <constraint firstItem="Ho0-o0-WBH" firstAttribute="top" secondItem="bic-8n-jvx" secondAttribute="bottom" id="G0c-Ca-hxa"/>
+                            <constraint firstItem="vKV-Z1-pIY" firstAttribute="leading" secondItem="nDz-Uf-usV" secondAttribute="leadingMargin" constant="-20" id="H56-rz-hZX"/>
                             <constraint firstItem="7ki-az-X4R" firstAttribute="leading" secondItem="nDz-Uf-usV" secondAttribute="leadingMargin" constant="-20" id="Ibj-Tj-n9s"/>
                             <constraint firstAttribute="trailingMargin" secondItem="7ki-az-X4R" secondAttribute="trailing" constant="-20" id="Xo8-S4-eFA"/>
-                            <constraint firstItem="vKV-Z1-pIY" firstAttribute="top" secondItem="9g4-FU-NCt" secondAttribute="bottom" id="g2N-jW-kPd"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="vKV-Z1-pIY" secondAttribute="trailing" constant="-20" id="oy6-jY-kcM"/>
-                            <constraint firstItem="Ho0-o0-WBH" firstAttribute="top" secondItem="vKV-Z1-pIY" secondAttribute="bottom" id="vr3-aK-x3D"/>
+                            <constraint firstItem="bic-8n-jvx" firstAttribute="top" secondItem="vKV-Z1-pIY" secondAttribute="bottom" id="d45-NP-3yc"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="vKV-Z1-pIY" secondAttribute="trailing" constant="-20" id="gWo-4A-LXQ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="bic-8n-jvx" secondAttribute="trailing" constant="-20" id="ghS-h4-ime"/>
+                            <constraint firstItem="bic-8n-jvx" firstAttribute="leading" secondItem="nDz-Uf-usV" secondAttribute="leadingMargin" constant="-20" id="ijm-2N-ciH"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="mDJ-Ya-e2I"/>
                     <connections>
                         <outlet property="FileManagerTableView" destination="vKV-Z1-pIY" id="d7Y-Id-i7f"/>
+                        <outlet property="ReturnButton" destination="bic-8n-jvx" id="h0Q-Pg-Ldm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZvI-sX-GOG" userLabel="First Responder" sceneMemberID="firstResponder"/>
