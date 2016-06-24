@@ -206,6 +206,9 @@ namespace InterViewer.iOS
 						{
 							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
 
+							Detailviewcontroller.PDF_Type = "Add";
+						//把這個頁面的值傳給新頁面的屬性
+
 							Detailviewcontroller.Doc = this.Doc;
 						}
 						break;
