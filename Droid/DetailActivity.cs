@@ -17,6 +17,7 @@ using Android.Graphics;
 using Debug = System.Diagnostics.Debug;
 namespace InterViewer.Droid
 {
+	
 	[Activity(Label = "DetailActivity"//, MainLauncher = true
 	          , ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
 	public class DetailActivity : Activity, View.IOnTouchListener
@@ -24,7 +25,7 @@ namespace InterViewer.Droid
 		PDFDocument pdf;
 		Bitmap bitmap;
 		int _pageNumber = 0;
-		public static Document document { get; set; }
+		public static Document Doc { get; set; }
 		private float startX, endX = 0;
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -46,7 +47,7 @@ namespace InterViewer.Droid
 				}
 			}*/
 
-			if (!File.Exists(document.Reference))
+			if (!File.Exists(Doc.Reference))
 			{
 				var alertDialog1 = new AlertDialog.Builder(this).Create();
 				// 設定Title
@@ -61,7 +62,7 @@ namespace InterViewer.Droid
 			}
 			else
 			{
-				pdf = new PDFDocument(this, document.Reference);
+				pdf = new PDFDocument(this, Doc.Reference);
 				var count = pdf.Count;
 
 				iv.SetImageBitmap(pdf.Images[0]);

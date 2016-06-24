@@ -118,6 +118,30 @@
     <None Include="Assets\AboutAssets.txt" />
     <None Include="packages.config" />
     <None Include="PluginsHelp\GeolocatorReadme.txt" />
+    <None Include="InterView\Documents\blackberry-128.pdf" />
+    <None Include="InterView\Documents\blackberry-128.png" />
+    <None Include="InterView\Documents\chrome_browser-128.pdf" />
+    <None Include="InterView\Documents\chrome_browser-128.png" />
+    <None Include="InterView\Documents\ubuntu-128.pdf" />
+    <None Include="InterView\Documents\ubuntu-128.png" />
+    <None Include="InterView\Documents\vmware-128.pdf" />
+    <None Include="InterView\Documents\vmware-128.png" />
+    <None Include="InterView\Documents\windows-128.pdf" />
+    <None Include="InterView\Documents\windows-128.png" />
+    <None Include="InterView\Documents\Write.txt" />
+    <None Include="InterView\Sliders\sample_0.pdf" />
+    <None Include="InterView\Sliders\sample_0.png" />
+    <None Include="InterView\Sliders\sample_1.pdf" />
+    <None Include="InterView\Sliders\sample_1.png" />
+    <None Include="InterView\Sliders\sample_2.pdf" />
+    <None Include="InterView\Sliders\sample_2.png" />
+    <None Include="InterView\Sliders\sample_3.pdf" />
+    <None Include="InterView\Sliders\sample_3.png" />
+    <None Include="InterView\Sliders\sample_4.pdf" />
+    <None Include="InterView\Sliders\sample_4.png" />
+    <None Include="Assets\InterView\Documents\.DS_Store" />
+    <None Include="Assets\InterView\Documents\Write.txt" />
+    <None Include="Assets\InterView\Sliders\.DS_Store" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
@@ -184,10 +208,32 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
+    <Folder Include="InterView\" />
+    <Folder Include="Assets\InterView\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\0200B9.pdf" />
     <AndroidAsset Include="Assets\InterViewer.pdf" />
+    <AndroidAsset Include="Assets\InterView\Documents\blackberry-128.pdf" />
+    <AndroidAsset Include="Assets\InterView\Documents\blackberry-128.png" />
+    <AndroidAsset Include="Assets\InterView\Documents\chrome_browser-128.pdf" />
+    <AndroidAsset Include="Assets\InterView\Documents\chrome_browser-128.png" />
+    <AndroidAsset Include="Assets\InterView\Documents\ubuntu-128.pdf" />
+    <AndroidAsset Include="Assets\InterView\Documents\ubuntu-128.png" />
+    <AndroidAsset Include="Assets\InterView\Documents\vmware-128.pdf" />
+    <AndroidAsset Include="Assets\InterView\Documents\vmware-128.png" />
+    <AndroidAsset Include="Assets\InterView\Documents\windows-128.pdf" />
+    <AndroidAsset Include="Assets\InterView\Documents\windows-128.png" />
+    <AndroidAsset Include="Assets\InterView\Sliders\sample_0.pdf" />
+    <AndroidAsset Include="Assets\InterView\Sliders\sample_0.png" />
+    <AndroidAsset Include="Assets\InterView\Sliders\sample_1.pdf" />
+    <AndroidAsset Include="Assets\InterView\Sliders\sample_1.png" />
+    <AndroidAsset Include="Assets\InterView\Sliders\sample_2.pdf" />
+    <AndroidAsset Include="Assets\InterView\Sliders\sample_2.png" />
+    <AndroidAsset Include="Assets\InterView\Sliders\sample_3.pdf" />
+    <AndroidAsset Include="Assets\InterView\Sliders\sample_3.png" />
+    <AndroidAsset Include="Assets\InterView\Sliders\sample_4.pdf" />
+    <AndroidAsset Include="Assets\InterView\Sliders\sample_4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.GooglePlayServices.Basement.29.0.0.2\build\Xamarin.GooglePlayServices.Basement.targets" Condition="Exists('..\packages\Xamarin.GooglePlayServices.Basement.29.0.0.2\build\Xamarin.GooglePlayServices.Basement.targets')" />
