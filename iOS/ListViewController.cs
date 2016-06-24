@@ -52,14 +52,21 @@ namespace InterViewer.iOS
 					CollectionViewInit(GetDirPngFile("Sliders"));
 				});
 			};
-			//Doc按鈕
-			btnDocuments.TouchUpInside+= (object sender, EventArgs e) => 
+			btnDocuments.TouchUpInside += (object sender, EventArgs e) => 
+
 			{
 				InvokeOnMainThread(() =>
 				{
 					CheckButtonIsSelected(btnDocuments);
 					//取得Documents下的.png送給grid
 					CollectionViewInit(GetDirPngFile("Documents"));
+				});
+			};
+			btnAdd.TouchUpInside += (object sender, EventArgs e) =>
+			{
+				InvokeOnMainThread(() =>
+				{
+					PerformSegue(@"moveToFileManagerSegue", this);
 				});
 			};
 		}
@@ -193,6 +200,7 @@ namespace InterViewer.iOS
 			switch (segue.Identifier)
 			{
 				case @"moveToDetailViewSegue":
+					if (segue.DestinationViewController is DetailViewController)
 					{
 						if (segue.DestinationViewController is DetailViewController)
 						{
@@ -202,7 +210,15 @@ namespace InterViewer.iOS
 						}
 						break;
 					}
-					//break;
+					break;
+				case @"moveToFileManagerSegue":
+					if (segue.DestinationViewController is FileManagerController)
+					{
+						
+					}
+					break;
+				default:
+					break;
 			}
 		}
 

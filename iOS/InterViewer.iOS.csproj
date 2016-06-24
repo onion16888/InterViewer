@@ -148,6 +148,17 @@
     </Compile>
     <Compile Include="MapCanvasView.cs" />
     <Compile Include="CustomAnnotation.cs" />
+    <Compile Include="FileManagerController.cs" />
+    <Compile Include="FileManagerController.designer.cs">
+      <DependentUpon>FileManagerController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileManagerTableCell.cs" />
+    <Compile Include="FileManagerTableCell.designer.cs">
+      <DependentUpon>FileManagerTableCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileListAttributes.cs" />
+    <Compile Include="FileManagerTableSource.cs" />
+    <Compile Include="AlertViewControllerHelper.cs" />
     <Compile Include="GetPngClass.cs" />
   </ItemGroup>
   <ItemGroup>
