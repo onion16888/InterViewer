@@ -95,7 +95,7 @@
       <Project>{E6A33D47-1328-493C-A62E-AFEE9029F40C}</Project>
       <Name>InterViewer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Xamarin.Android.Maps.Utils\GoogleMapsUtilityBinding.csproj">
+    <ProjectReference Include="..\Xamarin.Android.Maps.Utils\GoogleMapsUtils.csproj">
       <Project>{BC829F65-B3B0-43C3-A282-FD5497656434}</Project>
       <Name>GoogleMapsUtils</Name>
     </ProjectReference>
