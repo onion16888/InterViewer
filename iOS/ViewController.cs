@@ -188,10 +188,9 @@ namespace InterViewer.iOS
 
 		public void MapViewInit()
 		{
-			var manager = new CLLocationManager();
-			manager.RequestWhenInUseAuthorization();
+			//var manager = new CLLocationManager();
+			//manager.RequestWhenInUseAuthorization();
 			/*
-			Button.TouchUpInside += async delegate {
 				var locator = CrossGeolocator.Current;
 				locator.DesiredAccuracy = 50;
 
@@ -200,34 +199,32 @@ namespace InterViewer.iOS
 				Console.WriteLine ("Position Status: {0}", position.Timestamp);
 				Console.WriteLine ("Position Latitude: {0}", position.Latitude);
 				Console.WriteLine ("Position Longitude: {0}", position.Longitude);
-			};
 			*/
 
 			CLLocationCoordinate2D mapCenter = new CLLocationCoordinate2D(22.617193, 120.3032346);
-			//CLLocationCoordinate2D mapCenter = new CLLocationCoordinate2D(45.00, -111.00);
-			map.CenterCoordinate = mapCenter;
 
-			var mapRegion = MKCoordinateRegion.FromDistance(mapCenter, 1000, 1000);
-			map.Region = mapRegion;
+			CenterLocation = map.CenterCoordinate = mapCenter;
+
+			map.Region = MKCoordinateRegion.FromDistance(mapCenter, 1000, 1000);
 
 			map.ShowsUserLocation = true;
-
 
 			CustomMapViewDelegate customDelegate = new CustomMapViewDelegate();
 			customDelegate.OnRegionChanged += MapViewOnRegionChanged;
 			map.Delegate = customDelegate;
 
-			//map.UserInteractionEnabled = true;
-			//UISwipeGestureRecognizer swipeGestureRecognizer = new UISwipeGestureRecognizer(sw =>
-			//{
+			/*
+			map.UserInteractionEnabled = true;
+			UISwipeGestureRecognizer swipeGestureRecognizer = new UISwipeGestureRecognizer(sw =>
+			{
 
-			//})
-			//{
-			//	NumberOfTouchesRequired = 3
-			//};
+			})
+			{
+				NumberOfTouchesRequired = 3
+			};
 
-			//map.AddGestureRecognizer(swipeGestureRecognizer);
-
+			map.AddGestureRecognizer(swipeGestureRecognizer);
+			*/
 		}
 
 		public void AddAnnotations()
