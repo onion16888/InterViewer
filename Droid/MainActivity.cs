@@ -16,10 +16,12 @@ using Android.Util;
 using Android.Content.PM;
 using Geolocator.Plugin;
 
+using Com.Google.Maps.Android.Clustering;
+using Com.Google.Maps.Android.Clustering.View;
+
 namespace InterViewer.Droid
 {
-	[Activity(Label = "Test", MainLauncher = true
-	          , Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Landscape)]
+	[Activity(Label = "Test", MainLauncher = true, Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Landscape)]
 	public class MainActivity : Activity
 	, ILocationListener
 	, GoogleMap.IOnCameraChangeListener
@@ -32,10 +34,14 @@ namespace InterViewer.Droid
 
 		private MapFragment _mapFragment;
 
+		private ClusterManager _clusterManager;
+
 		private GoogleMap _map;
+
 		//private Location _currentLocation;
 
 		//private bool currentLocationReveived;
+
 		public String _locationProvider;
 
 		public LocationManager _locationManager;
@@ -47,6 +53,8 @@ namespace InterViewer.Droid
 			base.OnCreate(savedInstanceState);
 
 			SetContentView(Resource.Layout.Main);
+
+			Util.context = this;
 
 			defaultLocation = new LatLng(22.6115547, 120.2912767);
 
@@ -69,14 +77,14 @@ namespace InterViewer.Droid
 
 				View triangleView = FindViewById<TriangleView>(Resource.Id.triangle_view);
 				{
-					triangleView.SetX(centerX - DpToPx(15));
+					triangleView.SetX(centerX - Util.DpToPx(15));
 					triangleView.SetY(centerY);
 				}
 
 				View rectangleView = FindViewById<LinearLayout>(Resource.Id.rectangle_view);
 				{
-					rectangleView.SetX(centerX - (DpToPx(100) / 2));
-					rectangleView.SetY(centerY + DpToPx(22));
+					rectangleView.SetX(centerX - (Util.DpToPx(100) / 2));
+					rectangleView.SetY(centerY + Util.DpToPx(22));
 				}
 
 				View sideView = FindViewById<RelativeLayout>(Resource.Id.side_view);
@@ -94,7 +102,7 @@ namespace InterViewer.Droid
 			TriangleView triangleView = new TriangleView(this);
 			{
 				triangleView.Id = Resource.Id.triangle_view;
-				triangleView.LayoutParameters = new ViewGroup.LayoutParams(DpToPx(100), DpToPx(100));
+				triangleView.LayoutParameters = new ViewGroup.LayoutParams(Util.DpToPx(100), Util.DpToPx(100));
 
 				relativeLayout.AddView(triangleView);
 			}
@@ -102,7 +110,7 @@ namespace InterViewer.Droid
 			View rectangleView = LayoutInflater.Inflate(Resource.Layout.rectangle_view_layout, null);
 			{
 				rectangleView.Id = Resource.Id.rectangle_view;
-				rectangleView.LayoutParameters = new ViewGroup.LayoutParams(DpToPx(100), DpToPx(100));
+				rectangleView.LayoutParameters = new ViewGroup.LayoutParams(Util.DpToPx(100), Util.DpToPx(100));
 
 				relativeLayout.AddView(rectangleView);
 			}
@@ -110,7 +118,7 @@ namespace InterViewer.Droid
 			View sideView = LayoutInflater.Inflate(Resource.Layout.side_view_layout, null);
 			{
 				sideView.Id = Resource.Id.side_view;
-				sideView.LayoutParameters = new ViewGroup.LayoutParams(DpToPx(430), ViewGroup.LayoutParams.MatchParent);
+				sideView.LayoutParameters = new ViewGroup.LayoutParams(Util.DpToPx(430), ViewGroup.LayoutParams.MatchParent);
 
 				relativeLayout.AddView(sideView);
 			}
@@ -124,7 +132,7 @@ namespace InterViewer.Droid
 
 					Console.WriteLine("Plus Button Click");
 
-					if (rectangleView.Width == DpToPx(100))
+					if (rectangleView.Width == Util.DpToPx(100))
 					{
 						ProjectNameEditText.Text = "";
 
@@ -138,7 +146,7 @@ namespace InterViewer.Droid
 						PlusButton.StartAnimation(PlusButtonOpenAnimation);
 
 
-						rectangleView.StartAnimation(new ResizeAnimation(rectangleView, new ViewGroup.LayoutParams(DpToPx(400), rectangleView.Height))
+						rectangleView.StartAnimation(new ResizeAnimation(rectangleView, new ViewGroup.LayoutParams(Util.DpToPx(400), rectangleView.Height))
 						{
 							Duration = 1000
 						});
@@ -155,7 +163,7 @@ namespace InterViewer.Droid
 						PlusButton.StartAnimation(PlusButtonCloseAnimation);
 
 
-						rectangleView.StartAnimation(new ResizeAnimation(rectangleView, new ViewGroup.LayoutParams(DpToPx(100), rectangleView.Height))
+						rectangleView.StartAnimation(new ResizeAnimation(rectangleView, new ViewGroup.LayoutParams(Util.DpToPx(100), rectangleView.Height))
 						{
 							Duration = 1000
 						});
@@ -190,7 +198,7 @@ namespace InterViewer.Droid
 				{
 					if (sideView.GetX().Equals(relativeLayout.Width))
 					{
-						TranslateAnimation SideViewSlideIn = new TranslateAnimation(0, -DpToPx(430), 0, 0)
+						TranslateAnimation SideViewSlideIn = new TranslateAnimation(0, -Util.DpToPx(430), 0, 0)
 						{
 							Duration = 1000,
 							FillEnabled = true
@@ -202,7 +210,7 @@ namespace InterViewer.Droid
 					}
 					else
 					{
-						TranslateAnimation SideViewSlideOut = new TranslateAnimation(0, DpToPx(430), 0, 0)
+						TranslateAnimation SideViewSlideOut = new TranslateAnimation(0, Util.DpToPx(430), 0, 0)
 						{
 							Duration = 1000,
 							FillEnabled = true
@@ -265,7 +273,7 @@ namespace InterViewer.Droid
 
 			GridView gridview = FindViewById<GridView>(Resource.Id.gridView);
 
-			gridview.Adapter = new CustomAdapter(this, temp, new ViewGroup.LayoutParams(DpToPx(200), DpToPx(200)));
+			gridview.Adapter = new CustomAdapter(this, temp, new ViewGroup.LayoutParams(Util.DpToPx(200), Util.DpToPx(200)));
 
 			gridview.ItemClick += (Object sender, AdapterView.ItemClickEventArgs e) =>
 			{
@@ -303,7 +311,7 @@ namespace InterViewer.Droid
 
 				var position = await locator.GetPositionAsync(timeoutMilliseconds: 10000);
 
-				defaultLocation = new LatLng(position.Latitude, position.Longitude);
+				CenterLocation = defaultLocation = new LatLng(position.Latitude, position.Longitude);
 
 				//Console.WriteLine("Position Status: {0}", position.Timestamp);
 				//Console.WriteLine("Position Latitude: {0}", position.Latitude);
@@ -315,8 +323,11 @@ namespace InterViewer.Droid
 				_map.SetOnCameraChangeListener(this);
 				_map.AnimateCamera(CameraUpdateFactory.NewLatLngZoom(defaultLocation, 15.5f));
 
+				_clusterManager = new ClusterManager(this, _map);
 
-				//_map.AddMarker(new MarkerOptions().SetPosition(defaultLocation).SetTitle("Test"));
+				_clusterManager.SetRenderer(new CustomClusterRenderer(this, _map, _clusterManager));
+
+				//_map.SetOnCameraChangeListener(_clusterManager);
 
 				AddMapMarker();
 
@@ -325,79 +336,43 @@ namespace InterViewer.Droid
 			_mapFragment.GetMapAsync(mapReadyCallBack);
 		}
 
-		public void AddMapMarker() 
+		public void AddMapMarker()
 		{
 
 			InterViewerService DocumentManager = new InterViewerService();
 
 			List<Document> DocumentList = DocumentManager.GetDocumentsForMap();
 
+			List<IClusterItem> items = new List<IClusterItem>();
+
 			for (Int32 i = 0; i < DocumentList.Count; i++)
 			{
 				Document Doc = DocumentList[i];
 
-				_map.AddMarker(new MarkerOptions()
-				    .SetPosition(new LatLng(Doc.Latitude, Doc.Longitude))
-				    .SetIcon(GetBitmapMarker(i.ToString(), 30))
-				);
-			}
+				//_map.AddMarker(new MarkerOptions()
+				//	.SetPosition(new LatLng(Doc.Latitude, Doc.Longitude))
+				//	.SetIcon(GetBitmapMarker(i.ToString(), 30))
+				//);
 
-			//_map.AddMarker(new MarkerOptions()
-			//	.SetPosition(new LatLng(22.6115547, 120.2912767))
-			//	.SetIcon(GetBitmapMarker("9", 30))
-			//);
-
-			//_map.AddMarker(new MarkerOptions()
-			//	.SetPosition(new LatLng(22.6132832406979, 120.294432342052))
-			//	.SetIcon(GetBitmapMarker("5", 30))
-			//);	
-		}
-
-		public BitmapDescriptor GetBitmapMarker(String text, Int32 size)
-		{
-			Int32 px = DpToPx(size);
-
-			using (Bitmap bitmap = Bitmap.CreateBitmap(px, px, Bitmap.Config.Argb8888))
-			{
-				using (Canvas canvas = new Canvas(bitmap))
+				items.Add(new ClusterItem()
 				{
-					using (Paint paint = new Paint())
-					{
-						View markerView = LayoutInflater.Inflate(Resource.Layout.marker_view_layout, null);
-
-						markerView.LayoutParameters = new ViewGroup.LayoutParams(px, px);
-
-						TextView textView = markerView.FindViewById<TextView>(Resource.Id.marker_count);
-						textView.Text = text;
-
-						canvas.DrawBitmap(CreateDrawableFromView(markerView), 0, 0, paint);
-					}
-
-				}
-				return BitmapDescriptorFactory.FromBitmap(bitmap);
+					Position = new LatLng(Doc.Latitude, Doc.Longitude)
+				});
 			}
-		}
 
-		public Int32 DpToPx(Int32 px)
-		{
-			return (Int32)TypedValue.ApplyDimension(ComplexUnitType.Dip, px, Resources.DisplayMetrics);
-		}
-
-		public Bitmap CreateDrawableFromView(View view)
-		{
-			Bitmap bitmap = Bitmap.CreateBitmap(view.LayoutParameters.Width, view.LayoutParameters.Height, Bitmap.Config.Argb8888);
-
-			using (Canvas canvas = new Canvas(bitmap))
+			Random rnd = new Random();
+			for (int i = 1; i <= 200; i++)
 			{
-				view.Measure(
-					View.MeasureSpec.MakeMeasureSpec(view.LayoutParameters.Width, MeasureSpecMode.Exactly),
-					View.MeasureSpec.MakeMeasureSpec(view.LayoutParameters.Height, MeasureSpecMode.Exactly)
-				);
-				view.Layout(0, 0, view.MeasuredWidth, view.MeasuredHeight);
-				view.Draw(canvas);
+				double lat = CenterLocation.Latitude + rnd.NextDouble();
+				double lon = CenterLocation.Longitude + rnd.NextDouble();
+
+				items.Add(new ClusterItem()
+				{
+					Position = new LatLng(lat, lon)
+				});
 			}
 
-			return bitmap;
+			_clusterManager.AddItems(items);
 		}
 
 		#region IOnCameraChangeListener
@@ -406,6 +381,8 @@ namespace InterViewer.Droid
 			CenterLocation = cameraPos.Target;
 
 			Console.WriteLine("{0}, {1}", cameraPos.Target.Latitude, cameraPos.Target.Longitude);
+
+			_clusterManager.OnCameraChange(cameraPos);
 		}
 		#endregion
 
@@ -636,6 +613,98 @@ namespace InterViewer.Droid
 			return (Int32)TypedValue.ApplyDimension(ComplexUnitType.Dip, px, Resources.DisplayMetrics);
 		}
 	}
+
+	public class ClusterItem : Java.Lang.Object, IClusterItem
+	{
+		public LatLng Position { get; set; }
+
+		public ClusterItem()
+		{
+		}
+
+		public ClusterItem(double lat, double lng)
+		{
+			Position = new LatLng(lat, lng);
+		}
+	}
+
+	public class CustomClusterRenderer : DefaultClusterRenderer
+	{
+		private Context _context { get; set; }
+
+		public CustomClusterRenderer(Context context, GoogleMap map, ClusterManager clusterManager) : base(context, map, clusterManager)
+		{
+			_context = context;
+		}
+
+		protected override void OnBeforeClusterItemRendered(Java.Lang.Object item, MarkerOptions markerOptions)
+		{
+			markerOptions.SetIcon(GetBitmapMarker("1", 30));
+		}
+
+		protected override void OnBeforeClusterRendered(ICluster cluster, MarkerOptions markerOptions)
+		{
+			markerOptions.SetIcon(GetBitmapMarker(cluster.Size.ToString(), 30));
+		}
+
+		protected override bool ShouldRenderAsCluster(ICluster cluster)
+		{
+			return cluster.Size > 1;
+		}
+
+		public BitmapDescriptor GetBitmapMarker(String text, Int32 size)
+		{
+			Int32 px = Util.DpToPx(size);
+
+			using (Bitmap bitmap = Bitmap.CreateBitmap(px, px, Bitmap.Config.Argb8888))
+			{
+				using (Canvas canvas = new Canvas(bitmap))
+				{
+					using (Paint paint = new Paint())
+					{
+						View markerView = LayoutInflater.From(_context).Inflate(Resource.Layout.marker_view_layout, null);
+
+						markerView.LayoutParameters = new ViewGroup.LayoutParams(px, px);
+
+						TextView textView = markerView.FindViewById<TextView>(Resource.Id.marker_count);
+						textView.Text = text;
+
+						canvas.DrawBitmap(CreateDrawableFromView(markerView), 0, 0, paint);
+					}
+
+				}
+				return BitmapDescriptorFactory.FromBitmap(bitmap);
+			}
+		}
+
+		public Bitmap CreateDrawableFromView(View view)
+		{
+			Bitmap bitmap = Bitmap.CreateBitmap(view.LayoutParameters.Width, view.LayoutParameters.Height, Bitmap.Config.Argb8888);
+
+			using (Canvas canvas = new Canvas(bitmap))
+			{
+				view.Measure(
+					View.MeasureSpec.MakeMeasureSpec(view.LayoutParameters.Width, MeasureSpecMode.Exactly),
+					View.MeasureSpec.MakeMeasureSpec(view.LayoutParameters.Height, MeasureSpecMode.Exactly)
+				);
+				view.Layout(0, 0, view.MeasuredWidth, view.MeasuredHeight);
+				view.Draw(canvas);
+			}
+
+			return bitmap;
+		}
+	}
+
+	public static class Util 
+	{
+		public static Context context { get; set; }
+
+		public static Int32 DpToPx(Int32 px)
+		{
+			return (Int32)TypedValue.ApplyDimension(ComplexUnitType.Dip, px, context.Resources.DisplayMetrics);
+		}
+	}
+
 }
 
 
