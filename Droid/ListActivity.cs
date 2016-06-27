@@ -16,6 +16,7 @@ using Android.Graphics;
 using Java.IO;
 using Android.Content.Res;
 using Android.Content.PM;
+using Android.Provider;
 
 namespace InterViewer.Droid
 {
@@ -143,12 +144,34 @@ namespace InterViewer.Droid
 					//imageView.SetImageURI (data.Data);
 					//得到Url物件,送去處理，回傳真實路徑
 					string Source = GetPathToImage(data.Data);
+
 					//將回傳路徑丟進JAVA.IO.FILE利用NAME得到檔案名稱,組出新路徑跟檔案名稱
 					string Des = System.IO.Path.Combine(SaveImageDir+"/Slides", new Java.IO.File(Source).Name);
 					if (new Java.IO.File(Des).Exists())
 					{
 						//搬完檔案之後重新載入Slides
-						this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
+						//this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
+
+						#region 縮圖
+						BitmapFactory.Options options = new BitmapFactory.Options();
+						options.InPreferredConfig = Bitmap.Config.Argb8888;
+						Bitmap bitmap = BitmapFactory.DecodeFile(Source, options);
+
+						Double scale = 1f / 4f;
+
+						Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
+							bitmap,
+							(Int32)(bitmap.Width * scale),
+							(Int32)(bitmap.Height * scale),
+							false
+						);
+
+						Stream output = new FileStream(Des, FileMode.Create);
+						resizedBitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, output);
+						output.Flush();
+						output.Close();
+						#endregion
+
 						PDFImageAdapter.TheImageAdapter = null;
 						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
 						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
@@ -158,7 +181,7 @@ namespace InterViewer.Droid
 						PDFImageAdapter.TheImageAdapter = null;
 						//this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
 
-
+						#region 縮圖
 						BitmapFactory.Options options = new BitmapFactory.Options();
 						options.InPreferredConfig = Bitmap.Config.Argb8888;
 						Bitmap bitmap = BitmapFactory.DecodeFile(Source, options);
@@ -176,6 +199,7 @@ namespace InterViewer.Droid
 						resizedBitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, output);
 						output.Flush();
 						output.Close();
+						#endregion
 
 						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
 						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
@@ -328,22 +352,47 @@ namespace InterViewer.Droid
 			}
 		}
 		//把Uri拆解成為真實路徑
-		private String GetPathToImage(Android.Net.Uri uri)
+		//private String GetPathToImage(Android.Net.Uri uri)
+		//{
+		//	string path = null;
+		//	// The projection contains the columns we want to return in our query.
+		//	string[] projection = new[] { Android.Provider.MediaStore.Images.Media.InterfaceConsts.Data };
+		//	using (ICursor cursor = ManagedQuery(uri, projection, null, null, null))
+		//	{
+		//		if (cursor != null)
+		//		{
+		//			int columnIndex = cursor.GetColumnIndexOrThrow(Android.Provider.MediaStore.Images.Media.InterfaceConsts.Data);
+		//			cursor.MoveToFirst();
+		//			path = cursor.GetString(columnIndex);
+		//		}
+		//	}
+		//	return path;
+		//}
+
+		private string GetPathToImage(Android.Net.Uri uri)
 		{
-			string path = null;
-			// The projection contains the columns we want to return in our query.
-			string[] projection = new[] { Android.Provider.MediaStore.Audio.Media.InterfaceConsts.Data };
-			using (ICursor cursor = ManagedQuery(uri, projection, null, null, null))
+			string doc_id = "";
+			using (var c1 = ContentResolver.Query(uri, null, null, null, null))
 			{
-				if (cursor != null)
-				{
-					int columnIndex = cursor.GetColumnIndexOrThrow(Android.Provider.MediaStore.Audio.Media.InterfaceConsts.Data);
-					cursor.MoveToFirst();
-					path = cursor.GetString(columnIndex);
-				}
+				c1.MoveToFirst();
+				String document_id = c1.GetString(0);
+				doc_id = document_id.Substring(document_id.LastIndexOf(":") + 1);
+			}
+
+			string path = null;
+
+			// The projection contains the columns we want to return in our query.
+			string selection = Android.Provider.MediaStore.Images.Media.InterfaceConsts.Id + " =? ";
+			using (var cursor = ManagedQuery(Android.Provider.MediaStore.Images.Media.ExternalContentUri, null, selection, new string[] { doc_id }, null))
+			{
+				if (cursor == null) return path;
+				var columnIndex = cursor.GetColumnIndexOrThrow(Android.Provider.MediaStore.Images.Media.InterfaceConsts.Data);
+				cursor.MoveToFirst();
+				path = cursor.GetString(columnIndex);
 			}
 			return path;
 		}
+
 		//找到路徑底下的.png
 		private List<FileSystemInfo> FindPngInPath(string icoopath, List<FileSystemInfo> visibleThings)
 		{

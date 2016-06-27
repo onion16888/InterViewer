@@ -623,19 +623,14 @@ namespace InterViewer.Droid
 				//path.LineTo(15, 30);
 				//path.LineTo(30, 0);
 				//path.LineTo(0, 0);
-				path.MoveTo(DpToPx(15), 0);
-				path.LineTo(0, DpToPx(30));
-				path.LineTo(DpToPx(30), DpToPx(30));
-				path.LineTo(DpToPx(15), 0);
+				path.MoveTo(Util.DpToPx(15), 0);
+				path.LineTo(0, Util.DpToPx(30));
+				path.LineTo(Util.DpToPx(30), Util.DpToPx(30));
+				path.LineTo(Util.DpToPx(15), 0);
 				path.Close();
 
 				canvas.DrawPath(path, paint);
 			}
-		}
-
-		public Int32 DpToPx(Int32 px)
-		{
-			return (Int32)TypedValue.ApplyDimension(ComplexUnitType.Dip, px, Resources.DisplayMetrics);
 		}
 	}
 
