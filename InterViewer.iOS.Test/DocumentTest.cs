@@ -2,29 +2,40 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using InterViewer.iOS;
 
 namespace InterViewer.iOS.Test
 {
 	[TestFixture]
 	public class DocumentTest
 	{
-		List<Document> documents { get; set; }
+		private IIOService ioService;
+
+		private IService service;
+
+		private List<Document> documents;
 
 		public DocumentTest()
 		{
-			documents = new InterViewerService().GetDocuments();
+			ioService = new IOService();
+			var service = new InterViewerService(ioService);
+			documents = service.GetDocuments();
 		}
 
 		[Test]
 		public void Pass()
 		{
-			Assert.True(documents.Count == 12);
+			var documentPath = ioService.GetDocumentDirectory();
+
+			var path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+			Assert.True(documentPath == path);
 		}
 
 		[Test]
 		public void Fail()
 		{
-			Assert.False(documents.Count == 10);
+			Assert.False(documents.Count > 0);
 		}
 
 		[Test]

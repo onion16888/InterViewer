@@ -167,6 +167,7 @@
     <Compile Include="AlertViewControllerHelper.cs" />
     <Compile Include="GetPngClass.cs" />
     <Compile Include="PDFUtils.cs" />
+    <Compile Include="IOService.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_note_d.png" />
