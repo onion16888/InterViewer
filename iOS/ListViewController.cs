@@ -62,6 +62,13 @@ namespace InterViewer.iOS
 					CollectionViewInit(GetDirPngFile("Documents"));
 				});
 			};
+			btnImages.TouchUpInside += (object sender, EventArgs e) =>
+			{
+				InvokeOnMainThread(() =>
+				{
+					PerformSegue(@"moveToImageManagerSegue", this);
+				});
+			};
 			btnAdd.TouchUpInside += (object sender, EventArgs e) =>
 			{
 				InvokeOnMainThread(() =>
@@ -220,6 +227,12 @@ namespace InterViewer.iOS
 						
 					}
 					break;
+				case @"moveToImageManagerSegue":
+					if (segue.DestinationViewController is ImageManagerController)
+					{
+
+					}
+					break;	
 				default:
 					break;
 			}
