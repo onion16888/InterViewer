@@ -98,6 +98,9 @@
     <Compile Include="PDFImageAdapter.cs" />
     <Compile Include="InterViewerService.cs" />
     <Compile Include="MapCanvasView.cs" />
+    <Compile Include="DrawLine.cs" />
+    <Compile Include="FindRect.cs" />
+    <Compile Include="BitmapHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
