@@ -157,7 +157,7 @@ namespace InterViewer.Droid
 						options.InPreferredConfig = Bitmap.Config.Argb8888;
 						Bitmap bitmap = BitmapFactory.DecodeFile(Source, options);
 
-						Double scale = 1f / 4f;
+						Double scale = 1f / 5f;
 
 						Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
 							bitmap,
