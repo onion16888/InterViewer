@@ -181,6 +181,30 @@ namespace InterViewer.iOS
 				}
 			});
 		}
+
+		public void SaveAsPng(String SavePath)
+		{
+
+			if (!Directory.Exists(SavePath))
+			{
+				Directory.CreateDirectory(SavePath);
+			}
+
+			Images.ForEach(Image =>
+			{
+				Int32 Index = Images.IndexOf(Image);
+
+				using (NSData imageData = Image.AsPNG())
+				{
+					NSError err = null;
+					imageData.Save(
+						Path.Combine(SavePath, String.Format("{0:0000}.png", Index)),
+						NSDataWritingOptions.Atomic,
+						out err
+					);
+				}
+			});
+		}
 	}
 }
 

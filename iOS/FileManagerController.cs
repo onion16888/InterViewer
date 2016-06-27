@@ -11,6 +11,7 @@ namespace InterViewer.iOS
 {
 	public partial class FileManagerController : UIViewController
 	{
+		const int FIRST_PAGE = 1;
 		FileManagerTableSource source;
 		List<FileListAttributes> listFilePathName;
 		String pathRightNow;
@@ -73,15 +74,20 @@ namespace InterViewer.iOS
 		/// <param name="e">E.</param>
 		private void ListButton_Click(object sender, FileManagerTableSource.SelectedEventArgs e)
 		{
+			bool isFilePDF = isPDF(e.SelectedName.Name);
+			string _folderSlides = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/InterView/Sliders";
 			if (e.SelectedName.IsFile == true)
 			{
-				bool isFilePDF = isPDF(e.SelectedName.Name);
 				if (isFilePDF == true)
 				{
-					if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/IntervView/Slides"))
-						Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/IntervView/Slides");
-					File.Copy(e.SelectedName.Name, Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/IntervView/Slides" + getFileNameFromFullFilePath(e.SelectedName.Name));
-					Console.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/IntervView/Slides");
+					if (!File.Exists(_folderSlides))
+						Directory.CreateDirectory(_folderSlides);
+					//File.Copy(e.SelectedName.Name, _folderSlides + getFileNameFromFullFilePath(e.SelectedName.Name));
+					PDFDocument theChoosedPDF = new PDFDocument(e.SelectedName.Name, FIRST_PAGE);
+					//theChoosedPDF.Save(_folderSlides + getFileNameFromFullFilePath(e.SelectedName.Name));
+					string tempPath = _folderSlides;
+					theChoosedPDF.SaveAsPng(tempPath);
+					Console.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/InterView/Sliders");
 					showAlert("新增範本", e.SelectedName.Name + @" 新增成功!!", @"確定", this);
 				}
 				else
