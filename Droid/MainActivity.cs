@@ -16,6 +16,8 @@ using Android.Util;
 using Android.Content.PM;
 using Geolocator.Plugin;
 
+using AndroidHUD;
+
 using Com.Google.Maps.Android.Clustering;
 using Com.Google.Maps.Android.Clustering.View;
 
@@ -31,6 +33,8 @@ namespace InterViewer.Droid
 		private Boolean CanvasEnable { get; set; } = false;
 
 		private Boolean SideViewIsOpen { get; set; } = false;
+
+		private Boolean _OnCreate { get; set; } = true;
 
 		private MapFragment _mapFragment;
 
@@ -68,31 +72,39 @@ namespace InterViewer.Droid
 
 		public override void OnWindowFocusChanged(bool hasFocus)
 		{
-			base.OnWindowFocusChanged(hasFocus);
-
-			RelativeLayout relativeLayout = FindViewById<RelativeLayout>(Resource.Id.test);
+			if (_OnCreate)
 			{
-				Int32 centerX = relativeLayout.Width / 2;
-				Int32 centerY = relativeLayout.Height / 2;
-
-				View triangleView = FindViewById<TriangleView>(Resource.Id.triangle_view);
+				RelativeLayout relativeLayout = FindViewById<RelativeLayout>(Resource.Id.test);
 				{
-					triangleView.SetX(centerX - Util.DpToPx(15));
-					triangleView.SetY(centerY);
+					Int32 centerX = relativeLayout.Width / 2;
+					Int32 centerY = relativeLayout.Height / 2;
+
+					View triangleView = FindViewById<TriangleView>(Resource.Id.triangle_view);
+					{
+						triangleView.SetX(centerX - Util.DpToPx(15));
+						triangleView.SetY(centerY);
+						triangleView.Visibility = ViewStates.Visible;
+					}
+
+					View rectangleView = FindViewById<LinearLayout>(Resource.Id.rectangle_view);
+					{
+						rectangleView.SetX(centerX - (Util.DpToPx(100) / 2));
+						rectangleView.SetY(centerY + Util.DpToPx(22));
+						rectangleView.Visibility = ViewStates.Visible;
+					}
+
+					View sideView = FindViewById<RelativeLayout>(Resource.Id.side_view);
+					{
+						sideView.SetX(relativeLayout.Width);
+						sideView.SetY(0);
+						sideView.Visibility = ViewStates.Visible;
+					}
 				}
 
-				View rectangleView = FindViewById<LinearLayout>(Resource.Id.rectangle_view);
-				{
-					rectangleView.SetX(centerX - (Util.DpToPx(100) / 2));
-					rectangleView.SetY(centerY + Util.DpToPx(22));
-				}
-
-				View sideView = FindViewById<RelativeLayout>(Resource.Id.side_view);
-				{
-					sideView.SetX(relativeLayout.Width);
-					sideView.SetY(0);
-				}
+				_OnCreate = false;
 			}
+
+			base.OnWindowFocusChanged(hasFocus);
 		}
 
 		public void ViewInit()
@@ -103,6 +115,7 @@ namespace InterViewer.Droid
 			{
 				triangleView.Id = Resource.Id.triangle_view;
 				triangleView.LayoutParameters = new ViewGroup.LayoutParams(Util.DpToPx(100), Util.DpToPx(100));
+				triangleView.Visibility = ViewStates.Gone;
 
 				relativeLayout.AddView(triangleView);
 			}
@@ -111,6 +124,7 @@ namespace InterViewer.Droid
 			{
 				rectangleView.Id = Resource.Id.rectangle_view;
 				rectangleView.LayoutParameters = new ViewGroup.LayoutParams(Util.DpToPx(100), Util.DpToPx(100));
+				rectangleView.Visibility = ViewStates.Gone;
 
 				relativeLayout.AddView(rectangleView);
 			}
@@ -119,6 +133,7 @@ namespace InterViewer.Droid
 			{
 				sideView.Id = Resource.Id.side_view;
 				sideView.LayoutParameters = new ViewGroup.LayoutParams(Util.DpToPx(430), ViewGroup.LayoutParams.MatchParent);
+				sideView.Visibility = ViewStates.Gone;
 
 				relativeLayout.AddView(sideView);
 			}
@@ -283,6 +298,11 @@ namespace InterViewer.Droid
 
 		public void MapViewInit()
 		{
+			RunOnUiThread(() =>
+			{
+				AndHUD.Shared.Show(this, "", -1, MaskType.Clear);
+			});
+
 			GoogleMapOptions mapOptions = new GoogleMapOptions()
 				.InvokeMapType(GoogleMap.MapTypeNormal)
 				.InvokeCamera(new CameraPosition(defaultLocation, 14.0f, 3.0f, 4.0f))
@@ -306,10 +326,11 @@ namespace InterViewer.Droid
 
 			mapReadyCallBack.MapReady += async (object sender, MapReadyEventArgs e) =>
 			{
+
 				var locator = CrossGeolocator.Current;
 				locator.DesiredAccuracy = 50;
 
-				var position = await locator.GetPositionAsync(timeoutMilliseconds: 10000);
+				var position = await locator.GetPositionAsync(timeoutMilliseconds: 20000);
 
 				CenterLocation = defaultLocation = new LatLng(position.Latitude, position.Longitude);
 
@@ -331,6 +352,10 @@ namespace InterViewer.Droid
 
 				AddMapMarker();
 
+				RunOnUiThread(() =>
+				{
+					AndHUD.Shared.Dismiss(this);
+				});
 			};
 
 			_mapFragment.GetMapAsync(mapReadyCallBack);
@@ -361,7 +386,7 @@ namespace InterViewer.Droid
 			}
 
 			Random rnd = new Random();
-			for (int i = 1; i <= 200; i++)
+			for (int i = 1; i <= 500; i++)
 			{
 				double lat = CenterLocation.Latitude + rnd.NextDouble();
 				double lon = CenterLocation.Longitude + rnd.NextDouble();
