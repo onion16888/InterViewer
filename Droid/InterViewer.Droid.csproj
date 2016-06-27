@@ -113,14 +113,11 @@
     <Compile Include="GridViewAdapter.cs" />
     <Compile Include="PDFImageAdapter.cs" />
     <Compile Include="MapCanvasView.cs" />
-<<<<<<< HEAD
     <Compile Include="DrawLine.cs" />
     <Compile Include="FindRect.cs" />
     <Compile Include="BitmapHelpers.cs" />
-=======
     <Compile Include="MainApplication.cs" />
     <Compile Include="IOService.cs" />
->>>>>>> 6f3aba1057f619af993b603ef07354ce7f337997
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

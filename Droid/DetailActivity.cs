@@ -88,7 +88,7 @@ namespace InterViewer.Droid
 			SetContentView(Resource.Layout.Detail);
 
 			//test 
-			document = new Document();
+			Doc = new Document();
 
 			Initial();
 
@@ -158,11 +158,8 @@ namespace InterViewer.Droid
 				}
 			}
 
-<<<<<<< HEAD
-			/*if (!File.Exists(document.Reference))
-=======
-			if (!File.Exists(Doc.Reference))
->>>>>>> 6f3aba1057f619af993b603ef07354ce7f337997
+
+			if (!System.IO.File.Exists(Doc.Reference))
 			{
 				var alertDialog1 = new AlertDialog.Builder(this).Create();
 				// 設定Title
@@ -178,11 +175,11 @@ namespace InterViewer.Droid
 			else
 			{
 				pdf = new PDFDocument(this, Doc.Reference);
-				var count = pdf.Count;
+				//var count = pdf.Count;
 
-				iv.SetImageBitmap(pdf.Images[0]);
+				pdfImageView.SetImageBitmap(pdf.Images[0]);
 
-			}*/
+			}
 			pdf = new PDFDocument(this, pdfFilepath);
 			var count = pdf.Count;
 
@@ -225,10 +222,10 @@ namespace InterViewer.Droid
 			detail_main = FindViewById<RelativeLayout>(Resource.Id.detail_main);
 			btnCamera = FindViewById<ImageButton>(Resource.Id.btnCamera);
 			btnPencil = FindViewById<ImageButton>(Resource.Id.btnPencil);
-			PDF_RECORD_DIR = PDF_Type == "Add" ? DateTime.Now.Ticks.ToString() : System.IO.Path.GetFileNameWithoutExtension(document.Name);
+			PDF_RECORD_DIR = PDF_Type == "Add" ? DateTime.Now.Ticks.ToString() : System.IO.Path.GetFileNameWithoutExtension(Doc.Name);
 			if (PDF_Type == "Add")
 			{
-				document.Name = string.Format("{0}.json", PDF_RECORD_DIR);
+				Doc.Name = string.Format("{0}.json", PDF_RECORD_DIR);
 			}
 
 		}
