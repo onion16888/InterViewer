@@ -6,16 +6,17 @@ using System.IO;
 using System.Linq;
 using UIKit;
 using Debug = System.Diagnostics.Debug;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace InterViewer.iOS
 {
-	public partial class FileManagerController : UIViewController
+	public partial class ImageManagerController : UIViewController
 	{
-		const int FIRST_PAGE = 1;
-		FileManagerTableSource source;
+		ImageManagerTableSource source;
 		List<FileListAttributes> listFilePathName;
 		String pathRightNow;
-		public FileManagerController (IntPtr handle) : base (handle)
+		public ImageManagerController (IntPtr handle) : base (handle)
 		{
 		}
 		public override void ViewDidLoad()
@@ -26,10 +27,10 @@ namespace InterViewer.iOS
 			listFilePathName = getFileAndPathList("/");
 			pathRightNow = "/";
 			//警告,FileManagerTableSource,可能造成記憶體問題
-			source = new FileManagerTableSource(listFilePathName);
-			FileManagerTableView.Source = source;
+			source = new ImageManagerTableSource(listFilePathName);
+			ImageManagerTableView.Source = source;
 			source.ItemClick += ListButton_Click;
-			FileManagerTableView.ReloadData();
+			ImageManagerTableView.ReloadData();
 
 			ReturnButton.TouchUpInside += ReturnButton_Click;
 		}
@@ -38,9 +39,6 @@ namespace InterViewer.iOS
 			base.DidReceiveMemoryWarning();
 			// Release any cached data, images, etc that aren't in use.
 		}
-		/// <summary>
-		/// Returns to the previou page
-		/// </summary>
 		private void ReturnButton_Click(object sender, EventArgs e)
 		{
 			char[] seperater = { '/' };
@@ -59,55 +57,45 @@ namespace InterViewer.iOS
 				pathForQuery += "/";
 			}
 			listFilePathName = getFileAndPathList(pathForQuery);
-			source = new FileManagerTableSource(listFilePathName);
-			FileManagerTableView.Source = source;
+			source = new ImageManagerTableSource(listFilePathName);
+			ImageManagerTableView.Source = source;
 			source.ItemClick += ListButton_Click;
-			FileManagerTableView.ReloadData();
+			ImageManagerTableView.ReloadData();
 			ReturnButton.SetTitle("<< " + pathForQuery, UIControlState.Normal);
 			pathRightNow = pathForQuery;
 		}
-		/// <summary>
-		/// The list button clicked
-		/// </summary>
-		/// <returns>The button click.</returns>
-		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		private void ListButton_Click(object sender, FileManagerTableSource.SelectedEventArgs e)
+		private void ListButton_Click(object sender, ImageManagerTableSource.SelectedEventArgs e)
 		{
-			bool isFilePDF = isPDF(e.SelectedName.Name);
+			bool isFilePNG = isPNG(e.SelectedName.Name);
 			string _folderSlides = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/InterView/Sliders";
 			if (e.SelectedName.IsFile == true)
 			{
-				if (isFilePDF == true)
+				if (isFilePNG == true)
 				{
 					if (!File.Exists(_folderSlides))
 						Directory.CreateDirectory(_folderSlides);
+					//PNG copy to destination
 					File.Copy(e.SelectedName.Name, _folderSlides + "/" + getFileNameFromFullFilePath(e.SelectedName.Name));
-					PDFDocument theChoosedPDF = new PDFDocument(e.SelectedName.Name, FIRST_PAGE);
-					theChoosedPDF.SaveAsPng(_folderSlides, getFileNameFromFullFilePath(e.SelectedName.Name).Replace(".pdf",".png"));
-					showAlert("新增範本", e.SelectedName.Name + @" 新增成功!!", @"確定", this);
+					//convert a PDF file to destination
+					convertToPDF(e.SelectedName.Name, _folderSlides + "/" + getFileNameFromFullFilePath(e.SelectedName.Name).Replace("pdf","png"));
+					showAlert("新增影像", e.SelectedName.Name + @" 新增成功!!", @"確定", this);
 				}
 				else
 				{
-					showAlert("新增範本", e.SelectedName.Name + @"不是PDF檔案", @"確定", this);
+					showAlert("新增影像", e.SelectedName.Name + @"不是PNG檔案", @"確定", this);
 				}
 			}
 			else
 			{
 				listFilePathName = getFileAndPathList(e.SelectedName.Name);
-				source = new FileManagerTableSource(listFilePathName);
-				FileManagerTableView.Source = source;
+				source = new ImageManagerTableSource(listFilePathName);
+				ImageManagerTableView.Source = source;
 				source.ItemClick += ListButton_Click;
-				FileManagerTableView.ReloadData();
-				ReturnButton.SetTitle("<< "+e.SelectedName.Name, UIControlState.Normal);
+				ImageManagerTableView.ReloadData();
+				ReturnButton.SetTitle("<< " + e.SelectedName.Name, UIControlState.Normal);
 				pathRightNow = e.SelectedName.Name;
 			}
 		}
-		/// <summary>
-		/// Gets the file and path list.
-		/// </summary>
-		/// <returns>The file and path list.</returns>
-		/// <param name="path">The searching location.Example : "/",is the root place.</param>
 		private List<FileListAttributes> getFileAndPathList(string path)
 		{
 			List<FileListAttributes> theList = new List<FileListAttributes>();
@@ -126,11 +114,6 @@ namespace InterViewer.iOS
 			}
 			return theList;
 		}
-		/// <summary>
-		/// Gets the file list.
-		/// </summary>
-		/// <returns>The file list.</returns>
-		/// <param name="path">The searching location.Example : "/",is the root place</param>
 		private string[] getFileList(string path)
 		{
 			try
@@ -145,11 +128,6 @@ namespace InterViewer.iOS
 				return files.ToArray<String>();
 			}
 		}
-		/// <summary>
-		/// Gets the path list.
-		/// </summary>
-		/// <returns>The path list.</returns>
-		/// <param name="path">The searching location.Example : "/",is the root place</param>
 		private string[] getPathList(string path)
 		{
 			try
@@ -164,34 +142,22 @@ namespace InterViewer.iOS
 				return paths.ToArray<String>();
 			}
 		}
-		/// <summary>
-		/// identifies the file type
-		/// </summary>
-		/// <returns>The pdf.</returns>
-		/// <param name="fullFilePath">Full file path.</param>
 		private bool isPDF(string fullFilePath)
 		{
 			//return (getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' })[getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' }).Length - 1]=="pdf"||getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' })[getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' }).Length - 1] == "PDF" || getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' })[getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' }).Length - 1] == "Pdf")? true : false;
-			return (Path.GetExtension(fullFilePath) == ".pdf" || Path.GetExtension(fullFilePath) == ".PDF" || Path.GetExtension(fullFilePath) == ".Pdf")?true:false;
-			//return false;
+			return (Path.GetExtension(fullFilePath) == ".pdf" || Path.GetExtension(fullFilePath) == ".PDF" || Path.GetExtension(fullFilePath) == ".Pdf") ? true : false;
 		}
-		/// <summary>
-		/// Gets the file name from full file path.
-		/// </summary>
-		/// <returns>The file name from full file path.</returns>
-		/// <param name="fullFilePath">Full file path.</param>
+		private bool isPNG(string fullFilePath)
+		{
+			return (Path.GetExtension(fullFilePath) == ".png" || Path.GetExtension(fullFilePath) == ".PNG" || Path.GetExtension(fullFilePath) == ".Png") ? true : false;
+		}
 		private string getFileNameFromFullFilePath(string fullFilePath)
 		{
-			return fullFilePath.Split(new char[] { '/' })[fullFilePath.Split(new char[] { '/' }).Length-1];
+			return fullFilePath.Split(new char[] { '/' })[fullFilePath.Split(new char[] { '/' }).Length - 1];
 		}
-		/// <summary>
-		/// Gets the path name from full file path.
-		/// </summary>
-		/// <returns>The path name from full file path.</returns>
-		/// <param name="fullFilePath">Full file path.</param>
 		private string getPathNameFromFullFilePath(string fullFilePath)
 		{
-			string[] pathTemp = fullFilePath.Split(new char[]{'/'});
+			string[] pathTemp = fullFilePath.Split(new char[] { '/' });
 			string folderPath = "";
 			if (pathTemp.Length > 2)
 			{
@@ -208,20 +174,21 @@ namespace InterViewer.iOS
 
 			return folderPath;
 		}
-		/// <summary>
-		/// Provide a simple way to show a alert window
-		/// </summary>
-		/// <returns>The alert.</returns>
-		/// <param name="title">Title of the alert window</param>
-		/// <param name="message">Message</param>
-		/// <param name="actionTitle">The text on the check button</param>
-		/// <param name="caller">Base ViewController</param>
+		private void convertToPDF(string pngFileName, string fileToCreate)
+		{
+			iTextSharp.text.Document doc = new iTextSharp.text.Document();
+			PdfWriter.GetInstance(doc, new FileStream(fileToCreate, FileMode.Create));
+			doc.Open();
+			Image png = Image.GetInstance(pngFileName);
+			png.SetAbsolutePosition(0, 0);
+			doc.Add(png);
+			doc.Close();
+		}
 		private void showAlert(string title, string message, string actionTitle, UIViewController caller)
 		{
 			UIAlertController alertController = UIAlertController.Create(title, message, UIAlertControllerStyle.Alert);
 			alertController.AddAction(UIAlertAction.Create(actionTitle, UIAlertActionStyle.Default, null));
 			caller.PresentViewController(alertController, true, null);
 		}
-
 	}
 }
