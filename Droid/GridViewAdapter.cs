@@ -57,6 +57,7 @@ namespace InterViewer.Droid
 			}
 			imageView.SetImageURI (Android.Net.Uri.Parse(fileName[position]));
 
+
 			return imageView;
 		}
 	}
