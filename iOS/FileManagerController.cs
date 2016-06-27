@@ -11,6 +11,7 @@ namespace InterViewer.iOS
 {
 	public partial class FileManagerController : UIViewController
 	{
+		const int FIRST_PAGE = 1;
 		FileManagerTableSource source;
 		List<FileListAttributes> listFilePathName;
 		String pathRightNow;
@@ -73,15 +74,23 @@ namespace InterViewer.iOS
 		/// <param name="e">E.</param>
 		private void ListButton_Click(object sender, FileManagerTableSource.SelectedEventArgs e)
 		{
+			bool isFilePDF = isPDF(e.SelectedName.Name);
+			string _folderSlides = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/InterView/Sliders";
 			if (e.SelectedName.IsFile == true)
 			{
-				//Debug.WriteLine(e.SelectedName.Name);
-				if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/IntervView/Slides"))
-					Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/IntervView/Slides");
-				//File.Copy(e.SelectedName.Name, Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/IntervView/Slides");
-				showAlert("新增範本", e.SelectedName.Name + @" 新增成功!!", @"確定", this);
-				ReturnButton.SetTitle("<< " + e.SelectedName.Name, UIControlState.Normal);
-				pathRightNow = e.SelectedName.Name;
+				if (isFilePDF == true)
+				{
+					if (!File.Exists(_folderSlides))
+						Directory.CreateDirectory(_folderSlides);
+					File.Copy(e.SelectedName.Name, _folderSlides + "/" + getFileNameFromFullFilePath(e.SelectedName.Name));
+					PDFDocument theChoosedPDF = new PDFDocument(e.SelectedName.Name, FIRST_PAGE);
+					theChoosedPDF.SaveAsPng(_folderSlides, getFileNameFromFullFilePath(e.SelectedName.Name).Replace(".pdf",".png"));
+					showAlert("新增範本", e.SelectedName.Name + @" 新增成功!!", @"確定", this);
+				}
+				else
+				{
+					showAlert("新增範本", e.SelectedName.Name + @"不是PDF檔案", @"確定", this);
+				}
 			}
 			else
 			{
@@ -156,6 +165,50 @@ namespace InterViewer.iOS
 			}
 		}
 		/// <summary>
+		/// identifies the file type
+		/// </summary>
+		/// <returns>The pdf.</returns>
+		/// <param name="fullFilePath">Full file path.</param>
+		private bool isPDF(string fullFilePath)
+		{
+			//return (getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' })[getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' }).Length - 1]=="pdf"||getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' })[getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' }).Length - 1] == "PDF" || getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' })[getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' }).Length - 1] == "Pdf")? true : false;
+			return (Path.GetExtension(fullFilePath) == ".pdf" || Path.GetExtension(fullFilePath) == ".PDF" || Path.GetExtension(fullFilePath) == ".Pdf")?true:false;
+			//return false;
+		}
+		/// <summary>
+		/// Gets the file name from full file path.
+		/// </summary>
+		/// <returns>The file name from full file path.</returns>
+		/// <param name="fullFilePath">Full file path.</param>
+		private string getFileNameFromFullFilePath(string fullFilePath)
+		{
+			return fullFilePath.Split(new char[] { '/' })[fullFilePath.Split(new char[] { '/' }).Length-1];
+		}
+		/// <summary>
+		/// Gets the path name from full file path.
+		/// </summary>
+		/// <returns>The path name from full file path.</returns>
+		/// <param name="fullFilePath">Full file path.</param>
+		private string getPathNameFromFullFilePath(string fullFilePath)
+		{
+			string[] pathTemp = fullFilePath.Split(new char[]{'/'});
+			string folderPath = "";
+			if (pathTemp.Length > 2)
+			{
+				for (int i = 1; i < pathTemp.Length - 2; i++)
+				{
+					folderPath += "/";
+					folderPath += pathTemp[i];
+				}
+			}
+			else
+			{
+				folderPath += "/";
+			}
+
+			return folderPath;
+		}
+		/// <summary>
 		/// Provide a simple way to show a alert window
 		/// </summary>
 		/// <returns>The alert.</returns>
@@ -169,5 +222,6 @@ namespace InterViewer.iOS
 			alertController.AddAction(UIAlertAction.Create(actionTitle, UIAlertActionStyle.Default, null));
 			caller.PresentViewController(alertController, true, null);
 		}
+
 	}
 }
