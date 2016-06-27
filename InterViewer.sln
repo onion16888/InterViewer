@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterViewer.iOS.Test", "Int
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterViewer.Droid.Test", "InterViewer.Droid.Test\InterViewer.Droid.Test.csproj", "{894C42D8-553E-4B5A-8BF7-8B2072F3FC76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleMapsUtils", "Xamarin.Android.Maps.Utils\GoogleMapsUtils.csproj", "{BC829F65-B3B0-43C3-A282-FD5497656434}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,5 +83,17 @@ Global
 		{894C42D8-553E-4B5A-8BF7-8B2072F3FC76}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{894C42D8-553E-4B5A-8BF7-8B2072F3FC76}.Debug|iPhone.ActiveCfg = Debug|Any CPU
 		{894C42D8-553E-4B5A-8BF7-8B2072F3FC76}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Release|iPhone.Build.0 = Release|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{BC829F65-B3B0-43C3-A282-FD5497656434}.Debug|iPhone.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal

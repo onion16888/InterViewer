@@ -14,6 +14,9 @@ using Android.Views;
 using Android.Widget;
 using Android.Graphics;
 using Java.IO;
+using Android.Content.Res;
+using Android.Content.PM;
+using Android.Provider;
 
 namespace InterViewer.Droid
 {
@@ -21,21 +24,28 @@ namespace InterViewer.Droid
 	          ,ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
 	public class ListActivity : Activity
 	{
+		//大家共用要傳的物件
 		public static Document Doc { set; get; }
 
+		//新增Image的辨識碼
 		private const int ImagePick = 1000;
+		//新增Pdf的辨識碼
 		private const int PdfPick = 2000;
+		//媒體庫公開目錄
 		Android.Net.Uri uri = Android.Provider.MediaStore.Images.Media.ExternalContentUri;
-		//public string icon=Android.OS.Environment.ExternalStorageDirectory+"/Download/Template";
+		//此App的專用目錄(暫定)
 		public string AppDir = Android.OS.Environment.ExternalStorageDirectory + "/Download/InterView/";
+		//只是一個物件 要存放某個資料夾下的資訊
 		List<FileSystemInfo> visibleThings = new List<FileSystemInfo>();
+		//右側四個Btn
 		Button btnTemplate;
 		Button btnDocuments;
 		Button btnImages;
 		Button btnAdd;
+		//Grid
 		GridView gridviewShow;
+		//轉出縮圖的物件
 		PDFDocument Pdf;
-		Document document;
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
@@ -43,10 +53,15 @@ namespace InterViewer.Droid
 			SetContentView(Resource.Layout.List);
 			//StartActivity(typeof(DetailActivity));
 
-			init();
+			//var sq=System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
 
-			this.DirCheck(new Java.IO.File(AppDir));
-			var ReturnIcons = this.FindTemplateIcon(AppDir+"Slides", visibleThings);
+			//Directory.CreateDirectory(sq +"/ InterView");
+			//var ss = Directory.Exists(sq + "/dog");
+			init();
+			//檢查專用目錄是否存在,不存在就建立
+			this.DirCheck(AppDir);
+
+			List<FileSystemInfo> ReturnIcons = this.FindPngInPath(AppDir+"Slides", visibleThings);
 			List<string> hh=new List<string>(); ;
 
 			var h = from qwe in ReturnIcons select new {qwe.FullName};
@@ -55,20 +70,20 @@ namespace InterViewer.Droid
 				hh.Add(v.FullName);
 			}
 			var cc=hh.Count;
-
-			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindTemplateIcon(AppDir + "Slides", visibleThings)));
+			//預設載入Sliders
+			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
 			gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			//gridviewShow.Adapter = new ImageAdapter(this, AppDir, ReturnIcons);
 
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindTemplateIcon(AppDir + "Slides", visibleThings)));
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
 
 			btnDocuments.Click += (object sender, EventArgs e) =>
 			{
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindTemplateIcon(AppDir + "Documents", visibleThings)));
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Documents", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
 				
@@ -80,7 +95,6 @@ namespace InterViewer.Droid
 
 				StartActivityForResult(Intent.CreateChooser(imageIntent, "選取您要匯入的檔案"), ImagePick);
 			};
-
 			btnAdd.Click += (object sender, EventArgs e) => 
 			{
 				Intent fileintent = new Intent(Intent.ActionGetContent);
@@ -95,11 +109,11 @@ namespace InterViewer.Droid
 			{
 				Toast.MakeText(this, ReturnIcons[args.Position].FullName, ToastLength.Short).Show();
 				//Intent DetailAc = new Intent(this, typeof(DetailActivity));
-				document = new Document();
-				document.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
+
+				Doc.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
 
 				//DetailAc.PutExtra("DocumentObject",document);
-				DetailActivity.document = this.document;
+				DetailActivity.Doc = Doc;
 				StartActivity(typeof(DetailActivity));
 				this.Finish();
 			};
@@ -113,28 +127,83 @@ namespace InterViewer.Droid
 			btnAdd = FindViewById<Button>(Resource.Id.btnAdd);
 			gridviewShow = FindViewById<GridView>(Resource.Id.gridviewShow);
 		}
+
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
 		{
-
-			string SaveImageDir = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/Download/InterView/Image";
+			string SaveImageDir = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/Download/InterView/";
 			base.OnActivityResult(requestCode, resultCode, data);
 
-			//如果使用者要選Image
+			//如果使用者要選Image 且 是要選Image
 			if (resultCode == Result.Ok && requestCode == ImagePick)
 			{
 				if (data.Data != null)
 				{
-					this.DirCheck(new Java.IO.File(SaveImageDir));
+					//再確認一次Appdir是否存在
+					this.DirCheck(SaveImageDir);
 					//var imageView = FindViewById<ImageView> (Resource.Id.myImageView);
 					//imageView.SetImageURI (data.Data);
+					//得到Url物件,送去處理，回傳真實路徑
 					string Source = GetPathToImage(data.Data);
 
-					string Des = System.IO.Path.Combine(SaveImageDir, new Java.IO.File(Source).Name);
+					//將回傳路徑丟進JAVA.IO.FILE利用NAME得到檔案名稱,組出新路徑跟檔案名稱
+					string Des = System.IO.Path.Combine(SaveImageDir+"/Slides", new Java.IO.File(Source).Name);
 					if (new Java.IO.File(Des).Exists())
 					{
-						this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
+						//搬完檔案之後重新載入Slides
+						//this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
+
+						#region 縮圖
+						BitmapFactory.Options options = new BitmapFactory.Options();
+						options.InPreferredConfig = Bitmap.Config.Argb8888;
+						Bitmap bitmap = BitmapFactory.DecodeFile(Source, options);
+
+						Double scale = 1f / 5f;
+
+						Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
+							bitmap,
+							(Int32)(bitmap.Width * scale),
+							(Int32)(bitmap.Height * scale),
+							false
+						);
+
+						Stream output = new FileStream(Des, FileMode.Create);
+						resizedBitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, output);
+						output.Flush();
+						output.Close();
+						#endregion
+
+						PDFImageAdapter.TheImageAdapter = null;
+						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
+						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 					}
-					this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
+					else
+					{
+						PDFImageAdapter.TheImageAdapter = null;
+						//this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
+
+						#region 縮圖
+						BitmapFactory.Options options = new BitmapFactory.Options();
+						options.InPreferredConfig = Bitmap.Config.Argb8888;
+						Bitmap bitmap = BitmapFactory.DecodeFile(Source, options);
+
+						Double scale = 1f / 4f;
+
+						Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
+							bitmap, 
+							(Int32)(bitmap.Width * scale), 
+							(Int32)(bitmap.Height * scale), 
+							false
+						);
+
+						Stream output = new FileStream(Des, FileMode.Create);
+						resizedBitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, output);
+						output.Flush();
+						output.Close();
+						#endregion
+
+						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
+						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+					}
 				}
 				else
 				{
@@ -224,13 +293,12 @@ namespace InterViewer.Droid
 					//ShowAlert ("以完成搬移檔案至DownLoad資料夾下",null);
 				}
 			}
-
 		}
 
 		void WritePngToDir(string Source, string Des)
 		{
 			//把PDF初始化被給予檔案路徑
-			Pdf = new PDFDocument(this, Source);
+			Pdf = new PDFDocument(this, Source,1);
 			//接收第一張Bitmap
 			var BitmapIcon = Pdf.Images[0];
 			//把.PDF轉成.PNG 開啟建檔
@@ -270,38 +338,72 @@ namespace InterViewer.Droid
 				alert.Show();
 			});
 		}
-		private void DirCheck(Java.IO.File dir)
+		private void DirCheck(string AppDir)
 		{
-			if (!dir.Exists())
+			Java.IO.File AppDirCheck = new Java.IO.File(AppDir);
+			bool ap=AppDirCheck.Exists();
+			bool si = Directory.Exists(AppDir + "/Slides");
+			bool dc = Directory.Exists(AppDir + "/Documents");
+			if (!AppDirCheck.Exists()||!Directory.Exists(AppDir + "/Slides")||!Directory.Exists(AppDir + "/Documents"))
 			{
-				dir.Mkdirs();
-				return;
+				AppDirCheck.Mkdirs();
+				Directory.CreateDirectory(AppDir + "/Slides");
+				Directory.CreateDirectory(AppDir + "/Documents");
 			}
 		}
-		private String GetPathToImage(Android.Net.Uri uri)
+		//把Uri拆解成為真實路徑
+		//private String GetPathToImage(Android.Net.Uri uri)
+		//{
+		//	string path = null;
+		//	// The projection contains the columns we want to return in our query.
+		//	string[] projection = new[] { Android.Provider.MediaStore.Images.Media.InterfaceConsts.Data };
+		//	using (ICursor cursor = ManagedQuery(uri, projection, null, null, null))
+		//	{
+		//		if (cursor != null)
+		//		{
+		//			int columnIndex = cursor.GetColumnIndexOrThrow(Android.Provider.MediaStore.Images.Media.InterfaceConsts.Data);
+		//			cursor.MoveToFirst();
+		//			path = cursor.GetString(columnIndex);
+		//		}
+		//	}
+		//	return path;
+		//}
+
+		private string GetPathToImage(Android.Net.Uri uri)
 		{
-			string path = null;
-			// The projection contains the columns we want to return in our query.
-			string[] projection = new[] { Android.Provider.MediaStore.Audio.Media.InterfaceConsts.Data };
-			using (ICursor cursor = ManagedQuery(uri, projection, null, null, null))
+			string doc_id = "";
+			using (var c1 = ContentResolver.Query(uri, null, null, null, null))
 			{
-				if (cursor != null)
-				{
-					int columnIndex = cursor.GetColumnIndexOrThrow(Android.Provider.MediaStore.Audio.Media.InterfaceConsts.Data);
-					cursor.MoveToFirst();
-					path = cursor.GetString(columnIndex);
-				}
+				c1.MoveToFirst();
+				String document_id = c1.GetString(0);
+				doc_id = document_id.Substring(document_id.LastIndexOf(":") + 1);
+			}
+
+			string path = null;
+
+			// The projection contains the columns we want to return in our query.
+			string selection = Android.Provider.MediaStore.Images.Media.InterfaceConsts.Id + " =? ";
+			using (var cursor = ManagedQuery(Android.Provider.MediaStore.Images.Media.ExternalContentUri, null, selection, new string[] { doc_id }, null))
+			{
+				if (cursor == null) return path;
+				var columnIndex = cursor.GetColumnIndexOrThrow(Android.Provider.MediaStore.Images.Media.InterfaceConsts.Data);
+				cursor.MoveToFirst();
+				path = cursor.GetString(columnIndex);
 			}
 			return path;
 		}
-		private List<FileSystemInfo> FindTemplateIcon(string icoopath, List<FileSystemInfo> visibleThings)
+
+		//找到路徑底下的.png
+		private List<FileSystemInfo> FindPngInPath(string icoopath, List<FileSystemInfo> visibleThings)
 		{
 			visibleThings.Clear();
 			DirectoryInfo DirInfo = new DirectoryInfo(icoopath);
 			foreach (var AllFile in DirInfo.GetFileSystemInfos().Where(item => item.Exists))
 			{
 				bool IsPngFile = AllFile.Extension.ToLower().EndsWith(".png");
-				if (IsPngFile)
+				bool IsJpgFile = AllFile.Extension.ToLower().EndsWith(".jpg");
+				System.Console.WriteLine(AllFile.Extension);
+				if (IsPngFile || IsJpgFile)
 				{
 					visibleThings.Add(AllFile);
 				}
@@ -325,6 +427,7 @@ namespace InterViewer.Droid
 
 			return files;
 		}
+
 		private string[] queryFilesName(List<FileSystemInfo> visibleThings)
 		{
 			List<string> hh = new List<string>(); ;
@@ -337,6 +440,7 @@ namespace InterViewer.Droid
 
 			return hh.ToArray();
 		}
+		//以後有機會測試,套這個Adapter會Error
 		public class ImageAdapter : BaseAdapter
 		{
 			List<FileSystemInfo> _visibleThings;

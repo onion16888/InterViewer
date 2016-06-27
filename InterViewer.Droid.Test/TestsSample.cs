@@ -1,11 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
+using InterViewer.Droid;
+using System.IO;
 
 namespace InterViewer.Droid.Test
 {
 	[TestFixture]
 	public class TestsSample
 	{
+		private IIOService ioService;
+
+		private IService service;
+
+		public TestsSample()
+		{
+			ioService = new IOService();
+
+			service = new InterViewerService(ioService);
+		}
 
 		[SetUp]
 		public void Setup() { }
@@ -17,14 +30,22 @@ namespace InterViewer.Droid.Test
 		[Test]
 		public void Pass()
 		{
-			Console.WriteLine("test1");
-			Assert.True(true);
+			var documentDir = ioService.GetDocumentDirectory();
+
+			var appPath = ioService.AppPath;
+			var path = Path.Combine(appPath, "Documents");
+
+
+
+			Console.WriteLine(documentDir);
+			Assert.True(documentDir == path);
 		}
 
 		[Test]
 		public void Fail()
 		{
-			Assert.False(true);
+			var documents = service.GetDocuments();
+			Assert.False(documents.Count > 0);
 		}
 
 		[Test]

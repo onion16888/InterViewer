@@ -538,7 +538,7 @@ namespace InterViewer.iOS
 
 		public void SaveLoadJsonData()
 		{
-			InterViewerService interviewerservice = new InterViewerService();
+			InterViewerService interviewerservice = new InterViewerService(new IOService());
 			interviewerservice.SaveAsJson(Doc);
 		}
 

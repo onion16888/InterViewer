@@ -93,6 +93,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\InterViewer\InterViewer.csproj">
@@ -144,7 +147,6 @@
     <Compile Include="MyCollectionViewCell.designer.cs">
       <DependentUpon>MyCollectionViewCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="InterViewerService.cs" />
     <Compile Include="PDFDocument.cs" />
     <Compile Include="CollectionViewCell.cs" />
     <Compile Include="CollectionViewCell.designer.cs">
@@ -168,6 +170,16 @@
     <Compile Include="AlertViewControllerHelper.cs" />
     <Compile Include="GetPngClass.cs" />
     <Compile Include="PDFUtils.cs" />
+    <Compile Include="ImageManagerController.cs" />
+    <Compile Include="ImageManagerController.designer.cs">
+      <DependentUpon>ImageManagerController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImageManagerTableCell.cs" />
+    <Compile Include="ImageManagerTableCell.designer.cs">
+      <DependentUpon>ImageManagerTableCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImageManagerTableSource.cs" />
+    <Compile Include="IOService.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_note_d.png" />

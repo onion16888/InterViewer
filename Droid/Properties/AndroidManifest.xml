@@ -10,7 +10,7 @@
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<application android:icon="@mipmap/icon" android:label="InterViewer">
+	<application android:icon="@mipmap/icon" android:label="InterViewer" android:largeHeap="true">
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBdwNk2AOb4jytK7SDZwgK2t6xCiwWObJU" />
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 	</application>

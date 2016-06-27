@@ -23,6 +23,7 @@ using CameraAppDemo;
 
 namespace InterViewer.Droid
 {
+	
 	[Activity(Label = "DetailActivity"//, MainLauncher = true
 			  , ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
 
@@ -41,7 +42,7 @@ namespace InterViewer.Droid
 		PDFDocument pdf;
 		private bool openPen { get; set; } = false;
 		int _pageNumber = 0;
-		public static Document document { get; set; }
+		public static Document Doc { get; set; }
 		private float startX, endX = 0;
 
 		ScrollView pdfScrollView;
@@ -157,7 +158,11 @@ namespace InterViewer.Droid
 				}
 			}
 
+<<<<<<< HEAD
 			/*if (!File.Exists(document.Reference))
+=======
+			if (!File.Exists(Doc.Reference))
+>>>>>>> 6f3aba1057f619af993b603ef07354ce7f337997
 			{
 				var alertDialog1 = new AlertDialog.Builder(this).Create();
 				// 設定Title
@@ -172,7 +177,7 @@ namespace InterViewer.Droid
 			}
 			else
 			{
-				pdf = new PDFDocument(this, document.Reference);
+				pdf = new PDFDocument(this, Doc.Reference);
 				var count = pdf.Count;
 
 				iv.SetImageBitmap(pdf.Images[0]);
