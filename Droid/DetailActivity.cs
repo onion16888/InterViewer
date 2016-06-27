@@ -23,7 +23,7 @@ using CameraAppDemo;
 
 namespace InterViewer.Droid
 {
-	[Activity(Label = "DetailActivity", MainLauncher = true
+	[Activity(Label = "DetailActivity"//, MainLauncher = true
 			  , ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
 
 
