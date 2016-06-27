@@ -147,7 +147,6 @@
     <Compile Include="MyCollectionViewCell.designer.cs">
       <DependentUpon>MyCollectionViewCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="InterViewerService.cs" />
     <Compile Include="PDFDocument.cs" />
     <Compile Include="CollectionViewCell.cs" />
     <Compile Include="CollectionViewCell.designer.cs">
@@ -180,6 +179,7 @@
       <DependentUpon>ImageManagerTableCell.cs</DependentUpon>
     </Compile>
     <Compile Include="ImageManagerTableSource.cs" />
+    <Compile Include="IOService.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\icon_note_d.png" />
