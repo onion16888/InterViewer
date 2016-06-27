@@ -52,6 +52,10 @@ namespace InterViewer.Droid
 			SetContentView(Resource.Layout.List);
 			//StartActivity(typeof(DetailActivity));
 
+			//var sq=System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+
+			//Directory.CreateDirectory(sq +"/ InterView");
+			//var ss = Directory.Exists(sq + "/dog");
 			init();
 			//檢查專用目錄是否存在,不存在就建立
 			this.DirCheck(AppDir);
@@ -122,6 +126,7 @@ namespace InterViewer.Droid
 			btnAdd = FindViewById<Button>(Resource.Id.btnAdd);
 			gridviewShow = FindViewById<GridView>(Resource.Id.gridviewShow);
 		}
+
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
 		{
 			string SaveImageDir = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + "/Download/InterView/";
@@ -144,12 +149,18 @@ namespace InterViewer.Droid
 					{
 						//搬完檔案之後重新載入Slides
 						this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
+						PDFImageAdapter.TheImageAdapter = null;
 						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
 						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 					}
-					this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
-					PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
-					gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+					else
+					{
+						PDFImageAdapter.TheImageAdapter = null;
+						this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
+						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
+						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+					}
+
 				}
 				else
 				{
@@ -239,7 +250,6 @@ namespace InterViewer.Droid
 					//ShowAlert ("以完成搬移檔案至DownLoad資料夾下",null);
 				}
 			}
-
 		}
 
 		void WritePngToDir(string Source, string Des)
