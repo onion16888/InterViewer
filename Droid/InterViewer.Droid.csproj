@@ -109,7 +109,6 @@
     <Compile Include="PDFDocument.cs" />
     <Compile Include="GridViewAdapter.cs" />
     <Compile Include="PDFImageAdapter.cs" />
-    <Compile Include="InterViewerService.cs" />
     <Compile Include="MapCanvasView.cs" />
     <Compile Include="MainApplication.cs" />
   </ItemGroup>

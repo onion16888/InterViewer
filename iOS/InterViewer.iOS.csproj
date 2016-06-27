@@ -144,7 +144,6 @@
     <Compile Include="MyCollectionViewCell.designer.cs">
       <DependentUpon>MyCollectionViewCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="InterViewerService.cs" />
     <Compile Include="PDFDocument.cs" />
     <Compile Include="CollectionViewCell.cs" />
     <Compile Include="CollectionViewCell.designer.cs">

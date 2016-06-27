@@ -1,54 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 
-namespace InterViewer.Droid
+namespace InterViewer
 {
 	public class InterViewerService : IService
 	{
-		private const string appName = "InterViewer";
-		private string rootPath;
-		private string appPath;
+		private IIOService ioService;
 
-		public InterViewerService()
+		public InterViewerService(IIOService ioService)
 		{
-			rootPath = Android.OS.Environment.ExternalStorageDirectory.Path;
-			appPath = Path.Combine(rootPath, appName);
-			CheckDirectory(appPath);
-		}
-
-		#region Implementation IService
-
-		public string GetDocumentDirectory()
-		{
-			var dirName = "Documents";
-			return GetPath(dirName);
-		}
-
-		public string GetImageDirectory()
-		{
-			var dirName = "Images";
-			return GetPath(dirName);
-		}
-
-		public string GetPdfDirectory()
-		{
-			var dirName = "Pdf";
-			return GetPath(dirName);
+			this.ioService = ioService;
 		}
 
 		public List<Document> GetDocuments()
 		{
 			var list = new List<Document>();
 
-			var path = GetDocumentDirectory();
-			var files = Directory.EnumerateFiles(path, ".json");
+			var path = ioService.GetDocumentDirectory();
+			var files = ioService.EnumerateFiles(path, ".json");
 
 			foreach (var file in files)
 			{
-				var jsonText = File.ReadAllText(file);
+				var jsonText = ioService.ReadAllText(file);
 
 				var document = JsonConvert.DeserializeObject<Document>(jsonText);
 
@@ -177,6 +153,22 @@ namespace InterViewer.Droid
 
 			#endregion
 
+			list.Add(new Document
+			{
+				Title = "073392470",
+				Name = "20160216163312.json",
+				Latitude = 25.0477376,
+				Longitude = 121.5149763
+			});
+
+			list.Add(new Document
+			{
+				Title = "073392470",
+				Name = "20160216163312.json",
+				Latitude = 24.998855,
+				Longitude = 121.581069
+			});
+
 			return list;
 		}
 
@@ -186,13 +178,13 @@ namespace InterViewer.Droid
 
 			var exts = new[] { "pdf" };
 
-			var path = GetPdfDirectory();
-			var files = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories)
+			var path = ioService.GetDocumentDirectory();
+			var files = ioService.EnumerateFiles(path, "*.*")
 								 .Where(file => exts.Any(x => file.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
 
 			foreach (var filePath in files)
 			{
-				if (File.Exists(filePath))
+				if (ioService.IsFileExists(filePath))
 				{
 					templates.Add(new PdfTemplate
 					{
@@ -214,26 +206,10 @@ namespace InterViewer.Droid
 
 			var json = JsonConvert.SerializeObject(entity, Newtonsoft.Json.Formatting.Indented);
 
-			var path = GetDocumentDirectory();
+			var path = ioService.GetDocumentDirectory();
 			var filename = Path.Combine(path, entity.Name);
-			File.WriteAllText(filename, json);
-		}
-
-		#endregion
-
-		private void CheckDirectory(string path)
-		{
-			if (!Directory.Exists(path))
-			{
-				Directory.CreateDirectory(path);
-			}
-		}
-
-		private string GetPath(string directoryName)
-		{
-			var path = Path.Combine(appPath, directoryName);
-			CheckDirectory(path);
-			return path;
+			ioService.WriteAllText(filename, json);
 		}
 	}
 }
+
