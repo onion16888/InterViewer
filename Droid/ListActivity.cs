@@ -52,6 +52,10 @@ namespace InterViewer.Droid
 			SetContentView(Resource.Layout.List);
 			//StartActivity(typeof(DetailActivity));
 
+			//var sq=System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+
+			//Directory.CreateDirectory(sq +"/ InterView");
+			//var ss = Directory.Exists(sq + "/dog");
 			init();
 			//檢查專用目錄是否存在,不存在就建立
 			this.DirCheck(AppDir);
