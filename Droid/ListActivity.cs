@@ -147,7 +147,13 @@ namespace InterViewer.Droid
 						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
 						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 					}
-					this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
+
+					//this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
+
+					BitmapFactory.Options options = new BitmapFactory.Options();
+					options.InPreferredConfig = Bitmap.Config.Argb8888;
+					Bitmap bitmap = BitmapFactory.DecodeFile(Source, options);
+
 					PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
 					gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 				}
