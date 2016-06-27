@@ -111,6 +111,7 @@
     <Compile Include="PDFImageAdapter.cs" />
     <Compile Include="MapCanvasView.cs" />
     <Compile Include="MainApplication.cs" />
+    <Compile Include="IOService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
