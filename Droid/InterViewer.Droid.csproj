@@ -112,9 +112,9 @@
     <Compile Include="PDFDocument.cs" />
     <Compile Include="GridViewAdapter.cs" />
     <Compile Include="PDFImageAdapter.cs" />
-    <Compile Include="InterViewerService.cs" />
     <Compile Include="MapCanvasView.cs" />
     <Compile Include="MainApplication.cs" />
+    <Compile Include="IOService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
