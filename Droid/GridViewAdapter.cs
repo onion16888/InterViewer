@@ -6,6 +6,8 @@ using Android.Content;
 using Android.App;
 using Android.Widget;
 using Android.OS;
+using Android.Graphics;
+using Android.Provider;
 
 namespace InterViewer.Droid
 {
@@ -50,12 +52,14 @@ namespace InterViewer.Droid
 				imageView.LayoutParameters = new GridView.LayoutParams (125, 125);
 				imageView.SetScaleType (ImageView.ScaleType.CenterCrop);
 				imageView.SetPadding (1, 1, 1, 1);
+
 			} 
 			else 
 			{
 				imageView = (ImageView)convertView;
 			}
-			imageView.SetImageURI (Android.Net.Uri.Parse(fileName[position]));
+
+			imageView.SetImageURI(Android.Net.Uri.Parse(fileName[position]));
 
 
 			return imageView;
