@@ -82,12 +82,9 @@ namespace InterViewer.iOS
 				{
 					if (!File.Exists(_folderSlides))
 						Directory.CreateDirectory(_folderSlides);
-					//File.Copy(e.SelectedName.Name, _folderSlides + getFileNameFromFullFilePath(e.SelectedName.Name));
+					File.Copy(e.SelectedName.Name, _folderSlides + "/" + getFileNameFromFullFilePath(e.SelectedName.Name));
 					PDFDocument theChoosedPDF = new PDFDocument(e.SelectedName.Name, FIRST_PAGE);
-					//theChoosedPDF.Save(_folderSlides + getFileNameFromFullFilePath(e.SelectedName.Name));
-					string tempPath = _folderSlides;
-					theChoosedPDF.SaveAsPng(tempPath);
-					Console.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/InterView/Sliders");
+					theChoosedPDF.SaveAsPng(_folderSlides, getFileNameFromFullFilePath(e.SelectedName.Name).Replace(".pdf",".png"));
 					showAlert("新增範本", e.SelectedName.Name + @" 新增成功!!", @"確定", this);
 				}
 				else
