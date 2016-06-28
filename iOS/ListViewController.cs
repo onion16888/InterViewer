@@ -5,6 +5,7 @@ using CoreGraphics;
 using System.Collections.Generic;
 using Foundation;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace InterViewer.iOS
 {
@@ -53,13 +54,16 @@ namespace InterViewer.iOS
 				});
 			};
 			btnDocuments.TouchUpInside += (object sender, EventArgs e) => 
-
 			{
 				InvokeOnMainThread(() =>
 				{
 					CheckButtonIsSelected(btnDocuments);
+
+					GetJsonFile();
+
 					//取得Documents下的.png送給grid
-					CollectionViewInit(GetDirPngFile("Documents"));
+					CollectionViewInit(GetJsonFile());
+					//CollectionViewInit(GetDirPngFile("Documents"));
 				});
 			};
 			btnImages.TouchUpInside += (object sender, EventArgs e) =>
@@ -107,7 +111,30 @@ namespace InterViewer.iOS
 
 			return result;
 		}
+		//撈出Jimmy底下所有的json
+		public List<string> GetJsonFile()
+		{
+			List<string> DocPng=new List<string>();;
+			var JsonFile = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
 
+			var result = JsonFile.Where(FilePath => Path.GetExtension(FilePath) == ".json");
+
+			var JsonList = result.ToList();
+			foreach(var h in JsonList)
+			{
+				string JsonContent=System.IO.File.ReadAllText(h);
+				var DocJson=JsonConvert.DeserializeObject<Document>(JsonContent);
+
+				var filename = Path.GetFileName(DocJson.Thumbnail);
+				string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/Sliders/" + filename;
+				var Check=File.Exists(path);
+
+				DocPng.Add(path);
+			}
+
+			return DocPng;
+
+		}
 		public override void DidReceiveMemoryWarning()
 		{
 			base.DidReceiveMemoryWarning();
