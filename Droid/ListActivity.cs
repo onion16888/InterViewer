@@ -154,7 +154,7 @@ namespace InterViewer.Droid
 					//var imageView = FindViewById<ImageView> (Resource.Id.myImageView);
 					//imageView.SetImageURI (data.Data);
 					//得到Url物件,送去處理，回傳真實路徑
-					string Source = GetPathToImage(data.Data);
+					string Source = getPathFromUri(this, data.Data);
 
 					//將回傳路徑丟進JAVA.IO.FILE利用NAME得到檔案名稱,組出新路徑跟檔案名稱
 					string Des = System.IO.Path.Combine(SaveImageDir+"/Slides", new Java.IO.File(Source).Name);
