@@ -3,84 +3,73 @@ using Android.Widget;
 using Android.OS;
 using Android.Graphics;
 using System;
-using Com.Artifex.Mupdfdemo;
 using System.IO;
 using System.Collections.Generic;
 using Android.Content;
 using Android.Content.PM;
 
+using Android.Graphics.Pdf;
+
+
 namespace InterViewer.Droid
 {
 	public class PDFDocument
 	{
-		public MuPDFCore Doc;
+		private PdfRenderer renderer;
 
 		public Int32 Count { get; set; }
 
 		public List<Bitmap> Images { get; set; }
 
+		private PdfRenderer.Page currentPage { get; set; }
+
 		public PDFDocument(Context ctxt, String FileName)
 		{
-			Doc = new MuPDFCore(ctxt, FileName);
-			Count = Doc.CountPages();
-			ConvertToImages();
+			LoadPdf(FileName);
+
+			ConvertAllPageToImages();
 		}
 
 		public PDFDocument(Context ctxt, String FileName, int PageIndex)
 		{
-			Doc = new MuPDFCore(ctxt, FileName);
-			Count = Doc.CountPages();
-			ConvertToImages(PageIndex);
+			LoadPdf(FileName);
+
+			Images = new List<Bitmap>() { ConvertSinglePageToImages(PageIndex) };
 		}
 
-		private List<Bitmap> ConvertToImages()
+		private void LoadPdf(String FileName)
+		{
+			Java.IO.File file = new Java.IO.File(FileName);
+
+			renderer = new PdfRenderer(ParcelFileDescriptor.Open(file, ParcelFileMode.ReadOnly));
+
+			Count = renderer.PageCount;
+		}
+
+		private void ConvertAllPageToImages()
 		{
 			Images = new List<Bitmap>();
 
-			if (Doc == null)
+			for (int PageIndex = 0; PageIndex < Count; PageIndex++)
 			{
-				throw new Exception("Could not load document");
+				Images.Add(ConvertSinglePageToImages(PageIndex));
 			}
-			var cookie = new MuPDFCore.Cookie(Doc);
-			for (Int32 i = 0; i < Count; i++)
-			{
-				var size = Doc.GetPageSize(i);
-
-				int pageWidth = (int)size.X;
-				int pageHeight = (int)size.Y;
-
-				int ScreenWidth = pageWidth;
-				int ScreenHeight = pageHeight;
-
-				Bitmap bitmap = Bitmap.CreateBitmap(ScreenWidth, ScreenHeight, Bitmap.Config.Argb8888);
-				Doc.DrawPage(bitmap, i, pageWidth, pageHeight, 0, 0, ScreenWidth, ScreenHeight, cookie);
-				Images.Add(bitmap);
-			}
-			return Images;
 		}
 
-		private List<Bitmap> ConvertToImages(int i)
+		private Bitmap ConvertSinglePageToImages(int PageIndex) 
 		{
-			Images = new List<Bitmap>();
+			currentPage = renderer.OpenPage(PageIndex);
+		
+			Bitmap bitmap = Bitmap.CreateBitmap(currentPage.Width, currentPage.Height, Bitmap.Config.Argb8888);
 
-			if (Doc == null)
-			{
-				throw new Exception("Could not load document");
-			}
-			var cookie = new MuPDFCore.Cookie(Doc);
-				var size = Doc.GetPageSize(i);
+			currentPage.Render(bitmap, null, null, PdfRenderMode.ForDisplay);
 
-				int pageWidth = (int)size.X;
-				int pageHeight = (int)size.Y;
+			currentPage.Close();
 
-				int ScreenWidth = pageWidth;
-				int ScreenHeight = pageHeight;
-
-				Bitmap bitmap = Bitmap.CreateBitmap(ScreenWidth, ScreenHeight, Bitmap.Config.Argb8888);
-				Doc.DrawPage(bitmap, i, pageWidth, pageHeight, 0, 0, ScreenWidth, ScreenHeight, cookie);
-				Images.Add(bitmap);
-			return Images;
+			return bitmap;
 		}
+
+
 	}
 }
 
