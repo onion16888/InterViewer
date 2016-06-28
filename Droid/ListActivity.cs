@@ -244,9 +244,22 @@ namespace InterViewer.Droid
 			{
 				string ForPdfDir = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
 
+				var uris = new List<Android.Net.Uri>();
 				if (data.Data != null)
 				{
-					string Source = getPathFromUri(this, data.Data);
+					uris.Add(data.Data);
+				}
+				else 
+				{
+					for (int i = 0; i < data.ClipData.ItemCount; i++)
+					{
+						uris.Add(data.ClipData.GetItemAt(i).Uri);
+					}
+				}
+
+				foreach (var fileUri in uris)
+				{
+					string Source = getPathFromUri(this, fileUri);
 
 					Java.IO.File FileSou = new Java.IO.File(Source);
 
@@ -254,54 +267,8 @@ namespace InterViewer.Droid
 
 					Java.IO.File FileDes = new Java.IO.File(Des);
 
-					if (FileDes.Exists())
-					{
-						//ShowAlert ("相同檔案名稱"+FileDes.Name+"已存在", null);
-						//先寫入檔案 給來源路徑跟目的地路徑
-						this.copy(FileSou, FileDes);
-						this.WritePngToDir(Source, Des);
-						return;
-					}
-
 					this.copy(FileSou, FileDes);
 					this.WritePngToDir(Source, Des);
-				}
-				//複選
-				else
-				{
-					//string s = Android.OS.Environment.ExternalStorageDirectory.Path + "/Sample/test.txt";
-					//output=new FileOutputStream(Android.OS.Environment.ExternalStorageDirectory.ToString()+"/Sample/test.txt");
-					ClipData clipData = data.ClipData;
-					int count = clipData.ItemCount;
-					if (count > 0)
-					{
-						Android.Net.Uri[] uris = new Android.Net.Uri[count];
-						for (int i = 0; i < count; i++)
-						{
-							uris[i] = clipData.GetItemAt(i).Uri;
-							var SourcePaths = System.IO.Path.GetFullPath(uris[i].Path);
-							var PathArray = SourcePaths.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-							var Source = System.IO.Path.Combine(ForPdfDir, PathArray[1]);
-
-							//FromFileName = new Java.IO.File (Source);
-							var Des = System.IO.Path.Combine(ForPdfDir, "DownLoad/InterView/Slides/" + new Java.IO.File(Source).Name);
-
-							Java.IO.File FileSou = new Java.IO.File(Source);
-							Java.IO.File FileDes = new Java.IO.File(Des);
-
-							if (FileDes.Exists())
-							{
-								//ShowAlert ("相同檔案名"+FileDes.Name+"稱已存在", null);
-								this.copy(FileSou, FileDes);
-								this.WritePngToDir(Source, Des);
-								continue;
-							}
-
-							this.copy(FileSou, FileDes);
-							this.WritePngToDir(Source, Des);
-						}
-					}
-					//ShowAlert ("以完成搬移檔案至DownLoad資料夾下",null);
 				}
 			}
 		}
