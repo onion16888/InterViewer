@@ -23,7 +23,7 @@
                 android:background="#ffffff"
                 android:contentDescription="button_note"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_note" />
+                android:src="@drawable/icon_note_d" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 android:background="#ffffff"
                 android:contentDescription="button_clock"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_clock" />
+                android:src="@drawable/icon_clock_d" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                 android:background="#ffffff"
                 android:contentDescription="button_tag"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_tag" />
+                android:src="@drawable/icon_tag_d" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -68,7 +68,7 @@
                 android:background="#ffffff"
                 android:contentDescription="button_microphone"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_microphone" />
+                android:src="@drawable/icon_microphone_d" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                 android:background="#ffffff"
                 android:contentDescription="button_camera"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_camera" />
+                android:src="@drawable/icon_camera_d" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,7 +106,7 @@
                 android:background="#ffffff"
                 android:contentDescription="button_pencil"
                 android:scaleType="centerInside"
-                android:src="@drawable/icon_pencil" />
+                android:src="@drawable/icon_pencil_d" />
         </LinearLayout>
     </LinearLayout>
     <RelativeLayout
