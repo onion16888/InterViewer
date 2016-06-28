@@ -193,7 +193,9 @@ namespace InterViewer.iOS
 			//var qq = ListViewController.GetDirFileList("PdfFile2");
 
 			Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Sliders2","PdfFile2").Replace("Documents2","PdfFile2");
-			Console.WriteLine(Doc.Reference);
+			Doc.Thumbnail = e.Selected;
+
+			Console.WriteLine(Doc.Reference+Doc.Thumbnail);
 
 			InvokeOnMainThread(() =>
 			{

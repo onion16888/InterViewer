@@ -35,7 +35,7 @@ namespace InterViewer.Droid
 		//媒體庫公開目錄
 		Android.Net.Uri uri = Android.Provider.MediaStore.Images.Media.ExternalContentUri;
 		//此App的專用目錄(暫定)
-		public string AppDir = Android.OS.Environment.ExternalStorageDirectory + "/Download/InterView/";
+		public string AppDir = Android.OS.Environment.ExternalStorageDirectory + "/Download/InterView";
 		//只是一個物件 要存放某個資料夾下的資訊
 		List<FileSystemInfo> visibleThings = new List<FileSystemInfo>();
 		//右側四個Btn
@@ -62,7 +62,7 @@ namespace InterViewer.Droid
 			//檢查專用目錄是否存在,不存在就建立
 			this.DirCheck(AppDir);
 
-			List<FileSystemInfo> ReturnIcons = this.FindPngInPath(AppDir+"Slides", visibleThings);
+			List<FileSystemInfo> ReturnIcons = this.FindPngInPath(AppDir+"/Slides", visibleThings);
 			List<string> hh=new List<string>(); ;
 
 			var h = from qwe in ReturnIcons select new {qwe.FullName};
@@ -72,7 +72,7 @@ namespace InterViewer.Droid
 			}
 			var cc=hh.Count;
 			//預設載入Sliders
-			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
+			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 			gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			//gridviewShow.Adapter = new ImageAdapter(this, AppDir, ReturnIcons);
 			CheckButtonIsSelected(btnTemplate);
@@ -81,7 +81,7 @@ namespace InterViewer.Droid
 			{
 				CheckButtonIsSelected(btnTemplate);
 
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
 
@@ -89,7 +89,7 @@ namespace InterViewer.Droid
 			{
 				CheckButtonIsSelected(btnDocuments);
 
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Documents", visibleThings)));
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Documents", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
 				
@@ -118,11 +118,11 @@ namespace InterViewer.Droid
 				//Intent DetailAc = new Intent(this, typeof(DetailActivity));
 
 				Doc.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
-
+				Doc.Thumbnail = ReturnIcons[args.Position].FullName;
 				//DetailAc.PutExtra("DocumentObject",document);
 				DetailActivity.Doc = Doc;
 				StartActivity(typeof(DetailActivity));
-				this.Finish();
+				//this.Finish();
 			};
 		}
 
@@ -180,7 +180,7 @@ namespace InterViewer.Droid
 						#endregion
 
 						PDFImageAdapter.TheImageAdapter = null;
-						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
+						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 					}
 					else
@@ -208,7 +208,7 @@ namespace InterViewer.Droid
 						output.Close();
 						#endregion
 
-						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
+						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 					}
 				}

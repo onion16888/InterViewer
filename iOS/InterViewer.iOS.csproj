@@ -109,14 +109,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
-    <Folder Include="Resources\InterView\" />
-    <Folder Include="Resources\InterView\Documents2\" />
-    <Folder Include="Resources\InterView\Sliders2\" />
-    <Folder Include="Resources\InterView\PdfFile2\" />
     <Folder Include="Resources\InterView2\" />
     <Folder Include="Resources\InterView2\Documents2\" />
     <Folder Include="Resources\InterView2\Sliders2\" />
     <Folder Include="Resources\InterView2\PdfFile2\" />
+    <Folder Include="Resources\InterView\" />
+    <Folder Include="Resources\InterView\Sliders\" />
+    <Folder Include="Resources\InterView\Documents\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -205,27 +204,27 @@
     <BundleResource Include="Resources\InterView2\Sliders2\icon_clock.png" />
     <BundleResource Include="Resources\InterView2\PdfFile2\icon_camera_d.pdf" />
     <BundleResource Include="Resources\InterView2\PdfFile2\icon_clock.pdf" />
-    <BundleResource Include="Resources\InterView\Documents\Write.txt" />
-    <BundleResource Include="Resources\InterView\Documents\blackberry-128.pdf" />
-    <BundleResource Include="Resources\InterView\Documents\blackberry-128.png" />
-    <BundleResource Include="Resources\InterView\Documents\chrome_browser-128.pdf" />
-    <BundleResource Include="Resources\InterView\Documents\chrome_browser-128.png" />
-    <BundleResource Include="Resources\InterView\Documents\ubuntu-128.pdf" />
-    <BundleResource Include="Resources\InterView\Documents\ubuntu-128.png" />
-    <BundleResource Include="Resources\InterView\Documents\vmware-128.pdf" />
-    <BundleResource Include="Resources\InterView\Documents\vmware-128.png" />
-    <BundleResource Include="Resources\InterView\Documents\windows-128.pdf" />
-    <BundleResource Include="Resources\InterView\Documents\windows-128.png" />
-    <BundleResource Include="Resources\InterView\Sliders\sample_0.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\sample_0.png" />
-    <BundleResource Include="Resources\InterView\Sliders\sample_1.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\sample_1.png" />
-    <BundleResource Include="Resources\InterView\Sliders\sample_2.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\sample_2.png" />
-    <BundleResource Include="Resources\InterView\Sliders\sample_3.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\sample_3.png" />
-    <BundleResource Include="Resources\InterView\Sliders\sample_4.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\sample_4.png" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_CLA_Shooting_Brake_20160509.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_CLA_Shooting_Brake_20160509.png" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_CLS_Shooting_Brake.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_CLS_Shooting_Brake.png" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_G-Class_0516.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_G-Class_0516.png" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_GLC_20160506.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_GLC_20160506.png" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_GLE_20160406.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_GLE_20160406.png" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_Mercedes-AMG_GT.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_Mercedes-AMG_GT.png" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_GL.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_GL.png" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_SL-Class.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_SL-Class.png" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_SLK.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_SLK.png" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_V-ClassVito_20160509.pdf" />
+    <BundleResource Include="Resources\InterView\Sliders\Benz_V-ClassVito_20160509.png" />
+    <BundleResource Include="Resources\InterView\Documents\Benz_CLA_Shooting_Brake_20160509.pdf" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

@@ -149,9 +149,7 @@
     <None Include="InterView\Sliders\sample_3.png" />
     <None Include="InterView\Sliders\sample_4.pdf" />
     <None Include="InterView\Sliders\sample_4.png" />
-    <None Include="Assets\InterView\Documents\.DS_Store" />
     <None Include="Assets\InterView\Documents\Write.txt" />
-    <None Include="Assets\InterView\Sliders\.DS_Store" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
@@ -239,16 +237,16 @@
     <AndroidAsset Include="Assets\InterView\Documents\vmware-128.png" />
     <AndroidAsset Include="Assets\InterView\Documents\windows-128.pdf" />
     <AndroidAsset Include="Assets\InterView\Documents\windows-128.png" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_0.pdf" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_0.png" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_1.pdf" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_1.png" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_2.pdf" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_2.png" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_3.pdf" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_3.png" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_4.pdf" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_4.png" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_0.pdf" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_0.png" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_1.pdf" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_1.png" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_2.pdf" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_2.png" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_3.pdf" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_3.png" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_4.pdf" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_4.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi-v7a\libmupdf.so" />
