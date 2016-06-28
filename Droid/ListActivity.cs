@@ -110,6 +110,7 @@ namespace InterViewer.Droid
 				Toast.MakeText(this, ReturnIcons[args.Position].FullName, ToastLength.Short).Show();
 				//Intent DetailAc = new Intent(this, typeof(DetailActivity));
 
+				Doc.Thumbnail = ReturnIcons[args.Position].FullName;
 				Doc.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
 
 				//DetailAc.PutExtra("DocumentObject",document);
