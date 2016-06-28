@@ -385,7 +385,7 @@ namespace InterViewer.Droid
 		void WritePngToDir(string Source, string Des)
 		{
 			//把PDF初始化被給予檔案路徑
-			Pdf = new PDFDocument(this, Source, 1);
+			Pdf = new PDFDocument(this, Source, 0);
 			//接收第一張Bitmap
 			var BitmapIcon = Pdf.Images[0];
 			//把.PDF轉成.PNG 開啟建檔
