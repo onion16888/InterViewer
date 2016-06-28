@@ -158,7 +158,7 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\Icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\Icon.png" />
     <AndroidResource Include="Resources\layout\List.axml" />
-    <AndroidResource Include="Resources\drawable\sub_command_shape.xml" />
+    <AndroidResource Include="Resources\drawable\sub_command_normal.xml" />
     <AndroidResource Include="Resources\layout\Detail.axml" />
     <AndroidResource Include="Resources\layout\marker_view_layout.axml" />
     <AndroidResource Include="Resources\layout\rectangle_view_layout.axml" />
@@ -190,6 +190,7 @@
     <AndroidResource Include="Resources\drawable\icon_tag_d.png" />
     <AndroidResource Include="Resources\drawable\icon_tag_s.png" />
     <AndroidResource Include="Resources\drawable\icon_tag.png" />
+    <AndroidResource Include="Resources\drawable\sub_command_selected.xml" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="xamandroidsupportv4-18">
