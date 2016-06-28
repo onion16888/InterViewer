@@ -114,7 +114,7 @@ namespace InterViewer.Droid
 			};
 			gridviewShow.ItemClick += (object sender, AdapterView.ItemClickEventArgs args) =>
 			{
-				Toast.MakeText(this, ReturnIcons[args.Position].FullName, ToastLength.Short).Show();
+				Toast.MakeText(this, ReturnIcons[args.Position].FullName, ToastLength.Long).Show();
 				//Intent DetailAc = new Intent(this, typeof(DetailActivity));
 
 				if (System.IO.File.Exists(ReturnIcons[args.Position].FullName.Replace(".png", ".pdf")))
@@ -411,6 +411,7 @@ namespace InterViewer.Droid
 			sou.Close();
 			des.Close();
 		}
+
 		private void ShowAlert(string message, EventHandler<Android.Content.DialogClickEventArgs> positiveButtonClickHandle)
 		{
 
@@ -425,6 +426,7 @@ namespace InterViewer.Droid
 				alert.Show();
 			});
 		}
+
 		//Sid ADD
 		private void DirCheck(string AppDir)
 		{

@@ -92,9 +92,6 @@
     <Reference Include="AndHUD">
       <HintPath>..\Components\AndHUD-1.3.1\lib\android\AndHUD.dll</HintPath>
     </Reference>
-    <Reference Include="Askaiser.Android.MuPDF">
-      <HintPath>..\packages\Askaiser.Android.MuPDF.1.1.0\lib\MonoAndroid410\Askaiser.Android.MuPDF.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\InterViewer\InterViewer.csproj">
@@ -247,9 +244,6 @@
     <AndroidAsset Include="Assets\InterView\Slides\sample_3.png" />
     <AndroidAsset Include="Assets\InterView\Slides\sample_4.pdf" />
     <AndroidAsset Include="Assets\InterView\Slides\sample_4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidNativeLibrary Include="lib\armeabi-v7a\libmupdf.so" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.GooglePlayServices.Basement.29.0.0.2\build\Xamarin.GooglePlayServices.Basement.targets" Condition="Exists('..\packages\Xamarin.GooglePlayServices.Basement.29.0.0.2\build\Xamarin.GooglePlayServices.Basement.targets')" />

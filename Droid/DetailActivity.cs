@@ -88,7 +88,7 @@ namespace InterViewer.Droid
 			SetContentView(Resource.Layout.Detail);
 
 			//test 
-			Doc = new Document();
+			//Doc = new Document();
 
 			Initial();
 
@@ -180,12 +180,12 @@ namespace InterViewer.Droid
 				pdfImageView.SetImageBitmap(pdf.Images[0]);
 
 			}
-			pdf = new PDFDocument(this, pdfFilepath);
+			//pdf = new PDFDocument(this, pdfFilepath);
 			var count = pdf.Count;
 
 
 
-			pdfImageView.SetImageBitmap(pdf.Images[0]);
+			//pdfImageView.SetImageBitmap(pdf.Images[0]);
 
 
 			#region Camera 
@@ -203,19 +203,24 @@ namespace InterViewer.Droid
 			{
 
 				if (e.Event.Action == MotionEventActions.Down)
-				{
-					//drawImageView.SetImageBitmap(draw.getcautbitmap());
+			f		//drawImageView.SetImageBitmap(draw.getcautbitmap());
 					Console.WriteLine("11");
 				}
 			};*/
 			//li.RemoveView(FindViewById(Resource.Id.scrollView1));
-			//iv.SetOnTouchListener(this);
+			pdfImageView.SetOnTouchListener(this);
 
 		}
 
 		private void Initial()
 		{
 			pdfImageView = FindViewById<ImageView>(Resource.Id.pdfImageView);
+
+			//pdfImageView.LayoutParameters = new ViewGroup.LayoutParams(
+			//	ViewGroup.LayoutParams.MatchParent,
+			//	ViewGroup.LayoutParams.MatchParent
+			//);
+
 			pdfScrollView = FindViewById<ScrollView>(Resource.Id.pdfScrollView);
 			pdfContent = FindViewById<RelativeLayout>(Resource.Id.pdfContent);
 
@@ -240,11 +245,11 @@ namespace InterViewer.Droid
 					startX = e.GetX();
 					break;
 				case MotionEventActions.Move:
-					startX = e.GetX();
+					//startX = e.GetX();
 					//path.LineTo(point.X, point.Y);
 					break;
 
-				case MotionEventActions.Cancel:
+				case MotionEventActions.Up:
 					Debug.WriteLine("C");    
 
 					endX = e.GetX();
