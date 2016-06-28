@@ -63,7 +63,7 @@ namespace InterViewer.iOS
 				{
 					CheckButtonIsSelected(btnDocuments);
 
-					GetJsonFile();
+					//GetJsonFile();
 
 					//取得Documents下的.png送給grid
 					CollectionViewInit(GetJsonFile());
@@ -223,13 +223,11 @@ namespace InterViewer.iOS
 		{
 			//var qq = ListViewController.GetDirFileList("PdfFile2");
 
-
-
 			//Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Sliders2","PdfFile2").Replace("Documents2","PdfFile2");
 			//Doc.Thumbnail = e.Selected;
 
 			if (File.Exists(e.Selected.Replace(".png", ".pdf")))
-				Doc.Reference = e.Selected.Replace(".png", ".pdf").Replace("Sliders2", "PdfFile2").Replace("Documents2", "PdfFile2");
+				Doc.Reference = e.Selected.Replace(".png", ".pdf");
 			else
 				Doc.Reference = e.Selected;
 			Doc.Thumbnail = e.Selected;

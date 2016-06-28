@@ -183,7 +183,6 @@ namespace InterViewer.Droid
 						output.Close();
 						#endregion
 
-						PDFImageAdapter.TheImageAdapter = null;
 						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 					}
@@ -273,9 +272,11 @@ namespace InterViewer.Droid
 					this.copy(FileSou, FileDes);
 					this.WritePngToDir(Source, Des);
 				}
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
+				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			}
 		}
-
+		//MaX Add
 		public string getPathFromUri(Context context, Android.Net.Uri uri)
 		{
 			if (uri == null)
@@ -355,7 +356,7 @@ namespace InterViewer.Droid
 			}
 			return null;
 		}
-
+		//MAX ADD
 		public string queryAbsolutePath(Context context, Android.Net.Uri uri)
 		{
 			string[] projection = { MediaStore.MediaColumns.Data};
@@ -380,7 +381,7 @@ namespace InterViewer.Droid
 			return null;
 		}
 
-
+		//Sid ADD
 		void WritePngToDir(string Source, string Des)
 		{
 			//把PDF初始化被給予檔案路徑
@@ -394,7 +395,7 @@ namespace InterViewer.Droid
 			BitmapIcon.Compress(Bitmap.CompressFormat.Png, 100, stream);
 			stream.Close();
 		}
-
+		//Sid ADD
 		public void copy(Java.IO.File src, Java.IO.File dst)
 		{
 			InputStream sou = new FileInputStream(src);
@@ -424,6 +425,7 @@ namespace InterViewer.Droid
 				alert.Show();
 			});
 		}
+		//Sid ADD
 		private void DirCheck(string AppDir)
 		{
 			Java.IO.File AppDirCheck = new Java.IO.File(AppDir);
@@ -454,7 +456,7 @@ namespace InterViewer.Droid
 		//	}
 		//	return path;
 		//}
-
+		//Sid ADD
 		private string GetPathToImage(Android.Net.Uri uri)
 		{
 			string doc_id = "";
@@ -501,6 +503,7 @@ namespace InterViewer.Droid
 		/// </summary>
 		/// <returns>The files name.</returns>
 		/// <param name="FolderName">Folder name. for example,if the source is in "Slides" path folder,set string "Slides" here</param>
+		/// Sean ADD
 		private string[] queryFilesName(string FolderName)
 		{
 			//Debug.WriteLine("files:");
@@ -513,7 +516,7 @@ namespace InterViewer.Droid
 
 			return files;
 		}
-
+		//Sid Add
 		private string[] queryFilesName(List<FileSystemInfo> visibleThings)
 		{
 			List<string> hh = new List<string>(); ;
@@ -527,7 +530,7 @@ namespace InterViewer.Droid
 			return hh.ToArray();
 		}
 
-
+		// ?? Add
 		private void CheckButtonIsSelected(Button button)
 		{
 			Button otherBtn = button.Id == Resource.Id.btnTemplate ? btnDocuments : btnTemplate;
@@ -542,7 +545,7 @@ namespace InterViewer.Droid
 			button.SetBackgroundResource(Resource.Drawable.sub_command_selected);
 		}
 
-		//以後有機會測試,套這個Adapter會Error
+		//以後有機會測試,套這個Adapter會Error Sid ADD
 		public class ImageAdapter : BaseAdapter
 		{
 			List<FileSystemInfo> _visibleThings;

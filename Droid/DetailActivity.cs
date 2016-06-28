@@ -37,7 +37,7 @@ namespace InterViewer.Droid
 		/// Edit, Add
 		/// </summary>
 		/// <value>The type of the pdf.</value>
-		public string PDF_Type { get; set; } = "Add";
+		public static string PDF_Type { get; set; } = "Add";
 		public string PDF_RECORD_DIR = string.Empty;
 		PDFDocument pdf;
 		private bool openPen { get; set; } = false;
