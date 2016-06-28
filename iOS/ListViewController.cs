@@ -5,6 +5,7 @@ using CoreGraphics;
 using System.Collections.Generic;
 using Foundation;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace InterViewer.iOS
 {
@@ -14,7 +15,9 @@ namespace InterViewer.iOS
 
 		private UIColor selectedColor;
 		private UIColor normalColor;
-
+		private const bool _Add = true;
+		private const bool _Edit = false;
+		private bool _AddOrEdit = true;
 		public ListViewController(IntPtr handle) : base(handle)
 		{
 			selectedColor = new UIColor(red: 0.95f, green: 0.52f, blue: 0.00f, alpha: 1.0f);
@@ -45,6 +48,7 @@ namespace InterViewer.iOS
 			//Slider按鈕
 			btnTemplate.TouchUpInside += (object sender, EventArgs e) =>
 			{
+				_AddOrEdit = _Add;
 				InvokeOnMainThread(() =>
 				{
 					CheckButtonIsSelected(btnTemplate);
@@ -53,13 +57,17 @@ namespace InterViewer.iOS
 				});
 			};
 			btnDocuments.TouchUpInside += (object sender, EventArgs e) => 
-
 			{
+				_AddOrEdit = _Edit;
 				InvokeOnMainThread(() =>
 				{
 					CheckButtonIsSelected(btnDocuments);
+
+					//GetJsonFile();
+
 					//取得Documents下的.png送給grid
-					CollectionViewInit(GetDirPngFile("Documents"));
+					CollectionViewInit(GetJsonFile());
+					//CollectionViewInit(GetDirPngFile("Documents"));
 				});
 			};
 			btnImages.TouchUpInside += (object sender, EventArgs e) =>
@@ -107,7 +115,30 @@ namespace InterViewer.iOS
 
 			return result;
 		}
+		//撈出Jimmy底下所有的json
+		public List<string> GetJsonFile()
+		{
+			List<string> DocPng=new List<string>();;
+			var JsonFile = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
 
+			var result = JsonFile.Where(FilePath => Path.GetExtension(FilePath) == ".json");
+
+			var JsonList = result.ToList();
+			foreach(var h in JsonList)
+			{
+				string JsonContent=System.IO.File.ReadAllText(h);
+				var DocJson=JsonConvert.DeserializeObject<Document>(JsonContent);
+
+				var filename = Path.GetFileName(DocJson.Thumbnail);
+				string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/Sliders/" + filename;
+				var Check=File.Exists(path);
+
+				DocPng.Add(path);
+			}
+
+			return DocPng;
+
+		}
 		public override void DidReceiveMemoryWarning()
 		{
 			base.DidReceiveMemoryWarning();
@@ -192,8 +223,16 @@ namespace InterViewer.iOS
 		{
 			//var qq = ListViewController.GetDirFileList("PdfFile2");
 
-			Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Sliders2","PdfFile2").Replace("Documents2","PdfFile2");
-			Console.WriteLine(Doc.Reference);
+			//Doc.Reference = e.Selected.Replace(".png",".pdf").Replace("Sliders2","PdfFile2").Replace("Documents2","PdfFile2");
+			//Doc.Thumbnail = e.Selected;
+
+			if (File.Exists(e.Selected.Replace(".png", ".pdf")))
+				Doc.Reference = e.Selected.Replace(".png", ".pdf");
+			else
+				Doc.Reference = e.Selected;
+			Doc.Thumbnail = e.Selected;
+
+			Console.WriteLine(Doc.Reference + Doc.Thumbnail);
 
 			InvokeOnMainThread(() =>
 			{
@@ -213,7 +252,10 @@ namespace InterViewer.iOS
 						{
 							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
 
-							Detailviewcontroller.PDF_Type = "Add";
+							if(_AddOrEdit==_Add)
+								Detailviewcontroller.PDF_Type = "Add";
+							else
+								Detailviewcontroller.PDF_Type = "Edit";
 						//把這個頁面的值傳給新頁面的屬性
 
 							Detailviewcontroller.Doc = this.Doc;

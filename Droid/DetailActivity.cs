@@ -24,8 +24,7 @@ using CameraAppDemo;
 namespace InterViewer.Droid
 {
 	
-	[Activity(Label = "DetailActivity"
-	          , MainLauncher = true
+	[Activity(Label = "DetailActivity"//, MainLauncher = true
 			  , ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
 
 
@@ -38,21 +37,18 @@ namespace InterViewer.Droid
 		/// Edit, Add
 		/// </summary>
 		/// <value>The type of the pdf.</value>
-		public string PDF_Type { get; set; } = "Add";
+		public static string PDF_Type { get; set; } = "Add";
 		public string PDF_RECORD_DIR = string.Empty;
 		PDFDocument pdf;
 		private bool openPen { get; set; } = false;
 		int _pageNumber = 0;
 		public static Document Doc { get; set; }
 		private float startX, endX = 0;
-		private Bitmap drawRectLine;
-		private string RootPath;
 
 		ScrollView pdfScrollView;
 		RelativeLayout pdfContent;
 		PencilDrawLine drawLineView;
 		RelativeLayout detail_main;
-		RelativeLayout pdfRelativeLayout;
 
 		ImageView pdfImageView;
 
@@ -92,8 +88,8 @@ namespace InterViewer.Droid
 			SetContentView(Resource.Layout.Detail);
 
 			//test 
-			Doc = new Document();
-			RootPath = Android.OS.Environment.ExternalStorageDirectory.Path;
+			//Doc = new Document();
+
 			Initial();
 
 
@@ -113,14 +109,14 @@ namespace InterViewer.Droid
 					drawLineView = new PencilDrawLine(pdfContent.Context);
 					drawImageView.SetBackgroundColor(Color.Blue);
 					pdfContent.AddView(drawLineView);
-					pdfRelativeLayout.AddView(drawImageView);
+					pdfContent.AddView(drawImageView);
 				}
 				else 
 				{
 					openPen = false;
 					//設置透明底色
 					btnPencil.SetBackgroundColor(Color.Transparent);
-				    drawRectLine = drawLineView.GetRectBitmap(drawLineView);
+				    Bitmap drawRectLine = drawLineView.GetRectBitmap(drawLineView);
 
 					drawImageView.SetImageBitmap(drawRectLine);
 					drawImageView.SetX(drawLineView.GetRectLeftX());
@@ -144,7 +140,7 @@ namespace InterViewer.Droid
 						//drawImageView.SetOnTouchListener(new View.IOnTouchListener () =>{ })
 						pdfContent.RemoveView(drawLineView);
 					}
-				    SettingUIView(AttachmentTypeEnum.Paint, null);
+				
 				}
 			
 			};
@@ -184,12 +180,12 @@ namespace InterViewer.Droid
 				pdfImageView.SetImageBitmap(pdf.Images[0]);
 
 			}
-			pdf = new PDFDocument(this, pdfFilepath);
+			//pdf = new PDFDocument(this, pdfFilepath);
 			var count = pdf.Count;
 
 
 
-			pdfImageView.SetImageBitmap(pdf.Images[0]);
+			//pdfImageView.SetImageBitmap(pdf.Images[0]);
 
 
 			#region Camera 
@@ -203,15 +199,14 @@ namespace InterViewer.Droid
 			#endregion
 
 			//drawImageView.SetOnTouchListener(this);
-			//drawImageView.Touch += (object sender, View.TouchEventArgs e) =>
-			//{
+			/*drawImageView.Touch += (object sender, View.TouchEventArgs e) =>
+			{
 
-			//	if (e.Event.Action == MotionEventActions.Down)
-			//	{
-			//		//drawImageView.SetImageBitmap(draw.getcautbitmap());
-			//		Console.WriteLine("11");
-			//	}
-			//};
+				if (e.Event.Action == MotionEventActions.Down)
+			f		//drawImageView.SetImageBitmap(draw.getcautbitmap());
+					Console.WriteLine("11");
+				}
+			};*/
 			//li.RemoveView(FindViewById(Resource.Id.scrollView1));
 			pdfImageView.SetOnTouchListener(this);
 
@@ -220,9 +215,14 @@ namespace InterViewer.Droid
 		private void Initial()
 		{
 			pdfImageView = FindViewById<ImageView>(Resource.Id.pdfImageView);
+
+			//pdfImageView.LayoutParameters = new ViewGroup.LayoutParams(
+			//	ViewGroup.LayoutParams.MatchParent,
+			//	ViewGroup.LayoutParams.MatchParent
+			//);
+
 			pdfScrollView = FindViewById<ScrollView>(Resource.Id.pdfScrollView);
 			pdfContent = FindViewById<RelativeLayout>(Resource.Id.pdfContent);
-			pdfRelativeLayout = FindViewById<RelativeLayout>(Resource.Id.ly1);
 
 			detail_main = FindViewById<RelativeLayout>(Resource.Id.detail_main);
 			btnCamera = FindViewById<ImageButton>(Resource.Id.btnCamera);
@@ -245,11 +245,11 @@ namespace InterViewer.Droid
 					startX = e.GetX();
 					break;
 				case MotionEventActions.Move:
-					startX = e.GetX();
+					//startX = e.GetX();
 					//path.LineTo(point.X, point.Y);
 					break;
 
-				case MotionEventActions.Cancel:
+				case MotionEventActions.Up:
 					Debug.WriteLine("C");    
 
 					endX = e.GetX();
@@ -277,9 +277,6 @@ namespace InterViewer.Droid
 					pdfImageView.SetImageBitmap(pdf.Images[PageNumber]);
 
 					startX = endX = 0;
-
-					LoadingAttachments();
-					SaveLoadJsonData();
 					Debug.WriteLine(PageNumber);
 
 					break;
@@ -340,7 +337,6 @@ namespace InterViewer.Droid
 				cameraImageView.SetX(Math.Abs(pdfContent.Width / 4));
 				cameraImageView.SetY(Math.Abs(pdfContent.Width / 4));
 				pdfContent.AddView(cameraImageView);
-				SettingUIView(AttachmentTypeEnum.Photo, null);
 				CameraApp.bitmap = null;
 			}
 
@@ -351,225 +347,6 @@ namespace InterViewer.Droid
 		#endregion
 
 
-		#region getSaveImageLocalSystemPath
-
-		private string getSaveImageLocalSystemPath(string IdentifierName, AttachmentTypeEnum savetype, Bitmap image)
-		{
-
-
-			string SAVE_FILE_NAME = string.Format("{0}.{1}", IdentifierName, savetype == AttachmentTypeEnum.Photo ? "jpg" : "png");
-			string SYSTEM_FILE_PATH = System.IO.Path.Combine(PDF_RECORD_DIR, SAVE_FILE_NAME);
-			var documentsDirectory = System.IO.Path.Combine(RootPath, PDF_RECORD_DIR);
-			if (!Directory.Exists(documentsDirectory))
-			{
-				Directory.CreateDirectory(documentsDirectory);
-			}
-
-			string saveFilePath = System.IO.Path.Combine(documentsDirectory, SAVE_FILE_NAME);
-
-			SaveBitmapFile(saveFilePath, image);
-			if (!System.IO.File.Exists(saveFilePath))
-			{
-				SYSTEM_FILE_PATH = string.Empty;
-			}
-			return SYSTEM_FILE_PATH;
-		}
-
-		private void SaveBitmapFile(string drawImageFileName, Bitmap image) 
-		{
-
-			var drawSaveDirPath = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
-			var drawLinePNGFilePath = System.IO.Path.Combine(drawSaveDirPath, drawImageFileName);
-			var stream = new FileStream(drawLinePNGFilePath, FileMode.Create);
-			image.Compress(Bitmap.CompressFormat.Png, 100, stream);
-			stream.Close();
-		}
-
-		#endregion
-
-		public void SettingAttachments(Attachment attachment)
-		{
-
-			if (Doc.Attachments == null)
-			{
-				Doc.Attachments = new List<Attachment>();
-				Doc.Attachments.Add(attachment);
-			}
-			else
-			{
-				var editAttachment = Doc.Attachments.Where(x => x.Name == attachment.Name).SingleOrDefault();
-				if (editAttachment == null)
-				{
-					Doc.Attachments.Add(attachment);
-				}
-				else
-				{
-					editAttachment = attachment;
-				}
-			}
-
-		}
-
-		public void LoadingAttachments()
-		{
-			if (Doc.Attachments != null)
-			{
-				List<Attachment> attachments = Doc.Attachments.Where(x => x.PageIndex == PageNumber).ToList();
-				foreach (Attachment attachment in attachments)
-				{
-
-					switch (attachment.Type)
-					{
-						case AttachmentTypeEnum.Note:
-							SettingUIView(AttachmentTypeEnum.Note, attachment);
-							break;
-						case AttachmentTypeEnum.Paint:
-							SettingUIView(AttachmentTypeEnum.Paint, attachment);
-							break;
-						case AttachmentTypeEnum.Photo:
-							SettingUIView(AttachmentTypeEnum.Photo, attachment);
-							break;
-
-					}
-
-				}
-			}
-
-		}
-
-		public void SettingUIView(AttachmentTypeEnum type, Attachment attachment = null)
-		{
-			var centerPoint = new LeftTopPoint();
-			//CGRect CGRectFrame = new CGRect();
-			if (attachment != null)
-			{
-				centerPoint.LeftX = attachment.X;
-				centerPoint.TopY = attachment.Y;
-				//CGRectFrame = new CGRect(attachment.X, attachment.Y, attachment.Width, attachment.Height);
-			}
-			string identifier = DateTime.Now.Ticks.ToString();
-			/*if (type == AttachmentTypeEnum.Note)
-			{
-				UITextView textview = new UITextView();
-				textview.Text = attachment == null ? string.Empty : attachment.Path;
-				textview.AccessibilityIdentifier = attachment == null ? identifier : attachment.Name;
-				textview.BackgroundColor = UIColor.FromRGB(242, 255, 0);
-				textview.Frame = attachment == null ? new CoreGraphics.CGRect(scrollView.Center.X, scrollView.Center.Y, 100, 100) : CGRectFrame;
-				//textview.Center = attachment == null ? new CGPoint(scrollView.Center.X, scrollView.Center.Y) : centerPoint;
-				textview.Font = UIFont.FromName("Helvetica-Bold", 30f);
-				UIPanGestureRecognizer panGesture = SettingUIPanGesture(textview, UIType.UITextView);
-				textview.UserInteractionEnabled = true;
-				textview.AddGestureRecognizer(panGesture);
-
-				textview.Ended += delegate
-				{
-					var editAttachment = Doc.Attachments.Where(x => x.Name == textview.AccessibilityIdentifier).SingleOrDefault();
-					editAttachment.Path = textview.Text;
-					SettingAttachments(editAttachment);
-				};
-				//NoteList.Add(Identifier, textNote);
-				this.scrollView.InsertSubview(textview, 1);
-
-				if (attachment == null)
-				{
-					Attachment newattachment = new Attachment();
-					newattachment.Name = identifier;
-					newattachment.PageIndex = PageNumber;
-					newattachment.Path = textview.Text;
-					newattachment.Type = AttachmentTypeEnum.Note;
-					newattachment.Width = textview.Frame.Width;
-					newattachment.Height = textview.Frame.Height;
-					newattachment.X = textview.Frame.Location.X;
-					newattachment.Y = textview.Frame.Location.Y;
-					SettingAttachments(newattachment);
-				}
-
-
-			}*/
-
-			if (type == AttachmentTypeEnum.Paint || type == AttachmentTypeEnum.Photo)
-			{
-				string systemPath = string.Empty;
-				if (type == AttachmentTypeEnum.Paint && attachment == null)
-				{
-					//newimage.BackgroundColor = UIColor.Clear;
-					systemPath = getSaveImageLocalSystemPath(identifier, AttachmentTypeEnum.Paint, drawRectLine);
-				}
-				else if (type == AttachmentTypeEnum.Photo && attachment == null)
-				{
-					//CameraCapture.IsOpenCamera = false;
-					systemPath = getSaveImageLocalSystemPath(identifier, AttachmentTypeEnum.Photo, CameraApp.bitmap);
-				}
-				else
-				{
-					systemPath = attachment.Path;
-				}
-
-				string filePath = System.IO.Path.Combine(RootPath, attachment == null ? systemPath : attachment.Path);
-
-				Java.IO.File DrawLinePNGFileIO = new Java.IO.File(filePath);
-				if (DrawLinePNGFileIO.Exists())
-				{
-					Bitmap savePNG = BitmapFactory.DecodeFile(filePath);
-					var imageView = new ImageView(this);
-					imageView.SetImageBitmap(savePNG);
-					imageView.SetBackgroundColor(Color.Yellow);
-					imageView.SetX((float)centerPoint.LeftX);
-					imageView.SetY((float)centerPoint.TopY);
-
-					pdfContent.RemoveView(drawLineView);
-				
-
-				//imageView.AccessibilityIdentifier = attachment == null ? identifier : attachment.Name;
-				//UIPanGestureRecognizer panGesture = SettingUIPanGesture(imageView, UIType.UIImageView);
-				//if (type == AttachmentTypeEnum.Paint && attachment == null)
-				//{
-				//	imageView.Frame = new CGRect(
-				//		path.BoundingBox.Location,
-				//		path.BoundingBox.Size);
-				//}
-				//else
-				//{
-				//	imageView.Frame = attachment == null ? new CGRect(scrollView.Center.X, scrollView.Center.Y, 225, 225) : CGRectFrame;
-				//}
-
-				//imageView.UserInteractionEnabled = true;
-				//imageView.AddGestureRecognizer(panGesture);
-
-				  pdfRelativeLayout.AddView(imageView);
-					if (attachment == null)
-					{
-						Attachment newattachment = new Attachment();
-						newattachment.Name = identifier;
-						newattachment.PageIndex = PageNumber;
-						newattachment.Path = systemPath;
-						newattachment.Type = type;
-						//newattachment.Width = imageView.Frame.Width;
-						//newattachment.Height = imageView.Frame.Height;
-						newattachment.X = imageView.GetX();
-						newattachment.Y = imageView.GetY();
-						SettingAttachments(newattachment);
-					}
-				}
-			}
-		}
-
-		public void SaveLoadJsonData()
-		{
-			InterViewerService interviewerservice = new InterViewerService(new IOService());
-			interviewerservice.SaveAsJson(Doc);
-		}
-
-		public class LeftTopPoint
-		{
-			public double LeftX { get; set; }
-			public double TopY { get; set; }
-
-			public LeftTopPoint()
-			{
-			}
-		}
 	}
-
 }
 
