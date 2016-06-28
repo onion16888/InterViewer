@@ -385,25 +385,29 @@ namespace InterViewer.iOS
 
 		public void LoadingAttachments()
 		{
-			List<Attachment> attachments = Doc.Attachments.Where(x => x.PageIndex == PageNumber).ToList();
-			foreach (Attachment attachment in attachments)
+			if (Doc.Attachments != null)
 			{
-				
-				switch (attachment.Type)
+				List<Attachment> attachments = Doc.Attachments.Where(x => x.PageIndex == PageNumber).ToList();
+				foreach (Attachment attachment in attachments)
 				{
-					case AttachmentTypeEnum.Note:
-						SettingUIView(AttachmentTypeEnum.Note, attachment);
-						break;
-					case AttachmentTypeEnum.Paint:
-						SettingUIView(AttachmentTypeEnum.Paint, attachment);
-						break;
-					case AttachmentTypeEnum.Photo:
-						SettingUIView(AttachmentTypeEnum.Photo, attachment);
-						break;
+
+					switch (attachment.Type)
+					{
+						case AttachmentTypeEnum.Note:
+							SettingUIView(AttachmentTypeEnum.Note, attachment);
+							break;
+						case AttachmentTypeEnum.Paint:
+							SettingUIView(AttachmentTypeEnum.Paint, attachment);
+							break;
+						case AttachmentTypeEnum.Photo:
+							SettingUIView(AttachmentTypeEnum.Photo, attachment);
+							break;
+
+					}
 
 				}
-			
 			}
+
 		}
 
 
@@ -534,7 +538,7 @@ namespace InterViewer.iOS
 
 		public void SaveLoadJsonData()
 		{
-			InterViewerService interviewerservice = new InterViewerService();
+			InterViewerService interviewerservice = new InterViewerService(new IOService());
 			interviewerservice.SaveAsJson(Doc);
 		}
 

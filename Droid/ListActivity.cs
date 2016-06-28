@@ -17,6 +17,7 @@ using Java.IO;
 using Android.Content.Res;
 using Android.Content.PM;
 using Android.Provider;
+using Java.Lang;
 
 namespace InterViewer.Droid
 {
@@ -74,15 +75,20 @@ namespace InterViewer.Droid
 			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
 			gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			//gridviewShow.Adapter = new ImageAdapter(this, AppDir, ReturnIcons);
+			CheckButtonIsSelected(btnTemplate);
 
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
+				CheckButtonIsSelected(btnTemplate);
+
 				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
 
 			btnDocuments.Click += (object sender, EventArgs e) =>
 			{
+				CheckButtonIsSelected(btnDocuments);
+
 				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Documents", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
@@ -101,6 +107,7 @@ namespace InterViewer.Droid
 				//fileintent.SetType("gagt/sdf");
 				fileintent.SetType("application/pdf");
 				fileintent.PutExtra(Intent.ExtraAllowMultiple, true);
+				fileintent.PutExtra(Intent.ExtraLocalOnly, true);
 
 				Intent destIntent = Intent.CreateChooser(fileintent, "選取Pdf");
 				StartActivityForResult(destIntent, PdfPick);
@@ -158,7 +165,7 @@ namespace InterViewer.Droid
 						options.InPreferredConfig = Bitmap.Config.Argb8888;
 						Bitmap bitmap = BitmapFactory.DecodeFile(Source, options);
 
-						Double scale = 1f / 4f;
+						double scale = 1f / 5f;
 
 						Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
 							bitmap,
@@ -187,7 +194,7 @@ namespace InterViewer.Droid
 						options.InPreferredConfig = Bitmap.Config.Argb8888;
 						Bitmap bitmap = BitmapFactory.DecodeFile(Source, options);
 
-						Double scale = 1f / 4f;
+						double scale = 1f / 4f;
 
 						Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
 							bitmap, 
@@ -236,14 +243,17 @@ namespace InterViewer.Droid
 			if (resultCode == Result.Ok && requestCode == PdfPick)
 			{
 				string ForPdfDir = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+
 				if (data.Data != null)
 				{
-					var SourcePath = System.Net.WebUtility.UrlDecode(data.Data.ToString());
-					var PathArray = SourcePath.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-					var Source = System.IO.Path.Combine(ForPdfDir, PathArray[2]);
-					var Des = System.IO.Path.Combine(ForPdfDir, "DownLoad/InterView/Slides/" + new Java.IO.File(Source).Name);
+					string Source = getPathFromUri(this, data.Data);
+
 					Java.IO.File FileSou = new Java.IO.File(Source);
+
+					string Des = System.IO.Path.Combine(ForPdfDir, "DownLoad/InterView/Slides/" + FileSou.Name);
+
 					Java.IO.File FileDes = new Java.IO.File(Des);
+
 					if (FileDes.Exists())
 					{
 						//ShowAlert ("相同檔案名稱"+FileDes.Name+"已存在", null);
@@ -296,10 +306,115 @@ namespace InterViewer.Droid
 			}
 		}
 
+		public string getPathFromUri(Context context, Android.Net.Uri uri)
+		{
+			if (uri == null)
+			{
+				return null;
+			}
+			// 判斷是否為Android 4.4之後的版本
+			bool after44 = (Int32)Build.VERSION.SdkInt >= 19;
+
+			if (after44 && DocumentsContract.IsDocumentUri(context, uri))
+			{
+				// 如果是Android 4.4之後的版本，而且屬於文件URI
+				string authority = uri.Authority;
+
+				// 判斷Authority是否為本地端檔案所使用的
+				if ("com.android.externalstorage.documents".Equals(authority))
+				{
+					// 外部儲存空間
+					string docId = DocumentsContract.GetDocumentId(uri);
+					string[] divide = docId.Split(':');
+					string type = divide[0];
+
+					if ("primary".Equals(type))
+					{
+						return Android.OS.Environment.ExternalStorageDirectory + "/" + divide[1];
+					}
+				}
+				else if ("com.android.providers.downloads.documents".Equals(authority))
+				{
+					// 下載目錄
+					string docId = DocumentsContract.GetDocumentId(uri);
+					Android.Net.Uri downloadUri = ContentUris.WithAppendedId(Android.Net.Uri.Parse("content://downloads/public_downloads"), Long.ParseLong(docId));
+					return queryAbsolutePath(context, downloadUri);
+				}
+				else if ("com.android.providers.media.documents".Equals(authority))
+				{
+					// 圖片、影音檔案
+					string docId = DocumentsContract.GetDocumentId(uri);
+					string[] divide = docId.Split(':');
+					string type = divide[0];
+					Android.Net.Uri mediaUri = null;
+					if ("image".Equals(type))
+					{
+						mediaUri = MediaStore.Images.Media.ExternalContentUri;
+					}
+					else if ("video".Equals(type))
+					{
+						mediaUri = MediaStore.Video.Media.ExternalContentUri;
+					}
+					else if ("audio".Equals(type))
+					{
+						mediaUri = MediaStore.Audio.Media.ExternalContentUri;
+					}
+					else {
+						return null;
+					}
+					mediaUri = ContentUris.WithAppendedId(mediaUri, Long.ParseLong(divide[1]));
+					return queryAbsolutePath(context, mediaUri);
+				}
+			}
+			else {
+				// 如果是一般的URI
+				string scheme = uri.Scheme;
+				string path = null;
+				if ("content".Equals(scheme))
+				{
+					// 內容URI
+					path = queryAbsolutePath(context, uri);
+				}
+				else if ("file".Equals(scheme))
+				{
+					// 檔案URI
+					path = uri.Path;
+				}
+				return path;
+				//return createFileObjFromPath(path, mustCanRead);
+			}
+			return null;
+		}
+
+		public string queryAbsolutePath(Context context, Android.Net.Uri uri)
+		{
+			string[] projection = { MediaStore.MediaColumns.Data};
+			ICursor cursor = null;
+			try
+			{
+				cursor = context.ContentResolver.Query(uri, projection, null, null, null);
+				if (cursor != null && cursor.MoveToFirst())
+				{
+					int index = cursor.GetColumnIndexOrThrow(MediaStore.MediaColumns.Data);
+					return cursor.GetString(index);
+				}
+			}
+			catch (Java.Lang.Exception ex)
+			{
+				ex.PrintStackTrace();
+				if (cursor != null)
+				{
+					cursor.Close();
+				}
+			}
+			return null;
+		}
+
+
 		void WritePngToDir(string Source, string Des)
 		{
 			//把PDF初始化被給予檔案路徑
-			Pdf = new PDFDocument(this, Source,1);
+			Pdf = new PDFDocument(this, Source, 1);
 			//接收第一張Bitmap
 			var BitmapIcon = Pdf.Images[0];
 			//把.PDF轉成.PNG 開啟建檔
@@ -376,7 +491,7 @@ namespace InterViewer.Droid
 			using (var c1 = ContentResolver.Query(uri, null, null, null, null))
 			{
 				c1.MoveToFirst();
-				String document_id = c1.GetString(0);
+				string document_id = c1.GetString(0);
 				doc_id = document_id.Substring(document_id.LastIndexOf(":") + 1);
 			}
 
@@ -441,6 +556,22 @@ namespace InterViewer.Droid
 
 			return hh.ToArray();
 		}
+
+
+		private void CheckButtonIsSelected(Button button)
+		{
+			Button otherBtn = button.Id == Resource.Id.btnTemplate ? btnDocuments : btnTemplate;
+
+			if (otherBtn.Selected)
+			{
+				otherBtn.Selected = false;
+				otherBtn.SetBackgroundResource(Resource.Drawable.sub_command_normal);
+			}
+
+			button.Selected = true;
+			button.SetBackgroundResource(Resource.Drawable.sub_command_selected);
+		}
+
 		//以後有機會測試,套這個Adapter會Error
 		public class ImageAdapter : BaseAdapter
 		{

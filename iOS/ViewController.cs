@@ -229,7 +229,7 @@ namespace InterViewer.iOS
 
 		public void AddAnnotations()
 		{
-			InterViewerService DocumentManager = new InterViewerService();
+			InterViewerService DocumentManager = new InterViewerService(new IOService());
 
 			List<Document> DocumentList = DocumentManager.GetDocumentsForMap();
 

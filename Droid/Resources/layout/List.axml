@@ -138,18 +138,18 @@
                 android:id="@+id/LinearGridview"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:orientation="vertical"
                 android:layout_alignParentLeft="true"
-                android:layout_weight="5">
+                android:layout_weight="5"
+                android:orientation="vertical">
                 <GridView
                     android:id="@+id/gridviewShow"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:columnWidth="90dp"
-                    android:numColumns="auto_fit"
-                    android:verticalSpacing="10dp"
                     android:horizontalSpacing="10dp"
-                    android:stretchMode="columnWidth" />
+                    android:numColumns="auto_fit"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="10dp" />
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -166,12 +166,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.0"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:gravity="center_vertical">
                 <Button
                     android:id="@+id/btnTemplate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/sub_command_shape"
+                    android:background="@drawable/sub_command_normal"
                     android:text="範本"
                     android:textColor="#ffffff"
                     android:textSize="20sp" />
@@ -180,12 +182,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.0"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:gravity="center_vertical">
                 <Button
                     android:id="@+id/btnDocuments"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/sub_command_shape"
+                    android:background="@drawable/sub_command_normal"
                     android:text="文件"
                     android:textColor="#ffffff"
                     android:textSize="20sp" />
@@ -194,12 +198,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.0"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:gravity="center_vertical">
                 <Button
                     android:id="@+id/btnImages"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/sub_command_shape"
+                    android:background="@drawable/sub_command_normal"
                     android:text="圖片"
                     android:textColor="#ffffff"
                     android:textSize="20sp" />
@@ -208,12 +214,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.0"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:gravity="center_vertical">
                 <Button
                     android:id="@+id/btnAdd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/sub_command_shape"
+                    android:background="@drawable/sub_command_normal"
                     android:text="＋"
                     android:textColor="#ffffff"
                     android:textSize="20sp" />
