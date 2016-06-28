@@ -75,15 +75,20 @@ namespace InterViewer.Droid
 			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
 			gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			//gridviewShow.Adapter = new ImageAdapter(this, AppDir, ReturnIcons);
+			CheckButtonIsSelected(btnTemplate);
 
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
+				CheckButtonIsSelected(btnTemplate);
+
 				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
 
 			btnDocuments.Click += (object sender, EventArgs e) =>
 			{
+				CheckButtonIsSelected(btnDocuments);
+
 				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Documents", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
@@ -550,6 +555,22 @@ namespace InterViewer.Droid
 
 			return hh.ToArray();
 		}
+
+
+		private void CheckButtonIsSelected(Button button)
+		{
+			Button otherBtn = button.Id == Resource.Id.btnTemplate ? btnDocuments : btnTemplate;
+
+			if (otherBtn.Selected)
+			{
+				otherBtn.Selected = false;
+				otherBtn.SetBackgroundResource(Resource.Drawable.sub_command_normal);
+			}
+
+			button.Selected = true;
+			button.SetBackgroundResource(Resource.Drawable.sub_command_selected);
+		}
+
 		//以後有機會測試,套這個Adapter會Error
 		public class ImageAdapter : BaseAdapter
 		{
