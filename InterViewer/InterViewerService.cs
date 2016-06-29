@@ -20,18 +20,43 @@ namespace InterViewer
 			var list = new List<Document>();
 
 			var path = ioService.GetDocumentDirectory();
-			var files = ioService.EnumerateFiles(path, ".json");
+
+			var files = ioService.EnumerateFiles(path, "*.json");
 
 			foreach (var file in files)
 			{
 				var jsonText = ioService.ReadAllText(file);
 
-				var document = JsonConvert.DeserializeObject<Document>(jsonText);
+				var document = ioService.FixDocument(JsonConvert.DeserializeObject<Document>(jsonText));
 
 				list.Add(document);
 			}
 
 			return list;
+		}
+
+		/// <summary>
+		/// 傳入經緯度，計算文件距離後，由小到大排序後回傳文件
+		/// </summary>
+		/// <returns>The documents.</returns>
+		/// <param name="latitude">經度</param>
+		/// <param name="longitude">緯度</param>
+		public List<Document> GetDocumentsOrderBy(double latitude, double longitude)
+		{
+			var documents = GetDocuments();
+			var dict = new Dictionary<Document, double>();
+
+			foreach (var item in documents)
+			{
+				var latitudeDiff = latitude - item.Latitude;
+				var longitudeDiff = longitude - item.Longitude;
+				var distance = Math.Sqrt(Math.Abs(latitudeDiff * latitudeDiff + longitudeDiff * longitudeDiff));
+				dict.Add(item, distance);
+			}
+
+			return dict.OrderBy(x => x.Value)
+					   .Select(x => x.Key)
+					   .ToList();
 		}
 
 		public List<Document> GetDocumentsForMap()
@@ -209,6 +234,49 @@ namespace InterViewer
 			var path = ioService.GetDocumentDirectory();
 			var filename = Path.Combine(path, entity.Name);
 			ioService.WriteAllText(filename, json);
+		}
+
+		public Document CopyAttachment(Document newDoc, Document oldDoc)
+		{
+			var attachmentDir = DateTime.Now.Ticks.ToString();
+			newDoc.Name = string.Format("{0}.json", attachmentDir);
+
+			if (newDoc.Attachments == null)
+			{
+				newDoc.Attachments = new List<Attachment>();
+			}
+
+			foreach (var item in oldDoc.Attachments)
+			{
+				if (!string.IsNullOrWhiteSpace(item.Path))
+				{
+					var sourceFileName = item.Path;
+					var fileName = Path.GetFileName(item.Path);
+					var destFileName = Path.Combine(attachmentDir, fileName);
+					item.Path = destFileName;
+
+					#region 實際複製檔案
+
+					var rootPath = ioService.GetDocumentDirectory();
+					if (!sourceFileName.StartsWith(rootPath, StringComparison.Ordinal))
+					{
+						sourceFileName = Path.Combine(rootPath, sourceFileName);
+					}
+
+					if (!destFileName.StartsWith(rootPath, StringComparison.Ordinal))
+					{
+						ioService.CheckDirectory(Path.Combine(rootPath, attachmentDir));
+						destFileName = Path.Combine(rootPath, destFileName);
+					}
+					ioService.CopyFile(sourceFileName, destFileName);
+
+					#endregion
+				}
+
+				newDoc.Attachments.Add(item);
+			}
+
+			return newDoc;
 		}
 	}
 }

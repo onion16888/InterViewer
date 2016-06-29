@@ -13,10 +13,18 @@ namespace InterViewer.iOS
 	partial class CollectionViewCell
 	{
 		[Outlet]
+		UIKit.UIImageView ImageView { get; set; }
+
+		[Outlet]
 		UIKit.UILabel Label { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (ImageView != null) {
+				ImageView.Dispose ();
+				ImageView = null;
+			}
+
 			if (Label != null) {
 				Label.Dispose ();
 				Label = null;
