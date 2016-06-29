@@ -25,9 +25,16 @@ namespace InterViewer.Droid
 
 		public PDFDocument(Context ctxt, String FileName)
 		{
-			LoadPdf(FileName);
+			if (System.IO.Path.GetExtension(FileName) == ".pdf")
+			{
+				LoadPdf(FileName);
 
-			ConvertAllPageToImages();
+				ConvertAllPageToImages();
+			}
+			else
+			{
+				LoadImage(FileName);
+			}
 		}
 
 		public PDFDocument(Context ctxt, String FileName, int PageIndex)
@@ -44,6 +51,15 @@ namespace InterViewer.Droid
 			renderer = new PdfRenderer(ParcelFileDescriptor.Open(file, ParcelFileMode.ReadOnly));
 
 			Count = renderer.PageCount;
+
+		}
+
+		private void LoadImage(String FileName)
+		{
+			Images = new List<Bitmap>();
+			Bitmap imageBackground = BitmapFactory.DecodeFile(FileName);
+			Images.Add(imageBackground);
+			Count = 1;
 		}
 
 		private void ConvertAllPageToImages()
