@@ -119,19 +119,15 @@ namespace InterViewer.iOS
 		public List<string> GetJsonFile()
 		{
 			List<string> DocPng=new List<string>();;
-			var JsonFile = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
-
-			var result = JsonFile.Where(FilePath => Path.GetExtension(FilePath) == ".json");
-
-			var JsonList = result.ToList();
+			List<string> JsonList = GetJsonLFileList();
 			foreach(var h in JsonList)
 			{
 				string JsonContent=System.IO.File.ReadAllText(h);
-				var DocJson=JsonConvert.DeserializeObject<Document>(JsonContent);
+				Document DocJson=JsonConvert.DeserializeObject<Document>(JsonContent);
 
-				var filename = Path.GetFileName(DocJson.Thumbnail);
-				string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/Sliders/" + filename;
-				var Check=File.Exists(path);
+				String filename = Path.GetFileName(DocJson.Thumbnail);
+				String path = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/Sliders/" + filename;
+				Boolean Check=File.Exists(path);
 
 				DocPng.Add(path);
 			}
@@ -253,12 +249,28 @@ namespace InterViewer.iOS
 							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
 
 							if(_AddOrEdit==_Add)
+							{
 								Detailviewcontroller.PDF_Type = "Add";
+								Detailviewcontroller.Doc = this.Doc;
+							}
 							else
+							{
 								Detailviewcontroller.PDF_Type = "Edit";
-						//把這個頁面的值傳給新頁面的屬性
+								string qwe = Doc.Thumbnail;
+								//List<string> DocPng = new List<string>();
+								List<string> JsonFile=GetJsonLFileList();
+								foreach(var h in JsonFile)
+								{
+									string JsonContent = System.IO.File.ReadAllText(h);
+									Document DocJson = JsonConvert.DeserializeObject<Document>(JsonContent);
+									if (DocJson.Name.Equals(Doc.Name))
+									{ Detailviewcontroller.Doc = DocJson; }
+								}
 
-							Detailviewcontroller.Doc = this.Doc;
+							}
+							//把這個頁面的值傳給新頁面的屬性
+
+
 						}
 						break;
 					}
@@ -294,6 +306,16 @@ namespace InterViewer.iOS
 			button.BackgroundColor = selectedColor;
 		}
 
+		static List<string> GetJsonLFileList()
+		{
+			var JsonFile = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+
+			var result = JsonFile.Where(FilePath => Path.GetExtension(FilePath) == ".json");
+
+			var JsonList = result.ToList();
+
+			return JsonList;
+		}
 	}
 }
 
