@@ -15,6 +15,12 @@ namespace InterViewer.iOS
 		private bool openPen { get; set; }
 		private CGPDFDocument _pdf;
 		private int _pageNumber;
+		private InterViewerService interviewerservice;
+		private IOService ioService;
+		private string DocumentPath;
+		private bool IsPdfBackground = true;
+		private CGRect imageBackgroundRect;
+
 		/// <summary>
 		/// Edit, Add
 		/// </summary>
@@ -47,18 +53,49 @@ namespace InterViewer.iOS
 		public string PDF_RECORD_DIR = string.Empty;
 		public UIImageView newimage = new UIImageView();
 		public UIImage photo = new UIImage();
+
+
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
-			var vv = this.Doc;
+
+			ioService = new IOService();
+			interviewerservice = new InterViewerService(ioService);
+			DocumentPath = ioService.GetDocumentDirectory();
+
 			Initial();
 
-			_pdf = CGPDFDocument.FromFile(Doc.Reference);
-			this.View.BackgroundColor = UIColor.Gray;
-			Debug.WriteLine(PageNumber);
-			imageView.Image = GetThumbForPage();
+			if (System.IO.Path.GetExtension(Doc.Reference) == ".pdf")
+			{
+				_pdf = CGPDFDocument.FromFile(Doc.Reference);
+				this.View.BackgroundColor = UIColor.Gray;
+				Debug.WriteLine(PageNumber);
+				imageView.Image = GetThumbForPage();
+				IsPdfBackground = true;
+			}
+			else {
+				UIImage imageBackground = UIImage.FromFile(Doc.Reference);
+				int width = (int)imageBackground.Size.Width;
+				int height = (int)imageBackground.Size.Height;
+				nfloat scale;
+				if (height > width)
+				{
+
+					scale = (this.View.Frame.Width - 80.0f) / width;
+				}
+				else
+				{
+					scale = this.View.Frame.Height / height;
+				}
+				imageView.Image = imageBackground;
+				imageBackgroundRect = new CGRect();
+				imageBackgroundRect.Size = new CGSize(width * scale, height * scale);
+				IsPdfBackground = false;
+			}
 			scrollView.ContentSize = imageView.Image.Size;
 
+			//reloadAttachment
+			LoadingAttachments();
 
 			//draw line
 			UIPanGestureRecognizer pan = new UIPanGestureRecognizer((a) =>
@@ -67,12 +104,20 @@ namespace InterViewer.iOS
 
 				   pointlist.Add(tempoint);
 
-				   CGPDFPage pdfPg = _pdf.GetPage(PageNumber);
+				   if (IsPdfBackground==true)
+				   {
+					   CGPDFPage pdfPg = _pdf.GetPage(PageNumber);
 
-				   CGRect pageRect = pdfPg.GetBoxRect(CGPDFBox.Media);
-				   nfloat scale = this.View.Frame.Width / pageRect.Width;
-				   pageRect.Size = new CGSize(pageRect.Width * scale, pageRect.Height * scale);
-				   newimage.Frame = pageRect;
+					   CGRect pageRect = pdfPg.GetBoxRect(CGPDFBox.Media);
+					   nfloat scale = this.View.Frame.Width / pageRect.Width;
+					   pageRect.Size = new CGSize(pageRect.Width * scale, pageRect.Height * scale);
+					   newimage.Frame = pageRect;
+				   }
+				   else {
+
+					   newimage.Frame = imageBackgroundRect;
+				   }
+
 				   scrollView.AddSubview(newimage);
 
 				   newimage.Image = Drawline();
@@ -99,7 +144,9 @@ namespace InterViewer.iOS
 					this.scrollView.RemoveGestureRecognizer(pan);
 					openPen = false;
 
-					SettingUIView(AttachmentTypeEnum.Paint, null);
+					//SettingUIView(AttachmentTypeEnum.Paint, null);
+					//SaveLoadJsonData();
+					AddAttachmentAndSaveJsonData(AttachmentTypeEnum.Paint);
 					newimage.RemoveFromSuperview();
 				};
 
@@ -114,27 +161,33 @@ namespace InterViewer.iOS
 				{
 					photo = obj.ValueForKey(new NSString("UIImagePickerControllerOriginalImage")) as UIImage;
 
-					SettingUIView(AttachmentTypeEnum.Photo, null);
+					//SettingUIView(AttachmentTypeEnum.Photo, null);
+					//SaveLoadJsonData();
+					AddAttachmentAndSaveJsonData(AttachmentTypeEnum.Photo);
 
 				});
 			};
 
 			btnNote.TouchUpInside += delegate
 			{
-				SettingUIView(AttachmentTypeEnum.Note);
-
+				//SettingUIView(AttachmentTypeEnum.Note);
+				//SaveLoadJsonData();
+				AddAttachmentAndSaveJsonData(AttachmentTypeEnum.Note);
 			};
 
 
 			#region Swipe Left and Right Gesture
-			this.scrollView.UserInteractionEnabled = true;
-			UISwipeGestureRecognizer rightSwipeGes = setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection.Right);
-			rightSwipeGes.Direction = UISwipeGestureRecognizerDirection.Right;
-			this.scrollView.AddGestureRecognizer(rightSwipeGes);
+			if (IsPdfBackground == true)
+			{
+				this.scrollView.UserInteractionEnabled = true;
+				UISwipeGestureRecognizer rightSwipeGes = setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection.Right);
+				rightSwipeGes.Direction = UISwipeGestureRecognizerDirection.Right;
+				this.scrollView.AddGestureRecognizer(rightSwipeGes);
 
-			UISwipeGestureRecognizer leftSwipeGes = setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection.Left);
-			leftSwipeGes.Direction = UISwipeGestureRecognizerDirection.Left;
-			this.scrollView.AddGestureRecognizer(leftSwipeGes);
+				UISwipeGestureRecognizer leftSwipeGes = setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection.Left);
+				leftSwipeGes.Direction = UISwipeGestureRecognizerDirection.Left;
+				this.scrollView.AddGestureRecognizer(leftSwipeGes);
+			}
 
 
 			#endregion
@@ -256,7 +309,8 @@ namespace InterViewer.iOS
 			imageView.AccessibilityIdentifier = "PDFImageView";
 
 			PDF_RECORD_DIR = PDF_Type == "Add" ? DateTime.Now.Ticks.ToString() : Path.GetFileNameWithoutExtension(Doc.Name);
-			if (PDF_Type == "Add")
+			//only doc.name is null had to process file name
+			if (PDF_Type == "Add" && Doc.Name == null)
 			{
 				Doc.Name = string.Format("{0}.json", PDF_RECORD_DIR);
 			}
@@ -266,13 +320,18 @@ namespace InterViewer.iOS
 
 		public UIImage Drawline()
 		{
+			CGRect pageRect;
+			if (IsPdfBackground == true)
+			{
+				CGPDFPage pdfPg = _pdf.GetPage(PageNumber);
 
-			CGPDFPage pdfPg = _pdf.GetPage(PageNumber);
-
-			CGRect pageRect = pdfPg.GetBoxRect(CGPDFBox.Media);
-			nfloat scale = this.View.Frame.Width / pageRect.Width;
-			pageRect.Size = new CGSize(pageRect.Width * scale, pageRect.Height * scale);
-
+				pageRect = pdfPg.GetBoxRect(CGPDFBox.Media);
+				nfloat scale = this.View.Frame.Width / pageRect.Width;
+				pageRect.Size = new CGSize(pageRect.Width * scale, pageRect.Height * scale);
+			}
+			else {
+				pageRect = imageBackgroundRect;
+			}
 			UIGraphics.BeginImageContext(pageRect.Size);
 			CGContext context = UIGraphics.GetCurrentContext();
 
@@ -311,7 +370,7 @@ namespace InterViewer.iOS
 
 			string SAVE_FILE_NAME = string.Format("{0}.{1}", IdentifierName, savetype == AttachmentTypeEnum.Photo ? "jpg" : "png");
 			string SYSTEM_FILE_PATH = Path.Combine(PDF_RECORD_DIR, SAVE_FILE_NAME);
-			var documentsDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), PDF_RECORD_DIR);
+			var documentsDirectory = Path.Combine(DocumentPath, PDF_RECORD_DIR);
 			if (!Directory.Exists(documentsDirectory))
 			{
 				Directory.CreateDirectory(documentsDirectory);
@@ -410,7 +469,6 @@ namespace InterViewer.iOS
 
 		}
 
-
 		public void SettingUIView(AttachmentTypeEnum type, Attachment attachment = null)
 		{
 			CGPoint centerPoint = new CGPoint();
@@ -478,7 +536,7 @@ namespace InterViewer.iOS
 					systemPath = attachment.Path;
 				}
 
-				string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), attachment == null ? systemPath : attachment.Path);
+				string filePath = Path.Combine(DocumentPath, attachment == null ? systemPath : attachment.Path);
 				var imageView = new UIImageView();
 
 				imageView.BackgroundColor = UIColor.Clear;
@@ -536,9 +594,13 @@ namespace InterViewer.iOS
 			}
 		}
 
+		public void AddAttachmentAndSaveJsonData(AttachmentTypeEnum type) {
+			SettingUIView(type);
+			SaveLoadJsonData();
+		}
+
 		public void SaveLoadJsonData()
 		{
-			InterViewerService interviewerservice = new InterViewerService(new IOService());
 			interviewerservice.SaveAsJson(Doc);
 		}
 

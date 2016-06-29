@@ -45,7 +45,7 @@ namespace InterViewer.Droid
 		public static Document Doc { get; set; }
 		private float startX, endX = 0;
 		private Bitmap drawRectLine;
-		private string RootPath;
+		private string DocumentPath;
 
 		ScrollView pdfScrollView;
 		RelativeLayout pdfContent;
@@ -84,13 +84,6 @@ namespace InterViewer.Droid
 			public static Bitmap bitmap;
 		}
 
-		public DetailActivity()
-		{
-			ioService = new IOService();
-			interviewerservice = new InterViewerService(ioService);
-		}
-
-
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
@@ -99,9 +92,11 @@ namespace InterViewer.Droid
 
 			//test 
 			//Doc = new Document();
-			RootPath = ioService.GetDocumentDirectory();
-			Initial();
+			ioService = new IOService();
+			interviewerservice = new InterViewerService(ioService);
+			DocumentPath = ioService.GetDocumentDirectory();
 
+			Initial();
 
 			ImageView drawImageView = new ImageView(pdfContent.Context);
 			drawLineView = new PencilDrawLine(pdfContent.Context);
@@ -117,7 +112,7 @@ namespace InterViewer.Droid
 					drawImageView = new ImageView(pdfContent.Context);
 					btnPencil.SetBackgroundColor(Color.Red);
 					drawLineView = new PencilDrawLine(pdfContent.Context);
-					drawImageView.SetBackgroundColor(Color.Blue);
+					//drawImageView.SetBackgroundColor(Color.Blue);
 					pdfContent.AddView(drawLineView);
 					pdfContent.AddView(drawImageView);
 				}
@@ -128,30 +123,31 @@ namespace InterViewer.Droid
 					btnPencil.SetBackgroundColor(Color.Transparent);
 				    drawRectLine = drawLineView.GetRectBitmap(drawLineView);
 
-					drawImageView.SetImageBitmap(drawRectLine);
+					/*drawImageView.SetImageBitmap(drawRectLine);
 					drawImageView.SetX(drawLineView.GetRectLeftX());
 					drawImageView.SetY(drawLineView.GetRectTopY());
 					var drawSaveDirPath = Environment.ExternalStorageDirectory.AbsolutePath;
 					var drawLinePNGFilePath = System.IO.Path.Combine(drawSaveDirPath, drawImageFileName);
 					var stream = new FileStream(drawLinePNGFilePath, FileMode.Create);
 					drawRectLine.Compress(Bitmap.CompressFormat.Png, 100, stream);
-					stream.Close();
+					stream.Close();*/
 
-					Java.IO.File DrawLinePNGFileIO = new Java.IO.File(drawLinePNGFilePath);
-					if (DrawLinePNGFileIO.Exists())
-					{
-						Bitmap savePNG = BitmapFactory.DecodeFile(drawLinePNGFilePath);
-						drawImageView.SetImageBitmap(savePNG);
-						drawImageView.SetBackgroundColor(Color.Transparent);
-						drawImageView.SetX(drawLineView.GetRectLeftX());
-						drawImageView.SetY(drawLineView.GetRectTopY());
+					//Java.IO.File DrawLinePNGFileIO = new Java.IO.File(drawLinePNGFilePath);
+					//if (DrawLinePNGFileIO.Exists())
+					//{
+					//	Bitmap savePNG = BitmapFactory.DecodeFile(drawLinePNGFilePath);
+					//	drawImageView.SetImageBitmap(savePNG);
+					//	drawImageView.SetBackgroundColor(Color.Transparent);
+					//	drawImageView.SetX(drawLineView.GetRectLeftX());
+					//	drawImageView.SetY(drawLineView.GetRectTopY());
 
 
-						//drawImageView.SetOnTouchListener(new View.IOnTouchListener () =>{ })
-						pdfContent.RemoveView(drawLineView);
-					}
+					//	//drawImageView.SetOnTouchListener(new View.IOnTouchListener () =>{ })
+					//	pdfContent.RemoveView(drawLineView);
+					//}
 
-					SettingUIView(AttachmentTypeEnum.Paint, null);
+					//SettingUIView(AttachmentTypeEnum.Paint, null);
+					AddAttachmentAndSaveJsonData(AttachmentTypeEnum.Paint);
 				
 				}
 			
@@ -190,6 +186,9 @@ namespace InterViewer.Droid
 				//var count = pdf.Count;
 
 				pdfImageView.SetImageBitmap(pdf.Images[0]);
+
+				//reloadAttachment
+				LoadingAttachments();
 
 			}
 			//pdf = new PDFDocument(this, pdfFilepath);
@@ -242,7 +241,7 @@ namespace InterViewer.Droid
 			btnCamera = FindViewById<ImageButton>(Resource.Id.btnCamera);
 			btnPencil = FindViewById<ImageButton>(Resource.Id.btnPencil);
 			PDF_RECORD_DIR = PDF_Type == "Add" ? DateTime.Now.Ticks.ToString() : System.IO.Path.GetFileNameWithoutExtension(Doc.Name);
-			if (PDF_Type == "Add")
+			if (PDF_Type == "Add" && Doc.Name == null)
 			{
 				Doc.Name = string.Format("{0}.json", PDF_RECORD_DIR);
 			}
@@ -345,19 +344,21 @@ namespace InterViewer.Droid
 			mediaScanIntent.SetData(contentUri);
 			SendBroadcast(mediaScanIntent);
 
-			int height = Resources.DisplayMetrics.HeightPixels;
-
-			int width = Math.Abs(pdfContent.Height / 3);
+			//int height = Resources.DisplayMetrics.HeightPixels;
+			int height = 300;
+			int width = Math.Abs(150);
 			CameraApp.bitmap = CameraApp._file.Path.LoadAndResizeBitmap(width, height);
 			if (CameraApp.bitmap != null)
 			{
-				cameraImageView.SetImageBitmap(CameraApp.bitmap);
+				/*cameraImageView.SetImageBitmap(CameraApp.bitmap);
 				cameraImageView.Id = View.GenerateViewId();
 				cameraImageView.SetX(Math.Abs(pdfContent.Width / 4));
 				cameraImageView.SetY(Math.Abs(pdfContent.Width / 4));
-				pdfContent.AddView(cameraImageView);
+				pdfContent.AddView(cameraImageView);*/
+
 				//must put the call method here!!! when the cameraImageView isn't null
-				SettingUIView(AttachmentTypeEnum.Photo, null);
+				//SettingUIView(AttachmentTypeEnum.Photo, null);
+				AddAttachmentAndSaveJsonData(AttachmentTypeEnum.Photo);
 
 				CameraApp.bitmap = null;
 			}
@@ -376,7 +377,7 @@ namespace InterViewer.Droid
 
 			string SAVE_FILE_NAME = string.Format("{0}.{1}", IdentifierName, savetype == AttachmentTypeEnum.Photo ? "jpg" : "png");
 			string SYSTEM_FILE_PATH = System.IO.Path.Combine(PDF_RECORD_DIR, SAVE_FILE_NAME);
-			var documentsDirectory = System.IO.Path.Combine(RootPath, PDF_RECORD_DIR);
+			var documentsDirectory = System.IO.Path.Combine(DocumentPath, PDF_RECORD_DIR);
 			if (!Directory.Exists(documentsDirectory))
 			{
 				Directory.CreateDirectory(documentsDirectory);
@@ -524,15 +525,15 @@ namespace InterViewer.Droid
 					systemPath = getSaveImageLocalSystemPath(identifier, AttachmentTypeEnum.Photo, CameraApp.bitmap);
 					rectPoint.LeftX = cameraImageView.GetX();
 					rectPoint.TopY = drawLineView.GetY();
-					rectPoint.Width = drawLineView.Width;
-					rectPoint.Height = drawLineView.Height;
+					rectPoint.Width = 300;
+					rectPoint.Height = 150;
 				}
 				else
 				{
 					systemPath = attachment.Path;
 				}
 
-				string filePath = System.IO.Path.Combine(RootPath, attachment == null ? systemPath : attachment.Path);
+				string filePath = System.IO.Path.Combine(DocumentPath, attachment == null ? systemPath : attachment.Path);
 
 				Java.IO.File DrawLinePNGFileIO = new Java.IO.File(filePath);
 				if (DrawLinePNGFileIO.Exists())
@@ -591,6 +592,12 @@ namespace InterViewer.Droid
 
 			//remain pdfImageView
 			pdfRelativeLayout.RemoveViewsInLayout(1, pdfRelativeLayout.ChildCount-1);
+		}
+
+		public void AddAttachmentAndSaveJsonData(AttachmentTypeEnum type)
+		{
+			SettingUIView(type);
+			SaveLoadJsonData();
 		}
 
 		public void SaveLoadJsonData()
