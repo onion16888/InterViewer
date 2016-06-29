@@ -23,9 +23,7 @@ using Com.Google.Maps.Android.Clustering.View;
 
 namespace InterViewer.Droid
 {
-	[Activity(Label = "Test"
-	          , MainLauncher = true
-	          , Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Landscape)]
+	[Activity(Label = "Test", MainLauncher = true, Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Landscape)]
 	public class MainActivity : Activity
 	, ILocationListener
 	, GoogleMap.IOnCameraChangeListener
@@ -37,6 +35,10 @@ namespace InterViewer.Droid
 		private Boolean SideViewIsOpen { get; set; } = false;
 
 		private Boolean _OnCreate { get; set; } = true;
+
+		private List<Document> DocumentList { get; set; }
+
+		private CustomAdapter customAdapter { get; set; }
 
 		private MapFragment _mapFragment;
 
@@ -66,10 +68,19 @@ namespace InterViewer.Droid
 
 			ViewInit();
 
-			GridViewInit();
-
 			MapViewInit();
 
+		}
+
+		protected override void OnResume()
+		{
+			base.OnResume();
+
+			LoadDocument();
+
+			GridViewInit();
+
+			AddMapMarker();
 		}
 
 		public override void OnWindowFocusChanged(bool hasFocus)
@@ -125,7 +136,7 @@ namespace InterViewer.Droid
 			View rectangleView = LayoutInflater.Inflate(Resource.Layout.rectangle_view_layout, null);
 			{
 				rectangleView.Id = Resource.Id.rectangle_view;
-				rectangleView.LayoutParameters = new ViewGroup.LayoutParams(Util.DpToPx(100), Util.DpToPx(100));
+				rectangleView.LayoutParameters = new RelativeLayout.LayoutParams(Util.DpToPx(100), Util.DpToPx(100));
 				rectangleView.Visibility = ViewStates.Gone;
 
 				relativeLayout.AddView(rectangleView);
@@ -197,7 +208,6 @@ namespace InterViewer.Droid
 
 					Console.WriteLine("{0}, {1}", CenterLocation.Latitude, CenterLocation.Longitude);
 
-
 					ListActivity.Doc = new Document()
 					{
 						Latitude = CenterLocation.Latitude,
@@ -206,6 +216,13 @@ namespace InterViewer.Droid
 					};
 
 					StartActivity(typeof(ListActivity));
+
+					rectangleView.LayoutParameters = new RelativeLayout.LayoutParams(Util.DpToPx(100), Util.DpToPx(100));
+
+					ImageView PlusImageView = rectangleView.FindViewById<ImageView>(Resource.Id.PlusImageView);
+					{
+						PlusImageView.SetImageResource(Resource.Drawable.plus);
+					}				
 				};
 			}
 
@@ -213,7 +230,7 @@ namespace InterViewer.Droid
 			{
 				imageButton1.Click += (object sender, EventArgs e) =>
 				{
-					if (sideView.GetX().Equals(relativeLayout.Width))
+					if (!SideViewIsOpen)
 					{
 						TranslateAnimation SideViewSlideIn = new TranslateAnimation(0, -Util.DpToPx(430), 0, 0)
 						{
@@ -279,18 +296,28 @@ namespace InterViewer.Droid
 			}
 		}
 
+		public void LoadDocument()
+		{
+			InterViewerService DocumentManager = new InterViewerService(new IOService());
+
+			DocumentList = DocumentManager.GetDocuments();
+
+			if (customAdapter != null)
+			{
+				customAdapter.UpdateData(DocumentList);
+
+				customAdapter.NotifyDataSetChanged();
+			}
+		}
+
 		public void GridViewInit()
 		{
-			List<Int32> temp = new List<Int32>();
-
-			for (Int32 i = 0; i < 20; i++)
-			{
-				temp.Add(i);
-			}
 
 			GridView gridview = FindViewById<GridView>(Resource.Id.gridView);
 
-			gridview.Adapter = new CustomAdapter(this, temp, new ViewGroup.LayoutParams(Util.DpToPx(200), Util.DpToPx(200)));
+			customAdapter = new CustomAdapter(this, DocumentList, new ViewGroup.LayoutParams(Util.DpToPx(200), Util.DpToPx(200)));
+
+			gridview.Adapter = customAdapter;
 
 			gridview.ItemClick += (Object sender, AdapterView.ItemClickEventArgs e) =>
 			{
@@ -365,41 +392,45 @@ namespace InterViewer.Droid
 
 		public void AddMapMarker()
 		{
-
-			InterViewerService DocumentManager = new InterViewerService(new IOService());
-
-			List<Document> DocumentList = DocumentManager.GetDocumentsForMap();
-
-			List<IClusterItem> items = new List<IClusterItem>();
-
-			for (Int32 i = 0; i < DocumentList.Count; i++)
+			if (null != _map)
 			{
-				Document Doc = DocumentList[i];
+				_clusterManager.ClearItems();
 
-				//_map.AddMarker(new MarkerOptions()
-				//	.SetPosition(new LatLng(Doc.Latitude, Doc.Longitude))
-				//	.SetIcon(GetBitmapMarker(i.ToString(), 30))
-				//);
+				InterViewerService DocumentManager = new InterViewerService(new IOService());
 
-				items.Add(new ClusterItem()
+				List<Document> DocumentList = DocumentManager.GetDocuments();
+
+				List<IClusterItem> items = new List<IClusterItem>();
+
+				for (Int32 i = 0; i < DocumentList.Count; i++)
 				{
-					Position = new LatLng(Doc.Latitude, Doc.Longitude)
-				});
+					Document Doc = DocumentList[i];
+
+					//_map.AddMarker(new MarkerOptions()
+					//	.SetPosition(new LatLng(Doc.Latitude, Doc.Longitude))
+					//	.SetIcon(GetBitmapMarker(i.ToString(), 30))
+					//);
+
+					items.Add(new ClusterItem()
+					{
+						Position = new LatLng(Doc.Latitude, Doc.Longitude)
+					});
+				}
+
+				//Random rnd = new Random();
+				//for (int i = 1; i <= 500; i++)
+				//{
+				//	double lat = CenterLocation.Latitude + rnd.NextDouble();
+				//	double lon = CenterLocation.Longitude + rnd.NextDouble();
+
+				//	items.Add(new ClusterItem()
+				//	{
+				//		Position = new LatLng(lat, lon)
+				//	});
+				//}
+
+				_clusterManager.AddItems(items);
 			}
-
-			Random rnd = new Random();
-			for (int i = 1; i <= 500; i++)
-			{
-				double lat = CenterLocation.Latitude + rnd.NextDouble();
-				double lon = CenterLocation.Longitude + rnd.NextDouble();
-
-				items.Add(new ClusterItem()
-				{
-					Position = new LatLng(lat, lon)
-				});
-			}
-
-			_clusterManager.AddItems(items);
 		}
 
 		#region IOnCameraChangeListener
@@ -463,17 +494,22 @@ namespace InterViewer.Droid
 
 	public class CustomAdapter : BaseAdapter
 	{
-		private List<Int32> _Source { get; set; }
+		private List<Document> _Source { get; set; }
 
 		private Context _context { get; set; }
 
 		private ViewGroup.LayoutParams _CellLayoutParams { get; set; }
 
-		public CustomAdapter(Context context, List<Int32> Source, ViewGroup.LayoutParams CellLayoutParams)
+		public CustomAdapter(Context context, List<Document> Source, ViewGroup.LayoutParams CellLayoutParams)
 		{
 			_context = context;
 			_Source = Source;
 			_CellLayoutParams = CellLayoutParams;
+		}
+
+		public void UpdateData(List<Document> Source)
+		{
+			_Source = Source;
 		}
 
 		public override Int32 Count
@@ -488,27 +524,44 @@ namespace InterViewer.Droid
 
 		public override long GetItemId(Int32 position)
 		{
-			return 0;
+			return position;
+		}
+
+		public class Holder
+		{
+			public TextView textView;
+			public ImageView imageView;
 		}
 
 		public override View GetView(Int32 position, View convertView, ViewGroup parent)
 		{
-			TextView textView;
+			Document doc = _Source[position];
+
+			View view;
+
+			Holder holder = new Holder();
 
 			if (convertView == null)
 			{
-				textView = new TextView(_context);
-				textView.SetBackgroundColor(Color.ParseColor("#008000"));
-				textView.LayoutParameters = _CellLayoutParams;
-				textView.Gravity = GravityFlags.Center;
+				view = LayoutInflater.From(_context).Inflate(Resource.Layout.side_view_cell_layout, null);
+
+				view.LayoutParameters = _CellLayoutParams;
 			}
-			else {
-				textView = (TextView)convertView;
+			else 
+			{
+				view = (View)convertView;
 			}
 
-			textView.Text = _Source[position].ToString();
-			//imageView.SetImageResource(thumbIds[position]);
-			return textView;
+			holder.textView = view.FindViewById<TextView>(Resource.Id.doc_title);
+			holder.imageView = view.FindViewById<ImageView>(Resource.Id.doc_image_view);
+
+			holder.imageView.SetImageBitmap(
+				BitmapFactory.DecodeFile(doc.Thumbnail)
+			);
+
+			holder.textView.Text = doc.Title;
+
+			return view;
 		}
 	}
 
@@ -522,7 +575,6 @@ namespace InterViewer.Droid
 			_Activity = activity;
 			_EventName = EventName;
 		}
-
 
 		#region IAnimationListener
 		public void OnAnimationEnd(Animation animation)
