@@ -94,6 +94,8 @@ namespace InterViewer.iOS
 			}
 			scrollView.ContentSize = imageView.Image.Size;
 
+			//reloadAttachment
+			LoadingAttachments();
 
 			//draw line
 			UIPanGestureRecognizer pan = new UIPanGestureRecognizer((a) =>
