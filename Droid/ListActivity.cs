@@ -142,16 +142,16 @@ namespace InterViewer.Droid
 				}
 				if(btnDocuments.Selected == true)
 				{
+					listDocumentTempDoc = interViewerServiceHelper.GetDocuments();
+					var filepaths = from theDoc in listDocumentTempDoc
+									where theDoc.Thumbnail == ReturnIcons[args.Position].FullName
+									select theDoc;
+					interViewerServiceHelper.CopyAttachment(Doc,filepaths.ToArray()[0]);
 					if (System.IO.File.Exists(ReturnIcons[args.Position].FullName.Replace(".png", ".pdf")))
 						Doc.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
 					else
 						Doc.Reference = ReturnIcons[args.Position].FullName;//passing a .png path
 					Doc.Thumbnail = ReturnIcons[args.Position].FullName;
-					listDocumentTempDoc = interViewerServiceHelper.GetDocuments();
-					var filepaths = from theDoc in listDocumentTempDoc
-									where theDoc.Thumbnail == ReturnIcons[args.Position].FullName
-									select theDoc.Attachments;
-					Doc.Attachments = filepaths.ToArray()[0];
 				}
 
 				DetailActivity.Doc = Doc;
@@ -577,19 +577,6 @@ namespace InterViewer.Droid
 
 			button.Selected = true;
 			button.SetBackgroundResource(Resource.Drawable.sub_command_selected);
-		}
-
-		private void DeepCopyForAttachment(Attachment sourceObject, Attachment newObject)
-		{
-			sourceObject.Type = newObject.Type;
-			sourceObject.Name = newObject.Name;
-			sourceObject.Path = newObject.Path;
-			sourceObject.Note = newObject.Note;
-			sourceObject.X = newObject.X;
-			sourceObject.Y = newObject.Y;
-			sourceObject.Height = newObject.Height; 
-			sourceObject.Width = newObject.Width; 
-			sourceObject.PageIndex = newObject.PageIndex;
 		}
 
 		//以後有機會測試,套這個Adapter會Error Sid ADD
