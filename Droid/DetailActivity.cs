@@ -53,7 +53,7 @@ namespace InterViewer.Droid
 		ImageView pdfImageView;
 
 		ImageView cameraImageView;
-
+		ImageView drawImageView;
 		#region tool bar
 		ImageButton btnPencil;
 		ImageButton btnCamera;
@@ -79,7 +79,66 @@ namespace InterViewer.Droid
 			public static Java.IO.File _dir;
 			public static Bitmap bitmap;
 		}
+		public static class ScreenSize
+		{
+			public static int screenWidth { get; set; }
+			public static int screenHeight { get; set; }
+		}
+		public class MyTouchListener: Java.Lang.Object, View.IOnTouchListener
+		{
+			float lastX, lastY; 
+			private int btnHeight;
+			int screenWidth = ScreenSize.screenWidth;
+			int screenHeight = ScreenSize.screenHeight;
+			public int imagHight = 0;
+			private float _posX;
+			private float _posY;
+			public bool OnTouch(View v, MotionEvent e)
+			{
+				
+				if (e.Action == MotionEventActions.Down)
+				{
+					lastX = e.GetX();
+					lastY = e.GetY();
+					return true;
+				}
+				if (e.Action == MotionEventActions.Move)
+				{
+					Debug.WriteLine("M");
+					float xx = e.GetX();
+					float yy = e.GetY();
+					float deltaX = xx - lastX;
+					float deltaY = yy - lastY;
+					_posX += deltaX;
+					_posY += deltaY;
+					v.SetX(_posX);
+					v.SetY(_posY);
+					Debug.WriteLine(_posX);
+					Debug.WriteLine(_posY);
+					v.Invalidate();
+					lastX = xx;
+					lastY = yy;
+					return true;
+				}
 
+				if (e.Action == MotionEventActions.Up)
+				{
+					Debug.WriteLine("UP");
+				
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		public class StopScrollTouchListener : Java.Lang.Object, View.IOnTouchListener
+		{
+			public bool OnTouch(View v, MotionEvent e)
+			{
+				return true;
+			}
+		}
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -92,8 +151,12 @@ namespace InterViewer.Droid
 
 			Initial();
 
-
-			ImageView drawImageView = new ImageView(pdfContent.Context);
+			var metrics = Resources.DisplayMetrics;
+			ScreenSize.screenWidth = metrics.WidthPixels;
+			ScreenSize.screenHeight = metrics.HeightPixels;
+		
+			RelativeLayout ly1 = FindViewById<RelativeLayout>(Resource.Id.ly1);
+			drawImageView = new ImageView(pdfContent.Context);
 			PencilDrawLine drawLineView = new PencilDrawLine(pdfContent.Context);
 			btnPencil.Click += (object sender, EventArgs e) =>
 			{
@@ -107,13 +170,14 @@ namespace InterViewer.Droid
 					drawImageView = new ImageView(pdfContent.Context);
 					btnPencil.SetBackgroundColor(Color.Red);
 					drawLineView = new PencilDrawLine(pdfContent.Context);
-					drawImageView.SetBackgroundColor(Color.Blue);
+					//drawImageView.SetBackgroundColor(Color.Blue);
 					pdfContent.AddView(drawLineView);
-					pdfContent.AddView(drawImageView);
+					ly1.AddView(drawImageView);
 				}
 				else 
 				{
 					openPen = false;
+
 					//設置透明底色
 					btnPencil.SetBackgroundColor(Color.Transparent);
 				    Bitmap drawRectLine = drawLineView.GetRectBitmap(drawLineView);
@@ -132,12 +196,26 @@ namespace InterViewer.Droid
 					{
 						Bitmap savePNG = BitmapFactory.DecodeFile(drawLinePNGFilePath);
 						drawImageView.SetImageBitmap(savePNG);
-						drawImageView.SetBackgroundColor(Color.Yellow);
+						//drawImageView.SetBackgroundColor(Color.Yellow);
 						drawImageView.SetX(drawLineView.GetRectLeftX());
 						drawImageView.SetY(drawLineView.GetRectTopY());
 
+						//drawImageView.Touch += (object s, View.TouchEventArgs ee) =>
+						//{
+						//	Debug.WriteLine(((ImageView)s).GetX());
+						//	Debug.WriteLine(((ImageView)s).GetY());
+						//};
+						MyTouchListener drawTouch = new MyTouchListener();
+						drawTouch.imagHight = drawLineView.Height;
+						drawImageView.SetOnTouchListener(drawTouch);
 
-						//drawImageView.SetOnTouchListener(new View.IOnTouchListener () =>{ })
+						//disable scroll
+						//pdfScrollView.SetOnTouchListener(new StopScrollTouchListener());
+
+						//enable scroll
+						//pdfScrollView.SetOnTouchListener(null);
+
+						//drawImageView.SetOnTouchListener(this);
 						pdfContent.RemoveView(drawLineView);
 					}
 				
@@ -209,12 +287,13 @@ namespace InterViewer.Droid
 				}
 			};*/
 			//li.RemoveView(FindViewById(Resource.Id.scrollView1));
-			//iv.SetOnTouchListener(this);
+			//pdfImageView.SetOnTouchListener(this);
 
 		}
 
 		private void Initial()
 		{
+			
 			pdfImageView = FindViewById<ImageView>(Resource.Id.pdfImageView);
 			pdfScrollView = FindViewById<ScrollView>(Resource.Id.pdfScrollView);
 			pdfContent = FindViewById<RelativeLayout>(Resource.Id.pdfContent);
@@ -233,6 +312,12 @@ namespace InterViewer.Droid
 		public bool OnTouch(View v, MotionEvent e)
 		{
 			Point point = new Point((Int32)e.GetX(), (Int32)e.GetY());
+			Debug.WriteLine("GET");
+			Debug.WriteLine(e.GetX());
+			Debug.WriteLine(e.GetY());
+			Debug.WriteLine("Raw");
+			Debug.WriteLine(e.RawX);
+			Debug.WriteLine(e.RawY);
 			switch (e.Action)
 			{
 				case MotionEventActions.Down:
@@ -240,16 +325,18 @@ namespace InterViewer.Droid
 					startX = e.GetX();
 					break;
 				case MotionEventActions.Move:
-					startX = e.GetX();
+					Debug.WriteLine("M");
+					//startX = e.GetX();
 					//path.LineTo(point.X, point.Y);
+				
 					break;
 
-				case MotionEventActions.Cancel:
+				case MotionEventActions.Up:
 					Debug.WriteLine("C");    
 
 					endX = e.GetX();
 					float diff = startX - endX;
-					Debug.WriteLine(diff.ToString());
+					//Debug.WriteLine(diff.ToString());
 					//-left to right
 					if (startX < endX)
 					{
@@ -269,11 +356,11 @@ namespace InterViewer.Droid
 						PageNumber--;
 					}
 
-					pdfImageView.SetImageBitmap(pdf.Images[PageNumber]);
+					//pdfImageView.SetImageBitmap(pdf.Images[PageNumber]);
 
 					startX = endX = 0;
-					Debug.WriteLine(PageNumber);
-
+					//Debug.WriteLine(PageNumber);
+					return true;
 					break;
 
 			}
