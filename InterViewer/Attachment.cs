@@ -22,6 +22,12 @@ namespace InterViewer
 		public string Path { get; set; }
 
 		/// <summary>
+		/// 便利貼文字內容
+		/// </summary>
+		/// <value>The note.</value>
+		public string Note { get; set; }
+
+		/// <summary>
 		/// 在頁面的X坐標
 		/// </summary>
 		/// <value>The x.</value>
