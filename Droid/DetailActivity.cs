@@ -62,7 +62,8 @@ namespace InterViewer.Droid
 		ImageButton btnCamera;
 		#endregion
 
-
+		private InterViewerService interviewerservice;
+		private IOService ioService;
 
 		public int PageNumber
 		{
@@ -83,6 +84,12 @@ namespace InterViewer.Droid
 			public static Bitmap bitmap;
 		}
 
+		public DetailActivity()
+		{
+			ioService = new IOService();
+			interviewerservice = new InterViewerService(ioService);
+		}
+
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -92,7 +99,7 @@ namespace InterViewer.Droid
 
 			//test 
 			//Doc = new Document();
-			RootPath = Android.OS.Environment.ExternalStorageDirectory.Path;
+			RootPath = ioService.GetDocumentDirectory();
 			Initial();
 
 
@@ -588,7 +595,6 @@ namespace InterViewer.Droid
 
 		public void SaveLoadJsonData()
 		{
-			InterViewerService interviewerservice = new InterViewerService(new IOService());
 			interviewerservice.SaveAsJson(Doc);
 		}
 
