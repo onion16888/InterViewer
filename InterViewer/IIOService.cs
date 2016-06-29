@@ -26,6 +26,8 @@ namespace InterViewer
 		void WriteAllText(string path, string contents);
 
 		bool IsFileExists(string path);
+
+		void CopyFile(string sourceFileName, string destFileName);
 	}
 }
 

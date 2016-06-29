@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace InterViewer.iOS
 {
-	public class IOService:IIOService
+	public class IOService : IIOService
 	{
 		private string appPath;
 
@@ -16,9 +16,9 @@ namespace InterViewer.iOS
 
 		public string AppPath
 		{
-			get 
-			{ 
-				return appPath; 
+			get
+			{
+				return appPath;
 			}
 		}
 
@@ -79,6 +79,11 @@ namespace InterViewer.iOS
 		public void WriteAllText(string path, string contents)
 		{
 			File.WriteAllText(path, contents);
+		}
+
+		public void CopyFile(string sourceFileName, string destFileName)
+		{
+			File.Copy(sourceFileName, destFileName, true);
 		}
 	}
 }
