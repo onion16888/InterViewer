@@ -19,6 +19,8 @@ using Android.Content.PM;
 using Android.Provider;
 using Java.Lang;
 
+using Debug = System.Diagnostics.Debug;
+
 namespace InterViewer.Droid
 {
 	[Activity(Label = "ListActivity"//,MainLauncher = true 
@@ -27,7 +29,6 @@ namespace InterViewer.Droid
 	{
 		//大家共用要傳的物件
 		public static Document Doc { set; get; }
-
 		//新增Image的辨識碼
 		private const int ImagePick = 1000;
 		//新增Pdf的辨識碼
@@ -47,6 +48,14 @@ namespace InterViewer.Droid
 		GridView gridviewShow;
 		//轉出縮圖的物件
 		PDFDocument Pdf;
+
+		IOService serviceHelper;
+		InterViewerService interViewerServiceHelper;
+		List<Document> listDocumentTempDoc;
+
+		string slideOrDocument = "slide";
+		const string BUTTON_SLIDE_SELECTED = "slide";
+		const string BUTTON_DOCUMENT_SELECTED = "document";
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
@@ -85,18 +94,18 @@ namespace InterViewer.Droid
 
 				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
-
-				DetailActivity.PDF_Type = "Add";
 			};
 
 			btnDocuments.Click += (object sender, EventArgs e) =>
 			{
 				CheckButtonIsSelected(btnDocuments);
 
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Documents", visibleThings)));
-				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+				listDocumentTempDoc = interViewerServiceHelper.GetDocuments();
+				var filepaths = from theDoc in listDocumentTempDoc
+								select theDoc.Thumbnail;
 
-				DetailActivity.PDF_Type = "Edit";
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, filepaths.ToArray());
+				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			};
 				
 			btnImages.Click+= (object sender, EventArgs e) => 
@@ -120,19 +129,33 @@ namespace InterViewer.Droid
 			};
 			gridviewShow.ItemClick += (object sender, AdapterView.ItemClickEventArgs args) =>
 			{
-				Toast.MakeText(this, ReturnIcons[args.Position].FullName, ToastLength.Long).Show();
+				//Toast.MakeText(this, ReturnIcons[args.Position].FullName, ToastLength.Long).Show();
 				//Intent DetailAc = new Intent(this, typeof(DetailActivity));
 
-				if (System.IO.File.Exists(ReturnIcons[args.Position].FullName.Replace(".png", ".pdf")))
-					Doc.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
-				else
-					Doc.Reference = ReturnIcons[args.Position].FullName;//passing a .png path
-				Doc.Thumbnail = ReturnIcons[args.Position].FullName;
-
+				if (btnTemplate.Selected == true)
+				{
+					if (System.IO.File.Exists(ReturnIcons[args.Position].FullName.Replace(".png", ".pdf")))
+						Doc.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
+					else
+						Doc.Reference = ReturnIcons[args.Position].FullName;//passing a .png path
+					Doc.Thumbnail = ReturnIcons[args.Position].FullName;
+				}
+				if(btnDocuments.Selected == true)
+				{
+					if (System.IO.File.Exists(ReturnIcons[args.Position].FullName.Replace(".png", ".pdf")))
+						Doc.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
+					else
+						Doc.Reference = ReturnIcons[args.Position].FullName;//passing a .png path
+					Doc.Thumbnail = ReturnIcons[args.Position].FullName;
+					listDocumentTempDoc = interViewerServiceHelper.GetDocuments();
+					var filepaths = from theDoc in listDocumentTempDoc
+									where theDoc.Thumbnail == ReturnIcons[args.Position].FullName
+									select theDoc.Attachments;
+					Doc.Attachments = filepaths.ToArray()[0];
+				}
 
 				DetailActivity.Doc = Doc;
 				StartActivity(typeof(DetailActivity));
-
 			};
 		}
 
@@ -143,6 +166,9 @@ namespace InterViewer.Droid
 			btnImages = FindViewById<Button>(Resource.Id.btnImages);
 			btnAdd = FindViewById<Button>(Resource.Id.btnAdd);
 			gridviewShow = FindViewById<GridView>(Resource.Id.gridviewShow);
+
+			serviceHelper = new IOService();
+			interViewerServiceHelper = new InterViewerService(serviceHelper);
 		}
 
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
@@ -519,7 +545,7 @@ namespace InterViewer.Droid
 			var files = Directory.EnumerateFiles(Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).ToString() + @"/InterView/" + FolderName + "/").ToArray();
 			foreach (string file in files)
 			{
-				System.Console.WriteLine(file);
+				Debug.WriteLine(file);
 			}
 
 			return files;
@@ -551,6 +577,19 @@ namespace InterViewer.Droid
 
 			button.Selected = true;
 			button.SetBackgroundResource(Resource.Drawable.sub_command_selected);
+		}
+
+		private void DeepCopyForAttachment(Attachment sourceObject, Attachment newObject)
+		{
+			sourceObject.Type = newObject.Type;
+			sourceObject.Name = newObject.Name;
+			sourceObject.Path = newObject.Path;
+			sourceObject.Note = newObject.Note;
+			sourceObject.X = newObject.X;
+			sourceObject.Y = newObject.Y;
+			sourceObject.Height = newObject.Height; 
+			sourceObject.Width = newObject.Width; 
+			sourceObject.PageIndex = newObject.PageIndex;
 		}
 
 		//以後有機會測試,套這個Adapter會Error Sid ADD
