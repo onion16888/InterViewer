@@ -112,7 +112,7 @@ namespace InterViewer.Droid
 					drawImageView = new ImageView(pdfContent.Context);
 					btnPencil.SetBackgroundColor(Color.Red);
 					drawLineView = new PencilDrawLine(pdfContent.Context);
-					drawImageView.SetBackgroundColor(Color.Blue);
+					//drawImageView.SetBackgroundColor(Color.Blue);
 					pdfContent.AddView(drawLineView);
 					pdfContent.AddView(drawImageView);
 				}
@@ -123,14 +123,14 @@ namespace InterViewer.Droid
 					btnPencil.SetBackgroundColor(Color.Transparent);
 				    drawRectLine = drawLineView.GetRectBitmap(drawLineView);
 
-					drawImageView.SetImageBitmap(drawRectLine);
+					/*drawImageView.SetImageBitmap(drawRectLine);
 					drawImageView.SetX(drawLineView.GetRectLeftX());
 					drawImageView.SetY(drawLineView.GetRectTopY());
 					var drawSaveDirPath = Environment.ExternalStorageDirectory.AbsolutePath;
 					var drawLinePNGFilePath = System.IO.Path.Combine(drawSaveDirPath, drawImageFileName);
 					var stream = new FileStream(drawLinePNGFilePath, FileMode.Create);
 					drawRectLine.Compress(Bitmap.CompressFormat.Png, 100, stream);
-					stream.Close();
+					stream.Close();*/
 
 					//Java.IO.File DrawLinePNGFileIO = new Java.IO.File(drawLinePNGFilePath);
 					//if (DrawLinePNGFileIO.Exists())
@@ -186,6 +186,9 @@ namespace InterViewer.Droid
 				//var count = pdf.Count;
 
 				pdfImageView.SetImageBitmap(pdf.Images[0]);
+
+				//reloadAttachment
+				LoadingAttachments();
 
 			}
 			//pdf = new PDFDocument(this, pdfFilepath);
@@ -341,17 +344,18 @@ namespace InterViewer.Droid
 			mediaScanIntent.SetData(contentUri);
 			SendBroadcast(mediaScanIntent);
 
-			int height = Resources.DisplayMetrics.HeightPixels;
-
-			int width = Math.Abs(pdfContent.Height / 3);
+			//int height = Resources.DisplayMetrics.HeightPixels;
+			int height = 300;
+			int width = Math.Abs(150);
 			CameraApp.bitmap = CameraApp._file.Path.LoadAndResizeBitmap(width, height);
 			if (CameraApp.bitmap != null)
 			{
-				cameraImageView.SetImageBitmap(CameraApp.bitmap);
+				/*cameraImageView.SetImageBitmap(CameraApp.bitmap);
 				cameraImageView.Id = View.GenerateViewId();
 				cameraImageView.SetX(Math.Abs(pdfContent.Width / 4));
 				cameraImageView.SetY(Math.Abs(pdfContent.Width / 4));
-				pdfContent.AddView(cameraImageView);
+				pdfContent.AddView(cameraImageView);*/
+
 				//must put the call method here!!! when the cameraImageView isn't null
 				//SettingUIView(AttachmentTypeEnum.Photo, null);
 				AddAttachmentAndSaveJsonData(AttachmentTypeEnum.Photo);
@@ -521,8 +525,8 @@ namespace InterViewer.Droid
 					systemPath = getSaveImageLocalSystemPath(identifier, AttachmentTypeEnum.Photo, CameraApp.bitmap);
 					rectPoint.LeftX = cameraImageView.GetX();
 					rectPoint.TopY = drawLineView.GetY();
-					rectPoint.Width = drawLineView.Width;
-					rectPoint.Height = drawLineView.Height;
+					rectPoint.Width = 300;
+					rectPoint.Height = 150;
 				}
 				else
 				{
