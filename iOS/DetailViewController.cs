@@ -50,7 +50,7 @@ namespace InterViewer.iOS
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
-
+			var vv = this.Doc;
 			Initial();
 
 			_pdf = CGPDFDocument.FromFile(Doc.Reference);

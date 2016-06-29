@@ -19,8 +19,9 @@ namespace InterViewer.iOS
 		private const bool _Edit = false;
 		private bool _AddOrEdit = true;
 		List<JsonIndex> JsonNameAndPng=new List<JsonIndex>();
-		private IIOService IIO;
+		private IOService IIO;
 		private InterViewerService InterViewService;
+		private string TempJsonName=null;
 		public ListViewController(IntPtr handle) : base(handle)
 		{
 			selectedColor = new UIColor(red: 0.95f, green: 0.52f, blue: 0.00f, alpha: 1.0f);
@@ -30,9 +31,9 @@ namespace InterViewer.iOS
 		{
 			base.ViewDidLoad();
 
+			IIO = new IOService();
 			InterViewService = new InterViewerService(IIO);
 
-			Console.WriteLine(IIO.AppPath);
 
 			// Perform any additional setup after loading the view, typically from a nib.
 			//練習用
@@ -50,6 +51,7 @@ namespace InterViewer.iOS
 
 			CheckButtonIsSelected(btnTemplate);
 			//把Sliders下的.png集合發給grid
+			JsonNameAndPng = null;
 			CollectionViewInit(fileOrDirectory);
 
 			//Slider按鈕
@@ -59,6 +61,7 @@ namespace InterViewer.iOS
 				InvokeOnMainThread(() =>
 				{
 					CheckButtonIsSelected(btnTemplate);
+					JsonNameAndPng = null;
 					//取得Sliders下的.png送給grid
 					CollectionViewInit(GetDirPngFile("Sliders"));
 				});
@@ -125,7 +128,10 @@ namespace InterViewer.iOS
 		//撈出Jimmy底下所有的json
 		public List<string> GetJsonFile()
 		{
-			JsonNameAndPng.Clear();
+			if (JsonNameAndPng != null)
+			{ JsonNameAndPng.Clear(); }
+			else
+			{ JsonNameAndPng = new List<JsonIndex>(); }
 			List<string> DocPng = new List<string>(); ;
 			List<string> JsonList = GetJsonLFileList();
 			foreach (var h in JsonList)
@@ -158,7 +164,7 @@ namespace InterViewer.iOS
 			List<string> ss = new List<string>();
 			ss.AddRange(PngSource);
 			//var v=from qwe in ss where 
-			var source = new TableSource(PngSource);
+			var source = new TableSource(PngSource,JsonNameAndPng);
 			MyCollectionView.Source = source;
 
 			MyCollectionView.SetCollectionViewLayout(new UICollectionViewFlowLayout
@@ -176,6 +182,16 @@ namespace InterViewer.iOS
 			const String CollectionViewCellIdentifier = "MyCollectionViewCell";
 
 			public List<string> Source { get; set; }
+			public List<JsonIndex> _JsonName { get; set;}
+
+
+			public TableSource(IEnumerable<string> list,List<JsonIndex> _JsonName)
+			{
+				this._JsonName = _JsonName;
+
+				Source = new List<string>();
+				Source.AddRange(list);
+			}
 
 			public TableSource(IEnumerable<string> list)
 			{
@@ -203,7 +219,15 @@ namespace InterViewer.iOS
 
 			public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
 			{
+				string JsonFileName=null;
+				if(this._JsonName!=null)
+				{
+					JsonIndex SomeItem=_JsonName.ToArray()[indexPath.Row];
+					JsonFileName = SomeItem.JsonName;
+				}
+
 				var data = Source[indexPath.Row];
+
 				collectionView.DeselectItem(indexPath, true);
 
 				// Raise Event
@@ -211,7 +235,7 @@ namespace InterViewer.iOS
 
 				if (null != handle)
 				{
-					var args = new SelectedEventArgs { Selected = data };
+					var args = new SelectedEventArgs { Selected = data,JsonName=JsonFileName };
 					handle(this, args);
 				}
 			}
@@ -219,6 +243,7 @@ namespace InterViewer.iOS
 			public class SelectedEventArgs : EventArgs
 			{
 				public string Selected { get; set; }
+				public string JsonName { get; set; }
 			}
 		}
 		//GridView ItemTouch
@@ -235,6 +260,8 @@ namespace InterViewer.iOS
 				Doc.Reference = e.Selected;
 			Doc.Thumbnail = e.Selected;
 
+			Console.WriteLine(e.JsonName);
+			TempJsonName = e.JsonName;
 			Console.WriteLine(Doc.Reference + Doc.Thumbnail);
 
 			InvokeOnMainThread(() =>
@@ -264,7 +291,14 @@ namespace InterViewer.iOS
 							{
 								//賦予第三頁PDF類型
 								Detailviewcontroller.PDF_Type = "Edit";
-								Detailviewcontroller.Doc = this.Doc;
+								List<Document> Json=InterViewService.GetDocuments();
+								foreach(var h in Json)
+								{
+									if(h.Name.Equals(TempJsonName))
+									{
+										Detailviewcontroller.Doc = InterViewService.CopyAttachment(this.Doc,h);
+									}
+								}
 							}
 						}
 						break;
