@@ -189,6 +189,7 @@
     <AndroidResource Include="Resources\drawable\icon_tag_s.png" />
     <AndroidResource Include="Resources\drawable\icon_tag.png" />
     <AndroidResource Include="Resources\drawable\sub_command_selected.xml" />
+    <AndroidResource Include="Resources\layout\side_view_cell_layout.axml" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="xamandroidsupportv4-18">

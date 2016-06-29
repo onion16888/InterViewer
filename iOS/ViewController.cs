@@ -103,8 +103,6 @@ namespace InterViewer.iOS
 
 				if (!CollectionViewIsOpen)
 				{
-					LoadDocument();
-
 					btnNote.Selected = CollectionViewIsOpen = true;
 
 					UIView.Animate(0.5,
