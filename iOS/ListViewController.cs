@@ -18,6 +18,9 @@ namespace InterViewer.iOS
 		private const bool _Add = true;
 		private const bool _Edit = false;
 		private bool _AddOrEdit = true;
+		List<JsonIndex> JsonNameAndPng=new List<JsonIndex>();
+		private IIOService IIO;
+		private InterViewerService InterViewService;
 		public ListViewController(IntPtr handle) : base(handle)
 		{
 			selectedColor = new UIColor(red: 0.95f, green: 0.52f, blue: 0.00f, alpha: 1.0f);
@@ -26,6 +29,10 @@ namespace InterViewer.iOS
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
+
+			InterViewService = new InterViewerService(IIO);
+
+			Console.WriteLine(IIO.AppPath);
 
 			// Perform any additional setup after loading the view, typically from a nib.
 			//練習用
@@ -56,7 +63,7 @@ namespace InterViewer.iOS
 					CollectionViewInit(GetDirPngFile("Sliders"));
 				});
 			};
-			btnDocuments.TouchUpInside += (object sender, EventArgs e) => 
+			btnDocuments.TouchUpInside += (object sender, EventArgs e) =>
 			{
 				_AddOrEdit = _Edit;
 				InvokeOnMainThread(() =>
@@ -88,13 +95,13 @@ namespace InterViewer.iOS
 		//檢查範例檔案是否存在,不存在就從Resources匯入
 		public void CheckDir(string Path)
 		{
-			if(!Directory.Exists(Path + "/InterView"))
+			if (!Directory.Exists(Path + "/InterView"))
 			{
-				Directory.Move("./InterView", Path+"/InterView");
+				Directory.Move("./InterView", Path + "/InterView");
 			}
 		}
 		//暫時用不到
-		public static  IEnumerable<string> GetDirFileList(string Whichfolder)
+		public static IEnumerable<string> GetDirFileList(string Whichfolder)
 		{
 			var fileOrDirectory = Directory.EnumerateFileSystemEntries("./InterView/" + Whichfolder);
 
@@ -118,22 +125,22 @@ namespace InterViewer.iOS
 		//撈出Jimmy底下所有的json
 		public List<string> GetJsonFile()
 		{
-			List<string> DocPng=new List<string>();;
+			JsonNameAndPng.Clear();
+			List<string> DocPng = new List<string>(); ;
 			List<string> JsonList = GetJsonLFileList();
-			foreach(var h in JsonList)
+			foreach (var h in JsonList)
 			{
-				string JsonContent=System.IO.File.ReadAllText(h);
-				Document DocJson=JsonConvert.DeserializeObject<Document>(JsonContent);
+				string JsonContent = System.IO.File.ReadAllText(h);
+				Document DocJson = JsonConvert.DeserializeObject<Document>(JsonContent);
 
 				String filename = Path.GetFileName(DocJson.Thumbnail);
 				String path = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/Sliders/" + filename;
-				Boolean Check=File.Exists(path);
-
+				Boolean Check = File.Exists(path);
 				DocPng.Add(path);
+				JsonNameAndPng.Add(new JsonIndex { JsonName = DocJson.Name, JsonPng = path });
 			}
 
 			return DocPng;
-
 		}
 		public override void DidReceiveMemoryWarning()
 		{
@@ -248,29 +255,17 @@ namespace InterViewer.iOS
 						{
 							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
 
-							if(_AddOrEdit==_Add)
+							if (_AddOrEdit == _Add)
 							{
 								Detailviewcontroller.PDF_Type = "Add";
 								Detailviewcontroller.Doc = this.Doc;
 							}
 							else
 							{
+								//賦予第三頁PDF類型
 								Detailviewcontroller.PDF_Type = "Edit";
-								string qwe = Doc.Thumbnail;
-								//List<string> DocPng = new List<string>();
-								List<string> JsonFile=GetJsonLFileList();
-								foreach(var h in JsonFile)
-								{
-									string JsonContent = System.IO.File.ReadAllText(h);
-									Document DocJson = JsonConvert.DeserializeObject<Document>(JsonContent);
-									if (DocJson.Name.Equals(Doc.Name))
-									{ Detailviewcontroller.Doc = DocJson; }
-								}
-
+								Detailviewcontroller.Doc = this.Doc;
 							}
-							//把這個頁面的值傳給新頁面的屬性
-
-
 						}
 						break;
 					}
@@ -278,7 +273,7 @@ namespace InterViewer.iOS
 				case @"moveToFileManagerSegue":
 					if (segue.DestinationViewController is FileManagerController)
 					{
-						
+
 					}
 					break;
 				case @"moveToImageManagerSegue":
@@ -286,7 +281,7 @@ namespace InterViewer.iOS
 					{
 
 					}
-					break;	
+					break;
 				default:
 					break;
 			}
@@ -315,6 +310,11 @@ namespace InterViewer.iOS
 			var JsonList = result.ToList();
 
 			return JsonList;
+		}
+		public class JsonIndex
+		{
+			public string JsonName { get; set;}
+			public string JsonPng { get; set;}
 		}
 	}
 }
