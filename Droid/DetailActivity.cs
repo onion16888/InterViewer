@@ -262,7 +262,7 @@ namespace InterViewer.Droid
 					//path.LineTo(point.X, point.Y);
 					break;
 
-				case MotionEventActions.Up:
+				case MotionEventActions.Cancel:
 					Debug.WriteLine("C");    
 
 					endX = e.GetX();
@@ -345,8 +345,8 @@ namespace InterViewer.Droid
 			SendBroadcast(mediaScanIntent);
 
 			//int height = Resources.DisplayMetrics.HeightPixels;
-			int height = 300;
-			int width = Math.Abs(150);
+			int height = 150;
+			int width = Math.Abs(75);
 			CameraApp.bitmap = CameraApp._file.Path.LoadAndResizeBitmap(width, height);
 			if (CameraApp.bitmap != null)
 			{
@@ -523,10 +523,10 @@ namespace InterViewer.Droid
 				{
 					//CameraCapture.IsOpenCamera = false;
 					systemPath = getSaveImageLocalSystemPath(identifier, AttachmentTypeEnum.Photo, CameraApp.bitmap);
-					rectPoint.LeftX = cameraImageView.GetX();
-					rectPoint.TopY = drawLineView.GetY();
-					rectPoint.Width = 300;
-					rectPoint.Height = 150;
+					rectPoint.LeftX = cameraImageView.GetX()+600;
+					rectPoint.TopY = drawLineView.GetY()+ 250;
+					rectPoint.Width = 150;
+					rectPoint.Height = 75;
 				}
 				else
 				{
