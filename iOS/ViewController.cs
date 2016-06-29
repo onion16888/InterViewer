@@ -99,38 +99,37 @@ namespace InterViewer.iOS
 			btnNote.UserInteractionEnabled = true;
 			btnNote.AddGestureRecognizer(new UITapGestureRecognizer(tap =>
 			{
-				CGPoint CollectionViewLocation = CollectionView.Frame.Location;
+				//CGPoint CollectionViewLocation = CollectionView.Frame.Location;
 
-				if (CollectionViewLocation.X >= View.Frame.Size.Width)
+				if (!CollectionViewIsOpen)
 				{
 					LoadDocument();
 
+					btnNote.Selected = CollectionViewIsOpen = true;
+
 					UIView.Animate(0.5,
 					() =>
 					{
 						CollectionView.Frame = new CGRect(
-							new CGPoint(CollectionView.Frame.Location.X - 430, CollectionView.Frame.Location.Y),
+							new CGPoint(View.Frame.Size.Width - 430, CollectionView.Frame.Y),
 							CollectionView.Frame.Size
 						);
-						View.LayoutIfNeeded();
 					});
-
-					btnNote.Selected = CollectionViewIsOpen = true;
 				}
 				else
 				{
+					btnNote.Selected = CollectionViewIsOpen = false;
+
 					UIView.Animate(0.5,
 					() =>
 					{
 						CollectionView.Frame = new CGRect(
-							new CGPoint(CollectionView.Frame.Location.X + 430, CollectionView.Frame.Location.Y),
+							new CGPoint(View.Frame.Size.Width, CollectionView.Frame.Y),
 							CollectionView.Frame.Size
 						);
-						View.LayoutIfNeeded();
 					});
-
-					btnNote.Selected = CollectionViewIsOpen = false;
 				}
+				View.LayoutIfNeeded();
 			})
 			{
 				NumberOfTapsRequired = 1
@@ -445,7 +444,6 @@ namespace InterViewer.iOS
 						() =>
 						{
 							BufferView.Transform = CGAffineTransform.MakeRotation((Single)Math.PI / 2);
-							View.LayoutIfNeeded();
 						},
 						() =>
 						{
@@ -459,7 +457,6 @@ namespace InterViewer.iOS
 							DrawView.Frame = new CGRect(DrawView.Frame.Location, new CGSize(400, 122));
 							RectangleView.Frame = new CGRect(RectangleView.Frame.Location, new CGSize(400, 100));
 							TextField.Frame = new CGRect(TextField.Frame.Location, new CGSize(290, 80));
-							View.LayoutIfNeeded();
 						}, null);
 
 						UIView.Animate(0.25, 0.5, UIViewAnimationOptions.CurveLinear,
@@ -468,7 +465,6 @@ namespace InterViewer.iOS
 							DrawView.Frame = new CGRect(DrawView.Frame.Location, new CGSize(490, 122));
 							RectangleView.Frame = new CGRect(RectangleView.Frame.Location, new CGSize(490, 100));
 							AddButton.Frame = new CGRect(AddButton.Frame.Location, new CGSize(80, 80));
-							View.LayoutIfNeeded();
 						},
 						() =>
 						{
@@ -483,7 +479,6 @@ namespace InterViewer.iOS
 						() =>
 						{
 							BufferView.Transform = CGAffineTransform.MakeRotation((Single)Math.PI / -2);
-							View.LayoutIfNeeded();
 						},
 						() =>
 						{
@@ -497,7 +492,6 @@ namespace InterViewer.iOS
 							DrawView.Frame = new CGRect(DrawView.Frame.Location, new CGSize(400, 122));
 							RectangleView.Frame = new CGRect(RectangleView.Frame.Location, new CGSize(400, 100));
 							AddButton.Frame = new CGRect(AddButton.Frame.Location, new CGSize(0, 80));
-							View.LayoutIfNeeded();
 						}, null);
 
 						UIView.Animate(0.5, 0.25, UIViewAnimationOptions.CurveLinear,
@@ -506,13 +500,13 @@ namespace InterViewer.iOS
 							DrawView.Frame = new CGRect(DrawView.Frame.Location, new CGSize(100, 122));
 							RectangleView.Frame = new CGRect(RectangleView.Frame.Location, new CGSize(100, 100));
 							TextField.Frame = new CGRect(TextField.Frame.Location, new CGSize(0, 80));
-							View.LayoutIfNeeded();
 						},
 						() =>
 						{
 
 						});
 					}
+					View.LayoutIfNeeded();
 				});
 			})
 			{
