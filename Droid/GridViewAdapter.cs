@@ -26,21 +26,17 @@ namespace InterViewer.Droid
 			context = c;
 			this.fileName = fileName;
 		}
-
 		public override int Count {
 			get { return fileName.Length; }
 		}
-
 		public override Java.Lang.Object GetItem (int position)
 		{
 			return null;
 		}
-
 		public override long GetItemId (int position)
 		{
 			return 0;
 		}
-
 		// create a new ImageView for each item referenced by the Adapter
 		public override View GetView (int position, View convertView, ViewGroup parent)
 		{
@@ -52,16 +48,12 @@ namespace InterViewer.Droid
 				imageView.LayoutParameters = new GridView.LayoutParams (125, 125);
 				imageView.SetScaleType (ImageView.ScaleType.CenterCrop);
 				imageView.SetPadding (1, 1, 1, 1);
-
 			} 
 			else 
 			{
 				imageView = (ImageView)convertView;
 			}
-
 			imageView.SetImageURI(Android.Net.Uri.Parse(fileName[position]));
-
-
 			return imageView;
 		}
 	}
