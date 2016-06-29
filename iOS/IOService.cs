@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+
 namespace InterViewer.iOS
 {
 	public class IOService:IIOService
@@ -9,7 +11,7 @@ namespace InterViewer.iOS
 
 		public IOService()
 		{
-			appPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			appPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 		}
 
 		public string AppPath
@@ -30,7 +32,9 @@ namespace InterViewer.iOS
 
 		public IEnumerable<string> EnumerateFiles(string path, string searchPattern)
 		{
-			return Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
+			//return Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
+
+			return Directory.EnumerateFiles(path).Where(FilePath => Path.GetExtension(FilePath) == searchPattern).ToList();
 		}
 
 		public bool IsFileExists(string path)

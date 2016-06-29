@@ -20,6 +20,10 @@ namespace InterViewer.iOS
 
 		private ClusteringManager AnnotationsClusteringManager { get; set; }
 
+		private List<Document> DocumentList { get; set; }
+
+		private TableSource source { get; set; }
+
 		public ViewController(IntPtr handle) : base(handle)
 		{
 		}
@@ -30,14 +34,21 @@ namespace InterViewer.iOS
 
 			ViewInit();
 
-			CollectionViewInit();
-
 			MapViewInit();
-
-			AddAnnotations();
 
 			CreatePlusButton();
 
+		}
+
+		public override void ViewWillAppear(bool animated)
+		{
+			base.ViewWillAppear(animated);
+
+			LoadDocument();
+
+			CollectionViewInit();
+
+			AddAnnotations();
 		}
 
 		public override void ViewDidLayoutSubviews()
@@ -57,12 +68,22 @@ namespace InterViewer.iOS
 
 		public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
 		{
-			base.PrepareForSegue(segue, sender);
+
 			if (segue.Identifier == "moveToListViewSegue")
 			{
 				var view = (ListViewController)segue.DestinationViewController;
 				view.Doc = Doc;
 			}
+
+			if (segue.Identifier == "moveToDetailViewSegue")
+			{
+				var view = (DetailViewController)segue.DestinationViewController;
+				view.PDF_Type = "Edit";
+				view.Doc = Doc;
+			}
+
+			base.PrepareForSegue(segue, sender);
+
 		}
 
 		public void ViewInit()
@@ -82,6 +103,8 @@ namespace InterViewer.iOS
 
 				if (CollectionViewLocation.X >= View.Frame.Size.Width)
 				{
+					LoadDocument();
+
 					UIView.Animate(0.5,
 					() =>
 					{
@@ -161,16 +184,23 @@ namespace InterViewer.iOS
 			});
 		}
 
+		public void LoadDocument()
+		{
+			InterViewerService DocumentManager = new InterViewerService(new IOService());
+
+			DocumentList = DocumentManager.GetDocuments();
+
+			if (source != null)
+			{
+				source.UpdateData(DocumentList);
+
+				CollectionView.ReloadData();
+			}
+		}
+
 		public void CollectionViewInit()
 		{
-			List<Int32> temp = new List<Int32>();
-
-			for (Int32 i = 0; i < 20; i++)
-			{
-				temp.Add(i);
-			}
-
-			var source = new TableSource(temp);
+			source = new TableSource(DocumentList);
 
 			CollectionView.Source = source;
 
@@ -183,7 +213,6 @@ namespace InterViewer.iOS
 			}, true);
 
 			source.Selected += ItemOnSelected;
-
 		}
 
 		public void MapViewInit()
@@ -229,10 +258,6 @@ namespace InterViewer.iOS
 
 		public void AddAnnotations()
 		{
-			InterViewerService DocumentManager = new InterViewerService(new IOService());
-
-			List<Document> DocumentList = DocumentManager.GetDocumentsForMap();
-
 			List<IMKAnnotation> AnnotationsList = new List<IMKAnnotation>();
 
 			for (Int32 i = 0; i < DocumentList.Count; i++)
@@ -264,6 +289,8 @@ namespace InterViewer.iOS
 			//}
 
 			AnnotationsClusteringManager = new ClusteringManager(AnnotationsList);
+
+			AnnotationsClusteringManager.DisplayAnnotations(AnnotationsList, map);
 
 			//map.AddAnnotation(new CustomAnnotation()
 			//{
@@ -512,6 +539,13 @@ namespace InterViewer.iOS
 				};
 
 				PerformSegue("moveToListViewSegue", this);
+
+				ImageView.Image = UIImage.FromBundle("plus.png");
+				DrawView.Frame = new CGRect(DrawView.Frame.Location, new CGSize(100, 122));
+				RectangleView.Frame = new CGRect(RectangleView.Frame.Location, new CGSize(100, 100));
+				TextField.Frame = new CGRect(TextField.Frame.Location, new CGSize(0, 80));
+				AddButton.Frame = new CGRect(AddButton.Frame.Location, new CGSize(0, 80));
+
 			})
 			{
 				NumberOfTapsRequired = 1
@@ -535,7 +569,13 @@ namespace InterViewer.iOS
 
 		private void ItemOnSelected(Object sender, TableSource.SelectedEventArgs e)
 		{
+			
 			Console.WriteLine(e.Selected);
+
+			Doc = e.Selected;
+
+			PerformSegue("moveToDetailViewSegue", this);
+
 		}
 
 		public class CustomMapViewDelegate : MKMapViewDelegate
@@ -634,11 +674,17 @@ namespace InterViewer.iOS
 		{
 			const String CollectionViewCellIdentifier = "CollectionViewCell";
 
-			public List<Int32> Source { get; set; }
+			public List<Document> Source { get; set; }
 
-			public TableSource(List<Int32> list)
+			public TableSource(List<Document> list)
 			{
-				Source = new List<Int32>();
+				Source = new List<Document>();
+				Source.AddRange(list);
+			}
+
+			public void UpdateData(List<Document> list)
+			{
+				Source.Clear();
 				Source.AddRange(list);
 			}
 
@@ -678,7 +724,7 @@ namespace InterViewer.iOS
 
 			public class SelectedEventArgs : EventArgs
 			{
-				public Int32 Selected { get; set; }
+				public Document Selected { get; set; }
 			}
 		}
 

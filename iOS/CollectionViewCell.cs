@@ -13,9 +13,10 @@ namespace InterViewer.iOS
 		{
 		}
 
-		public void UpdateCellData(Int32 i)
+		public void UpdateCellData(Document doc)
 		{
-			Label.Text = i.ToString();
+			ImageView.Image = UIImage.FromFile(doc.Thumbnail);
+			Label.Text = doc.Title;
 		}
 	}
 }
