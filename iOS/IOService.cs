@@ -35,6 +35,15 @@ namespace InterViewer.iOS
 			return Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
 		}
 
+		public Document FixDocument(Document document)
+		{ 
+			document.Thumbnail = appPath + "/InterView/Sliders/" + Path.GetFileName(document.Thumbnail);
+
+			document.Reference = appPath + "/InterView/Sliders/" + Path.GetFileName(document.Reference);
+
+			return document;
+		}
+
 		public bool IsFileExists(string path)
 		{
 			return File.Exists(path);

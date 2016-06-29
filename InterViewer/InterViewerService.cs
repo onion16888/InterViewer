@@ -27,11 +27,7 @@ namespace InterViewer
 			{
 				var jsonText = ioService.ReadAllText(file);
 
-				var document = JsonConvert.DeserializeObject<Document>(jsonText);
-
-				document.Thumbnail = path + "/InterView/Sliders/" + Path.GetFileName(document.Thumbnail);
-
-				document.Reference = path + "/InterView/Sliders/" + Path.GetFileName(document.Reference);
+				var document = ioService.FixDocument(JsonConvert.DeserializeObject<Document>(jsonText));
 
 				list.Add(document);
 			}
