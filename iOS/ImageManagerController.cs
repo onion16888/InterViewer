@@ -11,7 +11,7 @@ namespace InterViewer.iOS
 	{
 		ImageManagerTableSource source;
 		List<FileListAttributes> listFilePathName;
-		String pathRightNow;
+		string pathRightNow;
 		public ImageManagerController (IntPtr handle) : base (handle)
 		{
 		}
@@ -76,7 +76,7 @@ namespace InterViewer.iOS
 				}
 				else
 				{
-					showAlert("新增影像", e.SelectedName.Name + @"不是PNG檔案", @"確定", this);
+					showAlert("新增影像", e.SelectedName.Name + @" 不是PNG檔案", @"確定", this);
 				}
 			}
 			else

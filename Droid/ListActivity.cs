@@ -17,6 +17,7 @@ using Java.IO;
 using Android.Content.Res;
 using Android.Content.PM;
 using Android.Provider;
+using Java.Lang;
 
 namespace InterViewer.Droid
 {
@@ -34,7 +35,7 @@ namespace InterViewer.Droid
 		//媒體庫公開目錄
 		Android.Net.Uri uri = Android.Provider.MediaStore.Images.Media.ExternalContentUri;
 		//此App的專用目錄(暫定)
-		public string AppDir = Android.OS.Environment.ExternalStorageDirectory + "/Download/InterView/";
+		public string AppDir = Android.OS.Environment.ExternalStorageDirectory + "/Download/InterView";
 		//只是一個物件 要存放某個資料夾下的資訊
 		List<FileSystemInfo> visibleThings = new List<FileSystemInfo>();
 		//右側四個Btn
@@ -61,7 +62,7 @@ namespace InterViewer.Droid
 			//檢查專用目錄是否存在,不存在就建立
 			this.DirCheck(AppDir);
 
-			List<FileSystemInfo> ReturnIcons = this.FindPngInPath(AppDir+"Slides", visibleThings);
+			List<FileSystemInfo> ReturnIcons = this.FindPngInPath(AppDir+"/Slides", visibleThings);
 			List<string> hh=new List<string>(); ;
 
 			var h = from qwe in ReturnIcons select new {qwe.FullName};
@@ -71,20 +72,31 @@ namespace InterViewer.Droid
 			}
 			var cc=hh.Count;
 			//預設載入Sliders
-			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
+			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 			gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			//gridviewShow.Adapter = new ImageAdapter(this, AppDir, ReturnIcons);
+			CheckButtonIsSelected(btnTemplate);
+
+			DetailActivity.PDF_Type = "Add";
 
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
+				CheckButtonIsSelected(btnTemplate);
+
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+
+				DetailActivity.PDF_Type = "Add";
 			};
 
 			btnDocuments.Click += (object sender, EventArgs e) =>
 			{
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Documents", visibleThings)));
+				CheckButtonIsSelected(btnDocuments);
+
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Documents", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+
+				DetailActivity.PDF_Type = "Edit";
 			};
 				
 			btnImages.Click+= (object sender, EventArgs e) => 
@@ -101,21 +113,26 @@ namespace InterViewer.Droid
 				//fileintent.SetType("gagt/sdf");
 				fileintent.SetType("application/pdf");
 				fileintent.PutExtra(Intent.ExtraAllowMultiple, true);
+				fileintent.PutExtra(Intent.ExtraLocalOnly, true);
 
 				Intent destIntent = Intent.CreateChooser(fileintent, "選取Pdf");
 				StartActivityForResult(destIntent, PdfPick);
 			};
 			gridviewShow.ItemClick += (object sender, AdapterView.ItemClickEventArgs args) =>
 			{
-				Toast.MakeText(this, ReturnIcons[args.Position].FullName, ToastLength.Short).Show();
+				Toast.MakeText(this, ReturnIcons[args.Position].FullName, ToastLength.Long).Show();
 				//Intent DetailAc = new Intent(this, typeof(DetailActivity));
 
-				Doc.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
+				if (System.IO.File.Exists(ReturnIcons[args.Position].FullName.Replace(".png", ".pdf")))
+					Doc.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
+				else
+					Doc.Reference = ReturnIcons[args.Position].FullName;//passing a .png path
+				Doc.Thumbnail = ReturnIcons[args.Position].FullName;
 
-				//DetailAc.PutExtra("DocumentObject",document);
+
 				DetailActivity.Doc = Doc;
 				StartActivity(typeof(DetailActivity));
-				this.Finish();
+
 			};
 		}
 
@@ -143,7 +160,7 @@ namespace InterViewer.Droid
 					//var imageView = FindViewById<ImageView> (Resource.Id.myImageView);
 					//imageView.SetImageURI (data.Data);
 					//得到Url物件,送去處理，回傳真實路徑
-					string Source = GetPathToImage(data.Data);
+					string Source = getPathFromUri(this, data.Data);
 
 					//將回傳路徑丟進JAVA.IO.FILE利用NAME得到檔案名稱,組出新路徑跟檔案名稱
 					string Des = System.IO.Path.Combine(SaveImageDir+"/Slides", new Java.IO.File(Source).Name);
@@ -157,7 +174,7 @@ namespace InterViewer.Droid
 						options.InPreferredConfig = Bitmap.Config.Argb8888;
 						Bitmap bitmap = BitmapFactory.DecodeFile(Source, options);
 
-						Double scale = 1f / 5f;
+						double scale = 1f / 5f;
 
 						Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
 							bitmap,
@@ -172,8 +189,7 @@ namespace InterViewer.Droid
 						output.Close();
 						#endregion
 
-						PDFImageAdapter.TheImageAdapter = null;
-						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
+						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 					}
 					else
@@ -186,7 +202,7 @@ namespace InterViewer.Droid
 						options.InPreferredConfig = Bitmap.Config.Argb8888;
 						Bitmap bitmap = BitmapFactory.DecodeFile(Source, options);
 
-						Double scale = 1f / 4f;
+						double scale = 1f / 4f;
 
 						Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
 							bitmap, 
@@ -201,7 +217,7 @@ namespace InterViewer.Droid
 						output.Close();
 						#endregion
 
-						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "Slides", visibleThings)));
+						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 					}
 				}
@@ -235,70 +251,147 @@ namespace InterViewer.Droid
 			if (resultCode == Result.Ok && requestCode == PdfPick)
 			{
 				string ForPdfDir = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+
+				var uris = new List<Android.Net.Uri>();
 				if (data.Data != null)
 				{
-					var SourcePath = System.Net.WebUtility.UrlDecode(data.Data.ToString());
-					var PathArray = SourcePath.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-					var Source = System.IO.Path.Combine(ForPdfDir, PathArray[2]);
-					var Des = System.IO.Path.Combine(ForPdfDir, "DownLoad/InterView/Slides/" + new Java.IO.File(Source).Name);
-					Java.IO.File FileSou = new Java.IO.File(Source);
-					Java.IO.File FileDes = new Java.IO.File(Des);
-					if (FileDes.Exists())
+					uris.Add(data.Data);
+				}
+				else 
+				{
+					for (int i = 0; i < data.ClipData.ItemCount; i++)
 					{
-						//ShowAlert ("相同檔案名稱"+FileDes.Name+"已存在", null);
-						//先寫入檔案 給來源路徑跟目的地路徑
-						this.copy(FileSou, FileDes);
-						this.WritePngToDir(Source, Des);
-						return;
+						uris.Add(data.ClipData.GetItemAt(i).Uri);
 					}
+				}
+
+				foreach (var fileUri in uris)
+				{
+					string Source = getPathFromUri(this, fileUri);
+
+					Java.IO.File FileSou = new Java.IO.File(Source);
+
+					string Des = System.IO.Path.Combine(ForPdfDir, "DownLoad/InterView/Slides/" + FileSou.Name);
+
+					Java.IO.File FileDes = new Java.IO.File(Des);
 
 					this.copy(FileSou, FileDes);
 					this.WritePngToDir(Source, Des);
 				}
-				//複選
-				else
-				{
-					//string s = Android.OS.Environment.ExternalStorageDirectory.Path + "/Sample/test.txt";
-					//output=new FileOutputStream(Android.OS.Environment.ExternalStorageDirectory.ToString()+"/Sample/test.txt");
-					ClipData clipData = data.ClipData;
-					int count = clipData.ItemCount;
-					if (count > 0)
-					{
-						Android.Net.Uri[] uris = new Android.Net.Uri[count];
-						for (int i = 0; i < count; i++)
-						{
-							uris[i] = clipData.GetItemAt(i).Uri;
-							var SourcePaths = System.IO.Path.GetFullPath(uris[i].Path);
-							var PathArray = SourcePaths.Split(new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-							var Source = System.IO.Path.Combine(ForPdfDir, PathArray[1]);
-
-							//FromFileName = new Java.IO.File (Source);
-							var Des = System.IO.Path.Combine(ForPdfDir, "DownLoad/InterView/Slides/" + new Java.IO.File(Source).Name);
-
-							Java.IO.File FileSou = new Java.IO.File(Source);
-							Java.IO.File FileDes = new Java.IO.File(Des);
-
-							if (FileDes.Exists())
-							{
-								//ShowAlert ("相同檔案名"+FileDes.Name+"稱已存在", null);
-								this.copy(FileSou, FileDes);
-								this.WritePngToDir(Source, Des);
-								continue;
-							}
-
-							this.copy(FileSou, FileDes);
-							this.WritePngToDir(Source, Des);
-						}
-					}
-					//ShowAlert ("以完成搬移檔案至DownLoad資料夾下",null);
-				}
+				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
+				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 			}
 		}
+		//MaX Add
+		public string getPathFromUri(Context context, Android.Net.Uri uri)
+		{
+			if (uri == null)
+			{
+				return null;
+			}
+			// 判斷是否為Android 4.4之後的版本
+			bool after44 = (Int32)Build.VERSION.SdkInt >= 19;
 
+			if (after44 && DocumentsContract.IsDocumentUri(context, uri))
+			{
+				// 如果是Android 4.4之後的版本，而且屬於文件URI
+				string authority = uri.Authority;
+
+				// 判斷Authority是否為本地端檔案所使用的
+				if ("com.android.externalstorage.documents".Equals(authority))
+				{
+					// 外部儲存空間
+					string docId = DocumentsContract.GetDocumentId(uri);
+					string[] divide = docId.Split(':');
+					string type = divide[0];
+
+					if ("primary".Equals(type))
+					{
+						return Android.OS.Environment.ExternalStorageDirectory + "/" + divide[1];
+					}
+				}
+				else if ("com.android.providers.downloads.documents".Equals(authority))
+				{
+					// 下載目錄
+					string docId = DocumentsContract.GetDocumentId(uri);
+					Android.Net.Uri downloadUri = ContentUris.WithAppendedId(Android.Net.Uri.Parse("content://downloads/public_downloads"), Long.ParseLong(docId));
+					return queryAbsolutePath(context, downloadUri);
+				}
+				else if ("com.android.providers.media.documents".Equals(authority))
+				{
+					// 圖片、影音檔案
+					string docId = DocumentsContract.GetDocumentId(uri);
+					string[] divide = docId.Split(':');
+					string type = divide[0];
+					Android.Net.Uri mediaUri = null;
+					if ("image".Equals(type))
+					{
+						mediaUri = MediaStore.Images.Media.ExternalContentUri;
+					}
+					else if ("video".Equals(type))
+					{
+						mediaUri = MediaStore.Video.Media.ExternalContentUri;
+					}
+					else if ("audio".Equals(type))
+					{
+						mediaUri = MediaStore.Audio.Media.ExternalContentUri;
+					}
+					else {
+						return null;
+					}
+					mediaUri = ContentUris.WithAppendedId(mediaUri, Long.ParseLong(divide[1]));
+					return queryAbsolutePath(context, mediaUri);
+				}
+			}
+			else {
+				// 如果是一般的URI
+				string scheme = uri.Scheme;
+				string path = null;
+				if ("content".Equals(scheme))
+				{
+					// 內容URI
+					path = queryAbsolutePath(context, uri);
+				}
+				else if ("file".Equals(scheme))
+				{
+					// 檔案URI
+					path = uri.Path;
+				}
+				return path;
+				//return createFileObjFromPath(path, mustCanRead);
+			}
+			return null;
+		}
+		//MAX ADD
+		public string queryAbsolutePath(Context context, Android.Net.Uri uri)
+		{
+			string[] projection = { MediaStore.MediaColumns.Data};
+			ICursor cursor = null;
+			try
+			{
+				cursor = context.ContentResolver.Query(uri, projection, null, null, null);
+				if (cursor != null && cursor.MoveToFirst())
+				{
+					int index = cursor.GetColumnIndexOrThrow(MediaStore.MediaColumns.Data);
+					return cursor.GetString(index);
+				}
+			}
+			catch (Java.Lang.Exception ex)
+			{
+				ex.PrintStackTrace();
+				if (cursor != null)
+				{
+					cursor.Close();
+				}
+			}
+			return null;
+		}
+
+		//Sid ADD
 		void WritePngToDir(string Source, string Des)
 		{
 			//把PDF初始化被給予檔案路徑
-			Pdf = new PDFDocument(this, Source,1);
+			Pdf = new PDFDocument(this, Source, 0);
 			//接收第一張Bitmap
 			var BitmapIcon = Pdf.Images[0];
 			//把.PDF轉成.PNG 開啟建檔
@@ -308,7 +401,7 @@ namespace InterViewer.Droid
 			BitmapIcon.Compress(Bitmap.CompressFormat.Png, 100, stream);
 			stream.Close();
 		}
-
+		//Sid ADD
 		public void copy(Java.IO.File src, Java.IO.File dst)
 		{
 			InputStream sou = new FileInputStream(src);
@@ -324,6 +417,7 @@ namespace InterViewer.Droid
 			sou.Close();
 			des.Close();
 		}
+
 		private void ShowAlert(string message, EventHandler<Android.Content.DialogClickEventArgs> positiveButtonClickHandle)
 		{
 
@@ -338,6 +432,8 @@ namespace InterViewer.Droid
 				alert.Show();
 			});
 		}
+
+		//Sid ADD
 		private void DirCheck(string AppDir)
 		{
 			Java.IO.File AppDirCheck = new Java.IO.File(AppDir);
@@ -368,14 +464,14 @@ namespace InterViewer.Droid
 		//	}
 		//	return path;
 		//}
-
+		//Sid ADD
 		private string GetPathToImage(Android.Net.Uri uri)
 		{
 			string doc_id = "";
 			using (var c1 = ContentResolver.Query(uri, null, null, null, null))
 			{
 				c1.MoveToFirst();
-				String document_id = c1.GetString(0);
+				string document_id = c1.GetString(0);
 				doc_id = document_id.Substring(document_id.LastIndexOf(":") + 1);
 			}
 
@@ -415,6 +511,7 @@ namespace InterViewer.Droid
 		/// </summary>
 		/// <returns>The files name.</returns>
 		/// <param name="FolderName">Folder name. for example,if the source is in "Slides" path folder,set string "Slides" here</param>
+		/// Sean ADD
 		private string[] queryFilesName(string FolderName)
 		{
 			//Debug.WriteLine("files:");
@@ -427,7 +524,7 @@ namespace InterViewer.Droid
 
 			return files;
 		}
-
+		//Sid Add
 		private string[] queryFilesName(List<FileSystemInfo> visibleThings)
 		{
 			List<string> hh = new List<string>(); ;
@@ -440,7 +537,23 @@ namespace InterViewer.Droid
 
 			return hh.ToArray();
 		}
-		//以後有機會測試,套這個Adapter會Error
+
+		// ?? Add
+		private void CheckButtonIsSelected(Button button)
+		{
+			Button otherBtn = button.Id == Resource.Id.btnTemplate ? btnDocuments : btnTemplate;
+
+			if (otherBtn.Selected)
+			{
+				otherBtn.Selected = false;
+				otherBtn.SetBackgroundResource(Resource.Drawable.sub_command_normal);
+			}
+
+			button.Selected = true;
+			button.SetBackgroundResource(Resource.Drawable.sub_command_selected);
+		}
+
+		//以後有機會測試,套這個Adapter會Error Sid ADD
 		public class ImageAdapter : BaseAdapter
 		{
 			List<FileSystemInfo> _visibleThings;

@@ -4,5 +4,5 @@
 
     <!-- rounded corner -->
     <corners android:radius="10dp" />
-    <solid android:color="#F28500" />
+    <solid android:color="#f28500" />
 </shape>

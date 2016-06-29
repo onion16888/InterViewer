@@ -47,5 +47,6 @@ namespace InterViewer
 		/// </summary>
 		/// <value>The attachments.</value>
 		public List<Attachment> Attachments { get; set; }
+
 	}
 }

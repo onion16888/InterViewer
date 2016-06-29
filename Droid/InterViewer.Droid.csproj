@@ -16,6 +16,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
+    <AndroidSupportedAbis>armeabi-v7a</AndroidSupportedAbis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,6 +28,8 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AndroidLinkMode>None</AndroidLinkMode>
+    <AndroidSupportedAbis>armeabi-v7a;armeabi;x86;x86_64;arm64-v8a</AndroidSupportedAbis>
+    <PlatformTarget>anycpu</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -41,9 +44,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="Askaiser.Android.MuPDF">
-      <HintPath>..\packages\Askaiser.Android.MuPDF.1.1.0\lib\MonoAndroid410\Askaiser.Android.MuPDF.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -146,9 +146,7 @@
     <None Include="InterView\Sliders\sample_3.png" />
     <None Include="InterView\Sliders\sample_4.pdf" />
     <None Include="InterView\Sliders\sample_4.png" />
-    <None Include="Assets\InterView\Documents\.DS_Store" />
     <None Include="Assets\InterView\Documents\Write.txt" />
-    <None Include="Assets\InterView\Sliders\.DS_Store" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
@@ -158,7 +156,7 @@
     <AndroidResource Include="Resources\mipmap-xxhdpi\Icon.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\Icon.png" />
     <AndroidResource Include="Resources\layout\List.axml" />
-    <AndroidResource Include="Resources\drawable\sub_command_shape.xml" />
+    <AndroidResource Include="Resources\drawable\sub_command_normal.xml" />
     <AndroidResource Include="Resources\layout\Detail.axml" />
     <AndroidResource Include="Resources\layout\marker_view_layout.axml" />
     <AndroidResource Include="Resources\layout\rectangle_view_layout.axml" />
@@ -190,6 +188,7 @@
     <AndroidResource Include="Resources\drawable\icon_tag_d.png" />
     <AndroidResource Include="Resources\drawable\icon_tag_s.png" />
     <AndroidResource Include="Resources\drawable\icon_tag.png" />
+    <AndroidResource Include="Resources\drawable\sub_command_selected.xml" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="xamandroidsupportv4-18">
@@ -235,16 +234,16 @@
     <AndroidAsset Include="Assets\InterView\Documents\vmware-128.png" />
     <AndroidAsset Include="Assets\InterView\Documents\windows-128.pdf" />
     <AndroidAsset Include="Assets\InterView\Documents\windows-128.png" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_0.pdf" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_0.png" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_1.pdf" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_1.png" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_2.pdf" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_2.png" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_3.pdf" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_3.png" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_4.pdf" />
-    <AndroidAsset Include="Assets\InterView\Sliders\sample_4.png" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_0.pdf" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_0.png" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_1.pdf" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_1.png" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_2.pdf" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_2.png" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_3.pdf" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_3.png" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_4.pdf" />
+    <AndroidAsset Include="Assets\InterView\Slides\sample_4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.GooglePlayServices.Basement.29.0.0.2\build\Xamarin.GooglePlayServices.Basement.targets" Condition="Exists('..\packages\Xamarin.GooglePlayServices.Basement.29.0.0.2\build\Xamarin.GooglePlayServices.Basement.targets')" />

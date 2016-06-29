@@ -12,9 +12,10 @@ namespace InterViewer.iOS
 	public partial class FileManagerController : UIViewController
 	{
 		const int FIRST_PAGE = 1;
+		string _folderSlides = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/InterView/Sliders";
 		FileManagerTableSource source;
 		List<FileListAttributes> listFilePathName;
-		String pathRightNow;
+		string pathRightNow;
 		public FileManagerController (IntPtr handle) : base (handle)
 		{
 		}
@@ -75,7 +76,6 @@ namespace InterViewer.iOS
 		private void ListButton_Click(object sender, FileManagerTableSource.SelectedEventArgs e)
 		{
 			bool isFilePDF = isPDF(e.SelectedName.Name);
-			string _folderSlides = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/InterView/Sliders";
 			if (e.SelectedName.IsFile == true)
 			{
 				if (isFilePDF == true)
@@ -89,7 +89,7 @@ namespace InterViewer.iOS
 				}
 				else
 				{
-					showAlert("新增範本", e.SelectedName.Name + @"不是PDF檔案", @"確定", this);
+					showAlert("新增範本", e.SelectedName.Name + @" 不是PDF檔案", @"確定", this);
 				}
 			}
 			else
@@ -103,6 +103,11 @@ namespace InterViewer.iOS
 				pathRightNow = e.SelectedName.Name;
 			}
 		}
+		//private void enviromentCheck()
+		//{
+		//	if (!File.Exists(_folderSlides))
+		//		Directory.CreateDirectory(_folderSlides);
+		//}
 		/// <summary>
 		/// Gets the file and path list.
 		/// </summary>
@@ -222,6 +227,5 @@ namespace InterViewer.iOS
 			alertController.AddAction(UIAlertAction.Create(actionTitle, UIAlertActionStyle.Default, null));
 			caller.PresentViewController(alertController, true, null);
 		}
-
 	}
 }
