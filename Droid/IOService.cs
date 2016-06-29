@@ -4,7 +4,7 @@ using System.IO;
 
 namespace InterViewer.Droid
 {
-	public class IOService:IIOService
+	public class IOService : IIOService
 	{
 		private string appPath;
 
@@ -78,6 +78,11 @@ namespace InterViewer.Droid
 		public void WriteAllText(string path, string contents)
 		{
 			File.WriteAllText(path, contents);
+		}
+
+		public void CopyFile(string sourceFileName, string destFileName)
+		{
+			File.Copy(sourceFileName, destFileName, true);
 		}
 
 		private string GetPath(string directoryName)

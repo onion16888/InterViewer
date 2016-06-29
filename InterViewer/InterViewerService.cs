@@ -211,6 +211,49 @@ namespace InterViewer
 			var filename = Path.Combine(path, entity.Name);
 			ioService.WriteAllText(filename, json);
 		}
+
+		public Document CopyAttachment(Document newDoc, Document oldDoc)
+		{
+			var attachmentDir = DateTime.Now.Ticks.ToString();
+			newDoc.Name = string.Format("{0}.json", attachmentDir);
+
+			if (newDoc.Attachments == null)
+			{
+				newDoc.Attachments = new List<Attachment>();
+			}
+
+			foreach (var item in oldDoc.Attachments)
+			{
+				if (!string.IsNullOrWhiteSpace(item.Path))
+				{
+					var sourceFileName = item.Path;
+					var fileName = Path.GetFileName(item.Path);
+					var destFileName = Path.Combine(attachmentDir, fileName);
+					item.Path = destFileName;
+
+					#region 實際複製檔案
+
+					var rootPath = ioService.GetDocumentDirectory();
+					if (!sourceFileName.StartsWith(rootPath, StringComparison.Ordinal))
+					{
+						sourceFileName = Path.Combine(rootPath, sourceFileName);
+					}
+
+					if (!destFileName.StartsWith(rootPath, StringComparison.Ordinal))
+					{
+						ioService.CheckDirectory(Path.Combine(rootPath, attachmentDir));
+						destFileName = Path.Combine(rootPath, destFileName);
+					}
+					ioService.CopyFile(sourceFileName, destFileName);
+
+					#endregion
+				}
+
+				newDoc.Attachments.Add(item);
+			}
+
+			return newDoc;
+		}
 	}
 }
 
