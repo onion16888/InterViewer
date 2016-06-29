@@ -77,12 +77,16 @@ namespace InterViewer.Droid
 			//gridviewShow.Adapter = new ImageAdapter(this, AppDir, ReturnIcons);
 			CheckButtonIsSelected(btnTemplate);
 
+			DetailActivity.PDF_Type = "Add";
+
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
 				CheckButtonIsSelected(btnTemplate);
 
 				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+
+				DetailActivity.PDF_Type = "Add";
 			};
 
 			btnDocuments.Click += (object sender, EventArgs e) =>
@@ -91,6 +95,8 @@ namespace InterViewer.Droid
 
 				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Documents", visibleThings)));
 				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+
+				DetailActivity.PDF_Type = "Edit";
 			};
 				
 			btnImages.Click+= (object sender, EventArgs e) => 
