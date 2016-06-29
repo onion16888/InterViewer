@@ -19,6 +19,8 @@ namespace InterViewer
 
 		IEnumerable<string> EnumerateFiles(string path, string searchPattern);
 
+		Document FixDocument(Document doc);
+
 		string ReadAllText(string path);
 
 		void WriteAllText(string path, string contents);

@@ -131,7 +131,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.69999999999999996" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ih3-5B-fX6">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.80000000000000004" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ih3-5B-fX6">
                                 <rect key="frame" x="512" y="64" width="430" height="536"/>
                                 <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -151,10 +151,13 @@
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9If-5j-b36">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gSh-Ec-C4h">
                                                     <rect key="frame" x="8" y="8" width="34" height="34"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="28"/>
-                                                    <color key="textColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="32"/>
+                                                    <color key="textColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -164,10 +167,15 @@
                                         <constraints>
                                             <constraint firstItem="gSh-Ec-C4h" firstAttribute="leading" secondItem="uQa-oj-dBK" secondAttribute="leadingMargin" id="27m-eJ-8QM"/>
                                             <constraint firstItem="gSh-Ec-C4h" firstAttribute="top" secondItem="uQa-oj-dBK" secondAttribute="topMargin" id="FkU-Ck-l3V"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="9If-5j-b36" secondAttribute="trailing" constant="-8" id="J5l-4x-Crb"/>
+                                            <constraint firstItem="9If-5j-b36" firstAttribute="leading" secondItem="uQa-oj-dBK" secondAttribute="leadingMargin" constant="-8" id="O7R-Hc-tow"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="9If-5j-b36" secondAttribute="bottom" constant="-8" id="Uqj-xt-yyb"/>
                                             <constraint firstItem="gSh-Ec-C4h" firstAttribute="bottom" secondItem="uQa-oj-dBK" secondAttribute="bottomMargin" id="aXP-QA-6H2"/>
+                                            <constraint firstItem="9If-5j-b36" firstAttribute="top" secondItem="uQa-oj-dBK" secondAttribute="topMargin" constant="-8" id="ytl-Ef-imI"/>
                                             <constraint firstItem="gSh-Ec-C4h" firstAttribute="trailing" secondItem="uQa-oj-dBK" secondAttribute="trailingMargin" id="zYh-eY-Hc9"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="ImageView" destination="9If-5j-b36" id="IW4-HG-drM"/>
                                             <outlet property="Label" destination="gSh-Ec-C4h" id="DD6-7k-QRW"/>
                                         </connections>
                                     </collectionViewCell>
@@ -198,11 +206,12 @@
                         <outlet property="btnTag" destination="BWH-Ws-Ade" id="ILV-23-BZ6"/>
                         <outlet property="map" destination="7ff-Xc-zej" id="20z-rm-tck"/>
                         <segue destination="Ul9-b0-Vb1" kind="show" identifier="moveToListViewSegue" id="Yq6-si-8Xr"/>
+                        <segue destination="gcc-Rz-UfT" kind="show" identifier="moveToDetailViewSegue" id="l0g-Pc-XZ8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="249" y="317"/>
+            <point key="canvasLocation" x="485" y="317"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="lBU-fQ-ueQ">
@@ -300,7 +309,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="drt-AY-A20" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2135" y="-476"/>
+            <point key="canvasLocation" x="1951" y="1436"/>
         </scene>
         <!--List-->
         <scene sceneID="juP-uk-b3i">
@@ -702,7 +711,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZvI-sX-GOG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1422" y="1388"/>
+            <point key="canvasLocation" x="782" y="1380"/>
         </scene>
         <!--Detail-->
         <scene sceneID="l7P-cI-GQJ">
@@ -879,7 +888,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dRX-rw-hD8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2210" y="317"/>
+            <point key="canvasLocation" x="2331" y="317"/>
         </scene>
     </scenes>
     <resources>
@@ -902,4 +911,7 @@
         <image name="icon_tag_d.png" width="512" height="512"/>
         <image name="icon_tag_s.png" width="512" height="512"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="l0g-Pc-XZ8"/>
+    </inferredMetricsTieBreakers>
 </document>

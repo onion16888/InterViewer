@@ -20,13 +20,14 @@ namespace InterViewer
 			var list = new List<Document>();
 
 			var path = ioService.GetDocumentDirectory();
-			var files = ioService.EnumerateFiles(path, ".json");
+
+			var files = ioService.EnumerateFiles(path, "*.json");
 
 			foreach (var file in files)
 			{
 				var jsonText = ioService.ReadAllText(file);
 
-				var document = JsonConvert.DeserializeObject<Document>(jsonText);
+				var document = ioService.FixDocument(JsonConvert.DeserializeObject<Document>(jsonText));
 
 				list.Add(document);
 			}
