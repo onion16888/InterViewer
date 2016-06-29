@@ -424,7 +424,7 @@ namespace InterViewer.iOS
 			if (type == AttachmentTypeEnum.Note)
 			{
 				UITextView textview = new UITextView();
-				textview.Text = attachment == null ? string.Empty: attachment.Path;
+				textview.Text = attachment == null ? string.Empty: attachment.Note;
 				textview.AccessibilityIdentifier = attachment == null ? identifier : attachment.Name;
 				textview.BackgroundColor = UIColor.FromRGB(242, 255, 0);
 				textview.Frame = attachment == null ? new CoreGraphics.CGRect(scrollView.Center.X, scrollView.Center.Y, 100, 100): CGRectFrame;
@@ -437,7 +437,7 @@ namespace InterViewer.iOS
 				textview.Ended += delegate
 				{
 					var editAttachment = Doc.Attachments.Where(x => x.Name == textview.AccessibilityIdentifier).SingleOrDefault();
-					editAttachment.Path = textview.Text;
+					editAttachment.Note = textview.Text;
 					SettingAttachments(editAttachment);
 				};
 				//NoteList.Add(Identifier, textNote);
@@ -448,7 +448,7 @@ namespace InterViewer.iOS
 					Attachment newattachment = new Attachment();
 					newattachment.Name = identifier;
 					newattachment.PageIndex = PageNumber;
-					newattachment.Path = textview.Text;
+					newattachment.Note = textview.Text;
 					newattachment.Type = AttachmentTypeEnum.Note;
 					newattachment.Width = textview.Frame.Width;
 					newattachment.Height = textview.Frame.Height;
