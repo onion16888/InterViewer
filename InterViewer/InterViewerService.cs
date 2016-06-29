@@ -21,7 +21,7 @@ namespace InterViewer
 
 			var path = ioService.GetDocumentDirectory();
 
-			var files = ioService.EnumerateFiles(path, ".json");
+			var files = ioService.EnumerateFiles(path, "*.json");
 
 			foreach (var file in files)
 			{

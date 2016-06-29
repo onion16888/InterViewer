@@ -32,9 +32,7 @@ namespace InterViewer.iOS
 
 		public IEnumerable<string> EnumerateFiles(string path, string searchPattern)
 		{
-			//return Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
-
-			return Directory.EnumerateFiles(path).Where(FilePath => Path.GetExtension(FilePath) == searchPattern).ToList();
+			return Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
 		}
 
 		public bool IsFileExists(string path)
