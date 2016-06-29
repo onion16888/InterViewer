@@ -36,6 +36,11 @@ namespace InterViewer.Droid
 			return Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
 		}
 
+		public Document FixDocument(Document document)
+		{
+			return document;
+		}
+
 		public string GetDocumentDirectory()
 		{
 			var dirName = "Documents";
