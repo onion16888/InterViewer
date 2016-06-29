@@ -9,6 +9,8 @@ namespace InterViewer
 
 		List<Document> GetDocuments();
 
+		List<Document> GetDocumentsOrderBy(double latitude, double longitude);
+
 		/// <summary>
 		/// 地圖使用的測試資料
 		/// </summary>

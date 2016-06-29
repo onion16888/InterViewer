@@ -35,6 +35,30 @@ namespace InterViewer
 			return list;
 		}
 
+		/// <summary>
+		/// 傳入經緯度，計算文件距離後，由小到大排序後回傳文件
+		/// </summary>
+		/// <returns>The documents.</returns>
+		/// <param name="latitude">經度</param>
+		/// <param name="longitude">緯度</param>
+		public List<Document> GetDocumentsOrderBy(double latitude, double longitude)
+		{
+			var documents = GetDocuments();
+			var dict = new Dictionary<Document, double>();
+
+			foreach (var item in documents)
+			{
+				var latitudeDiff = latitude - item.Latitude;
+				var longitudeDiff = longitude - item.Longitude;
+				var distance = Math.Sqrt(Math.Abs(latitudeDiff * latitudeDiff + longitudeDiff * longitudeDiff));
+				dict.Add(item, distance);
+			}
+
+			return dict.OrderBy(x => x.Value)
+					   .Select(x => x.Key)
+					   .ToList();
+		}
+
 		public List<Document> GetDocumentsForMap()
 		{
 			var list = new List<Document>();
