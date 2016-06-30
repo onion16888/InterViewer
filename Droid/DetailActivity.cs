@@ -23,9 +23,9 @@ using CameraAppDemo;
 
 namespace InterViewer.Droid
 {
-	
+
 	[Activity(Label = "DetailActivity"//, MainLauncher = true
-			  , ScreenOrientation = Android.Content.PM.ScreenOrientation.Landscape)]
+			  , ScreenOrientation = ScreenOrientation.Landscape)]
 
 
 
@@ -45,18 +45,15 @@ namespace InterViewer.Droid
 		public static Document Doc { get; set; }
 		private float startX, endX = 0;
 		private Bitmap drawRectLine;
-		private string RootPath;
+		private string DocumentPath;
 
-		ScrollView pdfScrollView;
+
 		RelativeLayout pdfContent;
 		PencilDrawLine drawLineView;
-		RelativeLayout detail_main;
 		RelativeLayout pdfRelativeLayout;
-
 		ImageView pdfImageView;
-
 		ImageView cameraImageView;
-		ImageView drawImageView;
+		Button btnHome;
 		#region tool bar
 		ImageButton btnPencil;
 		ImageButton btnCamera;
@@ -83,76 +80,6 @@ namespace InterViewer.Droid
 			public static Java.IO.File _dir;
 			public static Bitmap bitmap;
 		}
-		public static class ScreenSize
-		{
-			public static int screenWidth { get; set; }
-			public static int screenHeight { get; set; }
-		}
-
-
-
-		public class MyTouchListener: Java.Lang.Object, View.IOnTouchListener
-		{
-			float lastX, lastY; 
-			private int btnHeight;
-			int screenWidth = ScreenSize.screenWidth;
-			int screenHeight = ScreenSize.screenHeight;
-			public int imagHight = 0;
-			private float _posX;
-			private float _posY;
-			public bool OnTouch(View v, MotionEvent e)
-			{
-				v.Parent.RequestDisallowInterceptTouchEvent(true);
-				if (e.Action == MotionEventActions.Down)
-				{
-					lastX = e.GetX();
-					lastY = e.GetY();
-					return true;
-				}
-				if (e.Action == MotionEventActions.Move)
-				{
-					//RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams));
-					Debug.WriteLine("M");
-					float xx = e.GetX();
-					float yy = e.GetY();
-					float deltaX = xx - lastX;
-					float deltaY = yy - lastY;
-					_posX += deltaX;
-					_posY += deltaY;
-					v.SetX(_posX);
-					v.SetY(_posY);
-					Debug.WriteLine(_posX);
-					Debug.WriteLine(_posY);
-					v.Invalidate();
-					lastX = xx;
-					lastY = yy;
-					return true;
-				}
-
-				if (e.Action == MotionEventActions.Up)
-				{
-					Debug.WriteLine("UP");
-				
-					return true;
-				}
-
-				return false;
-			}
-		}
-
-		public class StopScrollTouchListener : Java.Lang.Object, View.IOnTouchListener
-		{
-			public bool OnTouch(View v, MotionEvent e)
-			{
-				return true;
-			}
-		}
-		public DetailActivity()
-		{
-			ioService = new IOService();
-			interviewerservice = new InterViewerService(ioService);
-		}
-
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -160,25 +87,20 @@ namespace InterViewer.Droid
 
 			SetContentView(Resource.Layout.Detail);
 
-			//test 
-			//Doc = new Document();
-			RootPath = ioService.GetDocumentDirectory();
+
+			ioService = new IOService();
+			interviewerservice = new InterViewerService(ioService);
+			DocumentPath = ioService.GetDocumentDirectory();
+
 			Initial();
 
-			var metrics = Resources.DisplayMetrics;
-			ScreenSize.screenWidth = metrics.WidthPixels;
-			ScreenSize.screenHeight = metrics.HeightPixels;
-		
-			RelativeLayout ly1 = FindViewById<RelativeLayout>(Resource.Id.ly1);
 			ImageView drawImageView = new ImageView(pdfContent.Context);
-			//PencilDrawLine drawLineView = new PencilDrawLine(pdfContent.Context);
-			RelativeLayout item_bar = FindViewById<RelativeLayout>(Resource.Id.item_bar);
 			drawLineView = new PencilDrawLine(pdfContent.Context);
 			btnPencil.Click += (object sender, EventArgs e) =>
 			{
-				
+
 				drawImageView.Id = View.GenerateViewId();
-				string drawImageFileName = string.Format("{0}.png", DateTime.Now.Ticks);
+			
 				Debug.WriteLine(drawImageView.Id.ToString());
 				if (!openPen)
 				{
@@ -186,59 +108,27 @@ namespace InterViewer.Droid
 					drawImageView = new ImageView(pdfContent.Context);
 					btnPencil.SetBackgroundColor(Color.Red);
 					drawLineView = new PencilDrawLine(pdfContent.Context);
-					//drawImageView.SetBackgroundColor(Color.Blue);
+
 					pdfContent.AddView(drawLineView);
-					ly1.AddView(drawImageView);
+					pdfContent.AddView(drawImageView);
 				}
-				else 
+				else
 				{
 					openPen = false;
-
 					//設置透明底色
 					btnPencil.SetBackgroundColor(Color.Transparent);
-				    drawRectLine = drawLineView.GetRectBitmap(drawLineView);
+					drawRectLine = drawLineView.GetRectBitmap(drawLineView);
 
-					drawImageView.SetImageBitmap(drawRectLine);
-					drawImageView.SetX(drawLineView.GetRectLeftX());
-					drawImageView.SetY(drawLineView.GetRectTopY());
-					var drawSaveDirPath = Environment.ExternalStorageDirectory.AbsolutePath;
-					var drawLinePNGFilePath = System.IO.Path.Combine(drawSaveDirPath, drawImageFileName);
-					var stream = new FileStream(drawLinePNGFilePath, FileMode.Create);
-					drawRectLine.Compress(Bitmap.CompressFormat.Png, 100, stream);
-					stream.Close();
 
-					Java.IO.File DrawLinePNGFileIO = new Java.IO.File(drawLinePNGFilePath);
-					if (DrawLinePNGFileIO.Exists())
-					{
-						Bitmap savePNG = BitmapFactory.DecodeFile(drawLinePNGFilePath);
-						drawImageView.SetImageBitmap(savePNG);
+					AddAttachmentAndSaveJsonData(AttachmentTypeEnum.Paint);
 
-						//drawImageView.SetBackgroundColor(Color.Yellow);
-
-						drawImageView.SetBackgroundColor(Color.Transparent);
-
-						drawImageView.SetX(drawLineView.GetRectLeftX());
-						drawImageView.SetY(drawLineView.GetRectTopY());
-
-					
-						MyTouchListener drawTouch = new MyTouchListener();
-						drawTouch.imagHight = drawLineView.Height;
-						drawImageView.SetOnTouchListener(drawTouch);
-						//item_bar.SetOnTouchListener(drawTouch);
-						//drawImageView.SetOnDragListener(;
-						//disable scroll
-						pdfScrollView.SetOnTouchListener(new StopScrollTouchListener());
-
-						//enable scroll
-						//pdfScrollView.SetOnTouchListener(null);
-
-						pdfContent.RemoveView(drawLineView);
-					}
-
-					//SettingUIView(AttachmentTypeEnum.Paint, null);
-				
 				}
-			
+
+			};
+
+			btnHome.Click += (object sender, EventArgs e) =>
+			{
+				StartActivity(typeof(MainActivity));
 			};
 
 
@@ -275,13 +165,12 @@ namespace InterViewer.Droid
 
 				pdfImageView.SetImageBitmap(pdf.Images[0]);
 
+
+
+				//reloadAttachment
+				LoadingAttachments();
+
 			}
-			//pdf = new PDFDocument(this, pdfFilepath);
-			var count = pdf.Count;
-
-
-
-			//pdfImageView.SetImageBitmap(pdf.Images[0]);
 
 
 			#region Camera 
@@ -301,24 +190,17 @@ namespace InterViewer.Droid
 
 		private void Initial()
 		{
-			
 			pdfImageView = FindViewById<ImageView>(Resource.Id.pdfImageView);
 
-			//pdfImageView.LayoutParameters = new ViewGroup.LayoutParams(
-			//	ViewGroup.LayoutParams.MatchParent,
-			//	ViewGroup.LayoutParams.MatchParent
-			//);
-
 			pdfImageView = FindViewById<ImageView>(Resource.Id.pdfImageView);
-			pdfScrollView = FindViewById<ScrollView>(Resource.Id.pdfScrollView);
+
 			pdfContent = FindViewById<RelativeLayout>(Resource.Id.pdfContent);
 			pdfRelativeLayout = FindViewById<RelativeLayout>(Resource.Id.ly1);
-
-			detail_main = FindViewById<RelativeLayout>(Resource.Id.detail_main);
+			btnHome = FindViewById<Button>(Resource.Id.btnHome);
 			btnCamera = FindViewById<ImageButton>(Resource.Id.btnCamera);
 			btnPencil = FindViewById<ImageButton>(Resource.Id.btnPencil);
 			PDF_RECORD_DIR = PDF_Type == "Add" ? DateTime.Now.Ticks.ToString() : System.IO.Path.GetFileNameWithoutExtension(Doc.Name);
-			if (PDF_Type == "Add")
+			if (PDF_Type == "Add" && Doc.Name == null)
 			{
 				Doc.Name = string.Format("{0}.json", PDF_RECORD_DIR);
 			}
@@ -327,14 +209,6 @@ namespace InterViewer.Droid
 
 		public bool OnTouch(View v, MotionEvent e)
 		{
-			
-			Point point = new Point((Int32)e.GetX(), (Int32)e.GetY());
-			Debug.WriteLine("GET");
-			Debug.WriteLine(e.GetX());
-			Debug.WriteLine(e.GetY());
-			Debug.WriteLine("Raw");
-			Debug.WriteLine(e.RawX);
-			Debug.WriteLine(e.RawY);
 			switch (e.Action)
 			{
 				case MotionEventActions.Down:
@@ -342,26 +216,22 @@ namespace InterViewer.Droid
 					startX = e.GetX();
 					break;
 				case MotionEventActions.Move:
-
-					Debug.WriteLine("M");
-
-					//startX = e.GetX();
-					//path.LineTo(point.X, point.Y);
-				
+					
 					break;
 
+				case MotionEventActions.Up:
 				case MotionEventActions.Cancel:
-					Debug.WriteLine("C");    
+					Debug.WriteLine("C");
 
 					endX = e.GetX();
 					float diff = startX - endX;
-					//Debug.WriteLine(diff.ToString());
+					Debug.WriteLine(diff.ToString());
 					//-left to right
 					if (startX < endX)
 					{
 						if (PageNumber == pdf.Count - 1)
 						{
-						   //Toast.MakeText(this, "此為最後一頁", ToastLength.Long).Show();
+							//Toast.MakeText(this, "此為最後一頁", ToastLength.Long).Show();
 						}
 
 						PageNumber++;
@@ -369,7 +239,7 @@ namespace InterViewer.Droid
 					else {
 						if (PageNumber == 0)
 						{
-						//	Toast.MakeText(this, "此為第一頁", ToastLength.Long).Show();
+							//	Toast.MakeText(this, "此為第一頁", ToastLength.Long).Show();
 						}
 
 						PageNumber--;
@@ -378,10 +248,6 @@ namespace InterViewer.Droid
 					pdfImageView.SetImageBitmap(pdf.Images[PageNumber]);
 
 					startX = endX = 0;
-
-					//Debug.WriteLine(PageNumber);
-					return true;
-
 
 					ClearAllView();
 					LoadingAttachments();
@@ -436,23 +302,18 @@ namespace InterViewer.Droid
 			mediaScanIntent.SetData(contentUri);
 			SendBroadcast(mediaScanIntent);
 
-			int height = Resources.DisplayMetrics.HeightPixels;
-
-			int width = Math.Abs(pdfContent.Height / 3);
+			//int height = Resources.DisplayMetrics.HeightPixels;
+			int height = 150;
+			int width = Math.Abs(75);
 			CameraApp.bitmap = CameraApp._file.Path.LoadAndResizeBitmap(width, height);
 			if (CameraApp.bitmap != null)
 			{
-				cameraImageView.SetImageBitmap(CameraApp.bitmap);
-				cameraImageView.Id = View.GenerateViewId();
-				cameraImageView.SetX(Math.Abs(pdfContent.Width / 4));
-				cameraImageView.SetY(Math.Abs(pdfContent.Width / 4));
-				pdfContent.AddView(cameraImageView);
-				//must put the call method here!!! when the cameraImageView isn't null
-				SettingUIView(AttachmentTypeEnum.Photo, null);
+				
+				AddAttachmentAndSaveJsonData(AttachmentTypeEnum.Photo);
 
 				CameraApp.bitmap = null;
 			}
-	
+
 			// Dispose of the Java side bitmap.
 			GC.Collect();
 		}
@@ -467,7 +328,7 @@ namespace InterViewer.Droid
 
 			string SAVE_FILE_NAME = string.Format("{0}.{1}", IdentifierName, savetype == AttachmentTypeEnum.Photo ? "jpg" : "png");
 			string SYSTEM_FILE_PATH = System.IO.Path.Combine(PDF_RECORD_DIR, SAVE_FILE_NAME);
-			var documentsDirectory = System.IO.Path.Combine(RootPath, PDF_RECORD_DIR);
+			var documentsDirectory = System.IO.Path.Combine(DocumentPath, PDF_RECORD_DIR);
 			if (!Directory.Exists(documentsDirectory))
 			{
 				Directory.CreateDirectory(documentsDirectory);
@@ -555,54 +416,19 @@ namespace InterViewer.Droid
 				rectPoint.TopY = attachment.Y;
 				rectPoint.Width = attachment.Width;
 				rectPoint.Height = attachment.Height;
-				//CGRectFrame = new CGRect(attachment.X, attachment.Y, attachment.Width, attachment.Height);
+
 			}
 			string identifier = DateTime.Now.Ticks.ToString();
 			if (type == AttachmentTypeEnum.Note)
 			{
-				/*	
-					UITextView textview = new UITextView();
-					textview.Text = attachment == null ? string.Empty : attachment.Path;
-					textview.AccessibilityIdentifier = attachment == null ? identifier : attachment.Name;
-					textview.BackgroundColor = UIColor.FromRGB(242, 255, 0);
-					textview.Frame = attachment == null ? new CoreGraphics.CGRect(scrollView.Center.X, scrollView.Center.Y, 100, 100) : CGRectFrame;
-					//textview.Center = attachment == null ? new CGPoint(scrollView.Center.X, scrollView.Center.Y) : centerPoint;
-					textview.Font = UIFont.FromName("Helvetica-Bold", 30f);
-					UIPanGestureRecognizer panGesture = SettingUIPanGesture(textview, UIType.UITextView);
-					textview.UserInteractionEnabled = true;
-					textview.AddGestureRecognizer(panGesture);
+				
+			}
 
-					textview.Ended += delegate
-					{
-						var editAttachment = Doc.Attachments.Where(x => x.Name == textview.AccessibilityIdentifier).SingleOrDefault();
-						editAttachment.Path = textview.Text;
-						SettingAttachments(editAttachment);
-					};
-					//NoteList.Add(Identifier, textNote);
-					this.scrollView.InsertSubview(textview, 1);
-
-					if (attachment == null)
-					{
-						Attachment newattachment = new Attachment();
-						newattachment.Name = identifier;
-						newattachment.PageIndex = PageNumber;
-						newattachment.Path = textview.Text;
-						newattachment.Type = AttachmentTypeEnum.Note;
-						newattachment.Width = textview.Frame.Width;
-						newattachment.Height = textview.Frame.Height;
-						newattachment.X = textview.Frame.Location.X;
-						newattachment.Y = textview.Frame.Location.Y;
-						SettingAttachments(newattachment);
-					}
-                  */
-				}
-
-				if (type == AttachmentTypeEnum.Paint || type == AttachmentTypeEnum.Photo)
+			if (type == AttachmentTypeEnum.Paint || type == AttachmentTypeEnum.Photo)
 			{
 				string systemPath = string.Empty;
 				if (type == AttachmentTypeEnum.Paint && attachment == null)
 				{
-					//newimage.BackgroundColor = UIColor.Clear;
 					systemPath = getSaveImageLocalSystemPath(identifier, AttachmentTypeEnum.Paint, drawRectLine);
 					rectPoint.LeftX = drawLineView.GetRectLeftX();
 					rectPoint.TopY = drawLineView.GetRectTopY();
@@ -611,19 +437,18 @@ namespace InterViewer.Droid
 				}
 				else if (type == AttachmentTypeEnum.Photo && attachment == null)
 				{
-					//CameraCapture.IsOpenCamera = false;
 					systemPath = getSaveImageLocalSystemPath(identifier, AttachmentTypeEnum.Photo, CameraApp.bitmap);
-					rectPoint.LeftX = cameraImageView.GetX();
-					rectPoint.TopY = drawLineView.GetY();
-					rectPoint.Width = drawLineView.Width;
-					rectPoint.Height = drawLineView.Height;
+					rectPoint.LeftX = cameraImageView.GetX() + 600;
+					rectPoint.TopY = drawLineView.GetY() + 250;
+					rectPoint.Width = 150;
+					rectPoint.Height = 75;
 				}
 				else
 				{
 					systemPath = attachment.Path;
 				}
 
-				string filePath = System.IO.Path.Combine(RootPath, attachment == null ? systemPath : attachment.Path);
+				string filePath = System.IO.Path.Combine(DocumentPath, attachment == null ? systemPath : attachment.Path);
 
 				Java.IO.File DrawLinePNGFileIO = new Java.IO.File(filePath);
 				if (DrawLinePNGFileIO.Exists())
@@ -634,27 +459,9 @@ namespace InterViewer.Droid
 					imageView.SetBackgroundColor(Color.Transparent);
 					imageView.SetX((float)rectPoint.LeftX);
 					imageView.SetY((float)rectPoint.TopY);
-					imageView.SetMaxWidth((int)rectPoint.Width); 
+					imageView.SetMaxWidth((int)rectPoint.Width);
 					imageView.SetMaxHeight((int)rectPoint.Height);
 					pdfContent.RemoveView(drawLineView);
-
-
-					//imageView.AccessibilityIdentifier = attachment == null ? identifier : attachment.Name;
-					//UIPanGestureRecognizer panGesture = SettingUIPanGesture(imageView, UIType.UIImageView);
-
-					//if (type == AttachmentTypeEnum.Paint && attachment == null)
-					//{
-					//	imageView.Frame = new CGRect(
-					//		path.BoundingBox.Location,
-					//		path.BoundingBox.Size);
-					//}
-					//else
-					//{
-					//	imageView.Frame = attachment == null ? new CGRect(scrollView.Center.X, scrollView.Center.Y, 225, 225) : CGRectFrame;
-					//}
-
-					//imageView.UserInteractionEnabled = true;
-					//imageView.AddGestureRecognizer(panGesture);
 
 					pdfRelativeLayout.AddView(imageView);
 
@@ -678,10 +485,16 @@ namespace InterViewer.Droid
 		public void ClearAllView()
 		{
 			//remain pdfScrollView
-			pdfContent.RemoveViewsInLayout(1, pdfContent.ChildCount-1);
+			pdfContent.RemoveViewsInLayout(1, pdfContent.ChildCount - 1);
 
 			//remain pdfImageView
-			pdfRelativeLayout.RemoveViewsInLayout(1, pdfRelativeLayout.ChildCount-1);
+			pdfRelativeLayout.RemoveViewsInLayout(1, pdfRelativeLayout.ChildCount - 1);
+		}
+
+		public void AddAttachmentAndSaveJsonData(AttachmentTypeEnum type)
+		{
+			SettingUIView(type);
+			SaveLoadJsonData();
 		}
 
 		public void SaveLoadJsonData()
@@ -693,12 +506,8 @@ namespace InterViewer.Droid
 		{
 			public double LeftX { get; set; }
 			public double TopY { get; set; }
-			public double Width { get; set;}
-			public double Height { get; set;}
-
-			public ImageRectPoint()
-			{
-			}
+			public double Width { get; set; }
+			public double Height { get; set; }
 		}
 	}
 }
