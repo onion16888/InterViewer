@@ -122,6 +122,7 @@ namespace InterViewer.Droid
 					//設置透明底色
 					btnPencil.SetBackgroundColor(Color.Transparent);
 				    drawRectLine = drawLineView.GetRectBitmap(drawLineView);
+					pdfContent.RemoveView(drawLineView);
 
 					/*drawImageView.SetImageBitmap(drawRectLine);
 					drawImageView.SetX(drawLineView.GetRectLeftX());
