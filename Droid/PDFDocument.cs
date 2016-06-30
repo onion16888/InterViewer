@@ -80,18 +80,18 @@ namespace InterViewer.Droid
 				{
 					currentPage.Render(bitmap, null, null, PdfRenderMode.ForDisplay);
 
-					//Double scale = 1f / 1f;
+					Double scale = 1f / 4f;
 
-					//Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
-					//	bitmap,
-					//	(Int32)(bitmap.Width * scale),
-					//	(Int32)(bitmap.Height * scale),
-					//	false
-					//);
+					Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
+						bitmap,
+						(Int32)(bitmap.Width * scale),
+						(Int32)(bitmap.Height * scale),
+						false
+					);
 
 					currentPage.Close();
 
-					return bitmap;
+					return resizedBitmap;
 				}
 			}
 		}

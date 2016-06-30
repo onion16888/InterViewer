@@ -221,7 +221,7 @@ namespace InterViewer.iOS
 			IGeolocator locator = CrossGeolocator.Current;
 			locator.DesiredAccuracy = 50;
 
-			Position position = await locator.GetPositionAsync(timeoutMilliseconds: 10000);
+			Position position = await locator.GetPositionAsync(timeoutMilliseconds: 20000);
 
 			Console.WriteLine("Position Status: {0}", position.Timestamp);
 			Console.WriteLine("Position Latitude: {0}", position.Latitude);
