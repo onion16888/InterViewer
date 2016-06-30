@@ -80,10 +80,8 @@ namespace InterViewer.Droid
 				hh.Add(v.FullName);
 			}
 			var cc=hh.Count;
+
 			//預設載入Sliders
-			//thePDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
-			//gridviewShow.Adapter = thePDFImageAdapter.TheImageAdapter;
-			//gridviewShow.Adapter = new ImageAdapter(this, AppDir, ReturnIcons);
 			gridviewShow.Adapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 			CheckButtonIsSelected(btnTemplate);
 
@@ -92,9 +90,6 @@ namespace InterViewer.Droid
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
 				CheckButtonIsSelected(btnTemplate);
-
-				//thePDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
-				//gridviewShow.Adapter = thePDFImageAdapter.TheImageAdapter;
 				gridviewShow.Adapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 			};
 
@@ -106,9 +101,6 @@ namespace InterViewer.Droid
 				var filepaths = from theDoc in listDocumentTempDoc
 								select theDoc.Thumbnail;
 
-				//thePDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, filepaths.ToArray());
-				//gridviewShow.Adapter = thePDFImageAdapter.TheImageAdapter;
-				//gridviewShow.Adapter = new GridViewAdapter(this, filepaths.ToArray());
 				gridviewShow.Adapter = new GridViewAdapter(this, filepaths.ToArray());
 			};
 				
@@ -136,9 +128,7 @@ namespace InterViewer.Droid
 				//Toast.MakeText(this, ReturnIcons[args.Position].FullName, ToastLength.Long).Show();
 				//Intent DetailAc = new Intent(this, typeof(DetailActivity));
 
-				ReturnIcons = this.FindPngInPath(AppDir + "/Slides", visibleThings);
-
-
+				var q = gridviewShow.SelectedItem;
 
 				if (btnTemplate.Selected == true)
 				{
@@ -150,7 +140,6 @@ namespace InterViewer.Droid
 				}
 				if(btnDocuments.Selected == true)
 				{
-					//listDocumentTempDoc = interViewerServiceHelper.GetDocuments();
 					var filepaths = from theDoc in listDocumentTempDoc
 									where theDoc.Thumbnail == listDocumentTempDoc[args.Position].Thumbnail
 									select theDoc;
@@ -177,7 +166,6 @@ namespace InterViewer.Droid
 
 			serviceHelper = new IOService();
 			interViewerServiceHelper = new InterViewerService(serviceHelper);
-			//thePDFImageAdapter = new PDFImageAdapter();
 		}
 
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
@@ -224,15 +212,10 @@ namespace InterViewer.Droid
 						output.Close();
 						#endregion
 
-						//PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
-						//gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 						gridviewShow.Adapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 					}
 					else
 					{
-						//PDFImageAdapter.TheImageAdapter = null;
-						//this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
-
 						#region 縮圖
 						BitmapFactory.Options options = new BitmapFactory.Options();
 						options.InPreferredConfig = Bitmap.Config.Argb8888;
@@ -253,8 +236,6 @@ namespace InterViewer.Droid
 						output.Close();
 						#endregion
 
-						//PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
-						//gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 						gridviewShow.Adapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 					}
 				}
@@ -315,8 +296,6 @@ namespace InterViewer.Droid
 					this.copy(FileSou, FileDes);
 					this.WritePngToDir(Source, Des);
 				}
-				//PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
-				//gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
 				gridviewShow.Adapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 			}
 		}
