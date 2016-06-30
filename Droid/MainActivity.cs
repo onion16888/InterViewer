@@ -24,7 +24,9 @@ using System.Linq;
 
 namespace InterViewer.Droid
 {
+
 	[Activity(Label = "Test", MainLauncher = true, Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Landscape)]
+
 	public class MainActivity : Activity
 	, ILocationListener
 	, GoogleMap.IOnCameraChangeListener
@@ -387,7 +389,7 @@ namespace InterViewer.Droid
 
 				RunOnUiThread(() =>
 				{
-					AndHUD.Shared.Dismiss(this);
+				    AndHUD.Shared.Dismiss(this);
 				});
 			};
 
