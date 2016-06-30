@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="horizontal"
     android:id="@+id/detail_main">
     <RelativeLayout
         android:id="@+id/pdfContent"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_weight="9.0">
         <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:id="@+id/pdfScrollView"
             android:minWidth="25dp"
             android:minHeight="25dp"
             android:background="@android:color/darker_gray">
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:id="@+id/ly1"
                 android:minWidth="25dp"
                 android:minHeight="25dp"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp">
+                android:gravity="center_horizontal">
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:id="@+id/pdfImageView"
+                    android:layout_marginBottom="10dp"
+                    android:layout_alignBottom="@id/pdfScrollView"
                     android:src="@android:drawable/ic_menu_gallery"
                     android:background="@android:color/holo_blue_dark"
                     android:adjustViewBounds="true" />
@@ -53,8 +55,21 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:background="#E5E5FF"
+            android:visibility="gone"
             android:scaleType="fitCenter"
             android:src="@drawable/icon_note" />
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/btnHome"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@+id/imageButton1"
+            android:background="#00BBFF"
+            android:text="HOME"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_clock_d" />
         <ImageButton
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -62,8 +77,9 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:layout_below="@+id/imageButton2"
+            android:layout_below="@+id/btnHome"
             android:background="#E5E5FF"
+            android:visibility="gone"
             android:scaleType="fitCenter"
             android:src="@drawable/icon_tag_d" />
         <ImageButton
@@ -73,7 +89,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:layout_below="@+id/imageButton2"
+            android:layout_below="@+id/imageButton3"
             android:background="#E5E5FF"
             android:scaleType="fitCenter"
             android:src="@drawable/icon_camera" />

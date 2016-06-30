@@ -4415,7 +4415,369 @@ namespace InterViewer.Droid.Test
 			public const int ButtonBarLayout_allowStacking = 0;
 			
 			public static int[] CompoundButton = new int[]
+
+			}
+		}
+		
+		public partial class Color
+		{
+			
+			// aapt resource value: 0x7f090003
+			public const int busy_indicator = 2131296259;
+			
+			// aapt resource value: 0x7f090004
+			public const int button_normal = 2131296260;
+			
+			// aapt resource value: 0x7f090005
+			public const int button_pressed = 2131296261;
+			
+			// aapt resource value: 0x7f090000
+			public const int canvas = 2131296256;
+			
+			// aapt resource value: 0x7f090002
+			public const int page_indicator = 2131296258;
+			
+			// aapt resource value: 0x7f09000c
+			public const int seek_progress = 2131296268;
+			
+			// aapt resource value: 0x7f09000b
+			public const int seek_thumb = 2131296267;
+			
+			// aapt resource value: 0x7f09000a
+			public const int text_border_focused = 2131296266;
+			
+			// aapt resource value: 0x7f090008
+			public const int text_border_normal = 2131296264;
+			
+			// aapt resource value: 0x7f090009
+			public const int text_border_pressed = 2131296265;
+			
+			// aapt resource value: 0x7f090006
+			public const int text_normal = 2131296262;
+			
+			// aapt resource value: 0x7f090007
+			public const int text_pressed = 2131296263;
+			
+			// aapt resource value: 0x7f090001
+			public const int toolbar = 2131296257;
+			
+			static Color()
 			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Color()
+			{
+			}
+		}
+		
+		public partial class Drawable
+		{
+			
+			// aapt resource value: 0x7f020000
+			public const int bubble_mask = 2130837504;
+			
+			// aapt resource value: 0x7f020001
+			public const int bubble_shadow = 2130837505;
+			
+			// aapt resource value: 0x7f020002
+			public const int busy = 2130837506;
+			
+			// aapt resource value: 0x7f020003
+			public const int button = 2130837507;
+			
+			// aapt resource value: 0x7f020004
+			public const int darkdenim3 = 2130837508;
+			
+			// aapt resource value: 0x7f020005
+			public const int ic_annot = 2130837509;
+			
+			// aapt resource value: 0x7f020006
+			public const int ic_annotation = 2130837510;
+			
+			// aapt resource value: 0x7f020007
+			public const int ic_arrow_left = 2130837511;
+			
+			// aapt resource value: 0x7f020008
+			public const int ic_arrow_right = 2130837512;
+			
+			// aapt resource value: 0x7f020009
+			public const int ic_arrow_up = 2130837513;
+			
+			// aapt resource value: 0x7f02000a
+			public const int ic_cancel = 2130837514;
+			
+			// aapt resource value: 0x7f02000b
+			public const int ic_check = 2130837515;
+			
+			// aapt resource value: 0x7f02000c
+			public const int ic_clipboard = 2130837516;
+			
+			// aapt resource value: 0x7f02000d
+			public const int ic_dir = 2130837517;
+			
+			// aapt resource value: 0x7f02000e
+			public const int ic_doc = 2130837518;
+			
+			// aapt resource value: 0x7f02000f
+			public const int ic_highlight = 2130837519;
+			
+			// aapt resource value: 0x7f020010
+			public const int ic_link = 2130837520;
+			
+			// aapt resource value: 0x7f020011
+			public const int ic_list = 2130837521;
+			
+			// aapt resource value: 0x7f020012
+			public const int ic_magnifying_glass = 2130837522;
+			
+			// aapt resource value: 0x7f020013
+			public const int ic_more = 2130837523;
+			
+			// aapt resource value: 0x7f020014
+			public const int ic_pen = 2130837524;
+			
+			// aapt resource value: 0x7f020015
+			public const int ic_print = 2130837525;
+			
+			// aapt resource value: 0x7f020016
+			public const int ic_reflow = 2130837526;
+			
+			// aapt resource value: 0x7f020017
+			public const int ic_select = 2130837527;
+			
+			// aapt resource value: 0x7f020018
+			public const int ic_share = 2130837528;
+			
+			// aapt resource value: 0x7f020019
+			public const int ic_strike = 2130837529;
+			
+			// aapt resource value: 0x7f02001a
+			public const int ic_trash = 2130837530;
+			
+			// aapt resource value: 0x7f02001b
+			public const int ic_underline = 2130837531;
+			
+			// aapt resource value: 0x7f02001c
+			public const int ic_updir = 2130837532;
+			
+			// aapt resource value: 0x7f02001d
+			public const int icon = 2130837533;
+			
+			// aapt resource value: 0x7f02001e
+			public const int page_num = 2130837534;
+			
+			// aapt resource value: 0x7f02001f
+			public const int search = 2130837535;
+			
+			// aapt resource value: 0x7f020020
+			public const int seek_progress = 2130837536;
+			
+			// aapt resource value: 0x7f020021
+			public const int seek_thumb = 2130837537;
+			
+			// aapt resource value: 0x7f020022
+			public const int tiled_background = 2130837538;
+			
+			static Drawable()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Drawable()
+			{
+			}
+		}
+		
+		public partial class Id
+		{
+			
+			// aapt resource value: 0x7f070027
+			public const int OptionHostName = 2131165223;
+			
+			// aapt resource value: 0x7f070028
+			public const int OptionPort = 2131165224;
+			
+			// aapt resource value: 0x7f070026
+			public const int OptionRemoteServer = 2131165222;
+			
+			// aapt resource value: 0x7f07003b
+			public const int OptionsButton = 2131165243;
+			
+			// aapt resource value: 0x7f070036
+			public const int ResultFullName = 2131165238;
+			
+			// aapt resource value: 0x7f070038
+			public const int ResultMessage = 2131165240;
+			
+			// aapt resource value: 0x7f070037
+			public const int ResultResultState = 2131165239;
+			
+			// aapt resource value: 0x7f070035
+			public const int ResultRunSingleMethodTest = 2131165237;
+			
+			// aapt resource value: 0x7f070039
+			public const int ResultStackTrace = 2131165241;
+			
+			// aapt resource value: 0x7f070031
+			public const int ResultsFailed = 2131165233;
+			
+			// aapt resource value: 0x7f07002e
+			public const int ResultsId = 2131165230;
+			
+			// aapt resource value: 0x7f070032
+			public const int ResultsIgnored = 2131165234;
+			
+			// aapt resource value: 0x7f070033
+			public const int ResultsInconclusive = 2131165235;
+			
+			// aapt resource value: 0x7f070034
+			public const int ResultsMessage = 2131165236;
+			
+			// aapt resource value: 0x7f070030
+			public const int ResultsPassed = 2131165232;
+			
+			// aapt resource value: 0x7f07002f
+			public const int ResultsResult = 2131165231;
+			
+			// aapt resource value: 0x7f07003a
+			public const int RunTestsButton = 2131165242;
+			
+			// aapt resource value: 0x7f07003c
+			public const int TestSuiteListView = 2131165244;
+			
+			// aapt resource value: 0x7f070020
+			public const int acceptButton = 2131165216;
+			
+			// aapt resource value: 0x7f07001f
+			public const int annotType = 2131165215;
+			
+			// aapt resource value: 0x7f07001e
+			public const int cancelAcceptButton = 2131165214;
+			
+			// aapt resource value: 0x7f07000f
+			public const int cancelAnnotButton = 2131165199;
+			
+			// aapt resource value: 0x7f070015
+			public const int cancelDeleteButton = 2131165205;
+			
+			// aapt resource value: 0x7f070019
+			public const int cancelMoreButton = 2131165209;
+			
+			// aapt resource value: 0x7f07000a
+			public const int cancelSearch = 2131165194;
+			
+			// aapt resource value: 0x7f07001b
+			public const int copyTextButton = 2131165211;
+			
+			// aapt resource value: 0x7f070017
+			public const int deleteButton = 2131165207;
+			
+			// aapt resource value: 0x7f070016
+			public const int deleteLabel = 2131165206;
+			
+			// aapt resource value: 0x7f070003
+			public const int docNameText = 2131165187;
+			
+			// aapt resource value: 0x7f07001c
+			public const int editAnnotButton = 2131165212;
+			
+			// aapt resource value: 0x7f070010
+			public const int highlightButton = 2131165200;
+			
+			// aapt resource value: 0x7f07002b
+			public const int icon = 2131165227;
+			
+			// aapt resource value: 0x7f070024
+			public const int info = 2131165220;
+			
+			// aapt resource value: 0x7f070013
+			public const int inkButton = 2131165203;
+			
+			// aapt resource value: 0x7f070004
+			public const int linkButton = 2131165188;
+			
+			// aapt resource value: 0x7f070021
+			public const int lowerButtons = 2131165217;
+			
+			// aapt resource value: 0x7f070008
+			public const int moreButton = 2131165192;
+			
+			// aapt resource value: 0x7f07002c
+			public const int name = 2131165228;
+			
+			// aapt resource value: 0x7f070006
+			public const int outlineButton = 2131165190;
+			
+			// aapt resource value: 0x7f07002a
+			public const int page = 2131165226;
+			
+			// aapt resource value: 0x7f070023
+			public const int pageNumber = 2131165219;
+			
+			// aapt resource value: 0x7f070022
+			public const int pageSlider = 2131165218;
+			
+			// aapt resource value: 0x7f07001a
+			public const int printButton = 2131165210;
+			
+			// aapt resource value: 0x7f070005
+			public const int reflowButton = 2131165189;
+			
+			// aapt resource value: 0x7f07000c
+			public const int searchBack = 2131165196;
+			
+			// aapt resource value: 0x7f070007
+			public const int searchButton = 2131165191;
+			
+			// aapt resource value: 0x7f07000d
+			public const int searchForward = 2131165197;
+			
+			// aapt resource value: 0x7f07000b
+			public const int searchText = 2131165195;
+			
+			// aapt resource value: 0x7f070012
+			public const int strikeOutButton = 2131165202;
+			
+			// aapt resource value: 0x7f070001
+			public const int switcher = 2131165185;
+			
+			// aapt resource value: 0x7f070000
+			public const int text = 2131165184;
+			
+			// aapt resource value: 0x7f070029
+			public const int title = 2131165225;
+			
+			// aapt resource value: 0x7f070002
+			public const int topBar0Main = 2131165186;
+			
+			// aapt resource value: 0x7f070009
+			public const int topBar1Search = 2131165193;
+			
+			// aapt resource value: 0x7f07000e
+			public const int topBar2Annot = 2131165198;
+			
+			// aapt resource value: 0x7f070014
+			public const int topBar3Delete = 2131165204;
+			
+			// aapt resource value: 0x7f070018
+			public const int topBar4More = 2131165208;
+			
+			// aapt resource value: 0x7f07001d
+			public const int topBar5Accept = 2131165213;
+			
+			// aapt resource value: 0x7f070011
+			public const int underlineButton = 2131165201;
+			
+			// aapt resource value: 0x7f07002d
+			public const int webview = 2131165229;
+			
+			// aapt resource value: 0x7f070025
+			public const int window = 2131165221;
+
+		public partial class Id
+		{
+
 					16843015,
 					2130772137,
 					2130772138};
@@ -4488,6 +4850,10 @@ namespace InterViewer.Droid.Test
 			// aapt resource value: 1
 			public const int LinearLayoutCompat_android_orientation = 1;
 			
+
+			// aapt resource value: 0x7f040011
+			public const int TestSuiteListView = 2130968593;
+
 			// aapt resource value: 4
 			public const int LinearLayoutCompat_android_weightSum = 4;
 			
@@ -4527,6 +4893,47 @@ namespace InterViewer.Droid.Test
 					16843436,
 					16843437};
 			
+
+			// aapt resource value: 0x7f040000
+			public const int buttons = 2130968576;
+			
+			// aapt resource value: 0x7f040001
+			public const int info_window = 2130968577;
+			
+			// aapt resource value: 0x7f040002
+			public const int main = 2130968578;
+			
+			// aapt resource value: 0x7f040003
+			public const int options = 2130968579;
+			
+			// aapt resource value: 0x7f040004
+			public const int outline_entry = 2130968580;
+			
+			// aapt resource value: 0x7f040005
+			public const int picker_entry = 2130968581;
+			
+			// aapt resource value: 0x7f040006
+			public const int print_dialog = 2130968582;
+			
+			// aapt resource value: 0x7f040007
+			public const int results = 2130968583;
+			
+			// aapt resource value: 0x7f040008
+			public const int test_result = 2130968584;
+			
+			// aapt resource value: 0x7f040009
+			public const int test_suite = 2130968585;
+			
+			// aapt resource value: 0x7f04000a
+			public const int text_bubble = 2130968586;
+			
+			// aapt resource value: 0x7f04000b
+			public const int textentry = 2130968587;
+			
+			// aapt resource value: 0x7f04000c
+			public const int webview = 2130968588;
+			// aapt resource value: 0x7f030000
+			public const int options = 2130903040;
 			// aapt resource value: 0
 			public const int ListPopupWindow_android_dropDownHorizontalOffset = 0;
 			
@@ -4538,9 +4945,13 @@ namespace InterViewer.Droid.Test
 					2130771968,
 					2130771969,
 					2130771970};
-			
+
+			// aapt resource value: 0x7f030003
+			public const int test_suite = 2130903043;
+
 			// aapt resource value: 2
 			public const int LoadingImageView_circleCrop = 2;
+
 			
 			// aapt resource value: 1
 			public const int LoadingImageView_imageAspectRatio = 1;
@@ -5162,6 +5573,271 @@ namespace InterViewer.Droid.Test
 			{
 			}
 		}
+		
+		public partial class Raw
+		{
+			
+			// aapt resource value: 0x7f060000
+			public const int ballon_gx_prefix = 2131099648;
+			
+			// aapt resource value: 0x7f060001
+			public const int basic_folder = 2131099649;
+			
+			// aapt resource value: 0x7f060002
+			public const int basic_placemark = 2131099650;
+			
+			// aapt resource value: 0x7f060003
+			public const int cdata = 2131099651;
+			
+			// aapt resource value: 0x7f060004
+			public const int default_balloon = 2131099652;
+			
+			// aapt resource value: 0x7f060005
+			public const int document_nest = 2131099653;
+			
+			// aapt resource value: 0x7f060006
+			public const int draw_order_ground_overlay = 2131099654;
+			
+			// aapt resource value: 0x7f060007
+			public const int extended_data = 2131099655;
+			
+			// aapt resource value: 0x7f060008
+			public const int ground_overlay = 2131099656;
+			
+			// aapt resource value: 0x7f060009
+			public const int ground_overlay_color = 2131099657;
+			
+			// aapt resource value: 0x7f06000a
+			public const int inline_style = 2131099658;
+			
+			// aapt resource value: 0x7f06000b
+			public const int multigeometry_placemarks = 2131099659;
+			
+			// aapt resource value: 0x7f06000c
+			public const int multiple_placemarks = 2131099660;
+			
+			// aapt resource value: 0x7f06000d
+			public const int nested_folders = 2131099661;
+			
+			// aapt resource value: 0x7f06000e
+			public const int nested_multigeometry = 2131099662;
+			
+			// aapt resource value: 0x7f06000f
+			public const int unknwown_folder = 2131099663;
+			
+			// aapt resource value: 0x7f060010
+			public const int unsupported = 2131099664;
+			
+			// aapt resource value: 0x7f060011
+			public const int visibility_ground_overlay = 2131099665;
+			
+			static Raw()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Raw()
+			{
+			}
+		}
+		
+		public partial class String
+		{
+			
+			// aapt resource value: 0x7f0a0031
+			public const int accept = 2131361841;
+			
+			// aapt resource value: 0x7f0a0000
+			public const int app_name = 2131361792;
+			
+			// aapt resource value: 0x7f0a0004
+			public const int cancel = 2131361796;
+			
+			// aapt resource value: 0x7f0a002a
+			public const int cannot_open_buffer = 2131361834;
+			
+			// aapt resource value: 0x7f0a0027
+			public const int cannot_open_document = 2131361831;
+			
+			// aapt resource value: 0x7f0a0028
+			public const int cannot_open_document_Reason = 2131361832;
+			
+			// aapt resource value: 0x7f0a0029
+			public const int cannot_open_file_Path = 2131361833;
+			
+			// aapt resource value: 0x7f0a002d
+			public const int choose_value = 2131361837;
+			
+			// aapt resource value: 0x7f0a0022
+			public const int copied_to_clipboard = 2131361826;
+			
+			// aapt resource value: 0x7f0a0011
+			public const int copy = 2131361809;
+			
+			// aapt resource value: 0x7f0a0032
+			public const int copy_text = 2131361842;
+			
+			// aapt resource value: 0x7f0a002f
+			public const int copy_text_to_the_clipboard = 2131361839;
+			
+			// aapt resource value: 0x7f0a0013
+			public const int delete = 2131361811;
+			
+			// aapt resource value: 0x7f0a001a
+			public const int dismiss = 2131361818;
+			
+			// aapt resource value: 0x7f0a0026
+			public const int document_has_changes_save_them_ = 2131361830;
+			
+			// aapt resource value: 0x7f0a0024
+			public const int draw_annotation = 2131361828;
+			
+			// aapt resource value: 0x7f0a0016
+			public const int edit_annotations = 2131361814;
+			
+			// aapt resource value: 0x7f0a000a
+			public const int enter_password = 2131361802;
+			
+			// aapt resource value: 0x7f0a001e
+			public const int entering_reflow_mode = 2131361822;
+			
+			// aapt resource value: 0x7f0a002b
+			public const int fill_out_text_field = 2131361835;
+			
+			// aapt resource value: 0x7f0a0033
+			public const int format_currently_not_supported = 2131361843;
+			
+			// aapt resource value: 0x7f0a0014
+			public const int highlight = 2131361812;
+			
+			// aapt resource value: 0x7f0a0017
+			public const int ink = 2131361815;
+			
+			// aapt resource value: 0x7f0a001f
+			public const int leaving_reflow_mode = 2131361823;
+			
+			// aapt resource value: 0x7f0a0030
+			public const int more = 2131361840;
+			
+			// aapt resource value: 0x7f0a001d
+			public const int no = 2131361821;
+			
+			// aapt resource value: 0x7f0a000e
+			public const int no_further_occurrences_found = 2131361806;
+			
+			// aapt resource value: 0x7f0a0003
+			public const int no_media_hint = 2131361795;
+			
+			// aapt resource value: 0x7f0a0002
+			public const int no_media_warning = 2131361794;
+			
+			// aapt resource value: 0x7f0a0023
+			public const int no_text_selected = 2131361827;
+			
+			// aapt resource value: 0x7f0a002e
+			public const int not_supported = 2131361838;
+			
+			// aapt resource value: 0x7f0a0025
+			public const int nothing_to_save = 2131361829;
+			
+			// aapt resource value: 0x7f0a002c
+			public const int okay = 2131361836;
+			
+			// aapt resource value: 0x7f0a0009
+			public const int outline_title = 2131361801;
+			
+			// aapt resource value: 0x7f0a001b
+			public const int parent_directory = 2131361819;
+			
+			// aapt resource value: 0x7f0a0008
+			public const int picker_title_App_Ver_Dir = 2131361800;
+			
+			// aapt resource value: 0x7f0a0019
+			public const int print = 2131361817;
+			
+			// aapt resource value: 0x7f0a0020
+			public const int print_failed = 2131361824;
+			
+			// aapt resource value: 0x7f0a0018
+			public const int save = 2131361816;
+			
+			// aapt resource value: 0x7f0a0010
+			public const int search = 2131361808;
+			
+			// aapt resource value: 0x7f0a0005
+			public const int search_backwards = 2131361797;
+			
+			// aapt resource value: 0x7f0a0007
+			public const int search_document = 2131361799;
+			
+			// aapt resource value: 0x7f0a0006
+			public const int search_forwards = 2131361798;
+			
+			// aapt resource value: 0x7f0a000c
+			public const int searching_ = 2131361804;
+			
+			// aapt resource value: 0x7f0a000f
+			public const int select = 2131361807;
+			
+			// aapt resource value: 0x7f0a0021
+			public const int select_text = 2131361825;
+			
+			// aapt resource value: 0x7f0a0012
+			public const int strike_out = 2131361810;
+			
+			// aapt resource value: 0x7f0a000b
+			public const int text_not_found = 2131361803;
+			
+			// aapt resource value: 0x7f0a000d
+			public const int toggle_links = 2131361805;
+			
+			// aapt resource value: 0x7f0a0034
+			public const int toggle_reflow_mode = 2131361844;
+			
+			// aapt resource value: 0x7f0a0015
+			public const int underline = 2131361813;
+			
+			// aapt resource value: 0x7f0a0001
+			public const int version = 2131361793;
+			
+			// aapt resource value: 0x7f0a001c
+			public const int yes = 2131361820;
+			
+			static String()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private String()
+			{
+			}
+		}
+		
+		public partial class Style
+		{
+			
+			// aapt resource value: 0x7f080003
+			public const int AppBaseTheme = 2131230723;
+			
+			// aapt resource value: 0x7f080000
+			public const int Bubble_TextAppearance_Dark = 2131230720;
+			
+			// aapt resource value: 0x7f080001
+			public const int Bubble_TextAppearance_Light = 2131230721;
+			
+			// aapt resource value: 0x7f080002
+			public const int ClusterIcon_TextAppearance = 2131230722;
+			
+			static Style()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Style()
+			{
+			}
+		}
+
 	}
 }
 #pragma warning restore 1591
