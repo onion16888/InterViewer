@@ -330,6 +330,11 @@ namespace InterViewer.Droid
 			gridview.ItemClick += (Object sender, AdapterView.ItemClickEventArgs e) =>
 			{
 				Console.WriteLine(e.Position.ToString());
+
+				DetailActivity.PDF_Type = "Edit";
+				DetailActivity.Doc = DocumentList[e.Position];
+
+				StartActivity(typeof(DetailActivity));
 			};
 		}
 
