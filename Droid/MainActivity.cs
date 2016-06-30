@@ -20,6 +20,7 @@ using AndroidHUD;
 
 using Com.Google.Maps.Android.Clustering;
 using Com.Google.Maps.Android.Clustering.View;
+using System.Linq;
 
 namespace InterViewer.Droid
 {
@@ -300,7 +301,14 @@ namespace InterViewer.Droid
 		{
 			InterViewerService DocumentManager = new InterViewerService(new IOService());
 
-			DocumentList = DocumentManager.GetDocuments();
+			if (null != CenterLocation)
+			{
+				DocumentList = DocumentManager.GetDocumentsOrderBy(CenterLocation.Latitude, CenterLocation.Longitude);
+			}
+			else 
+			{
+				DocumentList = DocumentManager.GetDocuments();
+			}
 
 			if (customAdapter != null)
 			{
@@ -322,10 +330,15 @@ namespace InterViewer.Droid
 			gridview.ItemClick += (Object sender, AdapterView.ItemClickEventArgs e) =>
 			{
 				Console.WriteLine(e.Position.ToString());
+
+				DetailActivity.PDF_Type = "Edit";
+				DetailActivity.Doc = DocumentList[e.Position];
+
+				StartActivity(typeof(DetailActivity));
 			};
 		}
 
-		public void MapViewInit()
+		public async void MapViewInit()
 		{
 			RunOnUiThread(() =>
 			{
@@ -353,19 +366,8 @@ namespace InterViewer.Droid
 
 			var mapReadyCallBack = new CustomOnMapReady();
 
-			mapReadyCallBack.MapReady += async (object sender, MapReadyEventArgs e) =>
+			mapReadyCallBack.MapReady += (object sender, MapReadyEventArgs e) =>
 			{
-
-				var locator = CrossGeolocator.Current;
-				locator.DesiredAccuracy = 50;
-
-				var position = await locator.GetPositionAsync(timeoutMilliseconds: 20000);
-
-				CenterLocation = defaultLocation = new LatLng(position.Latitude, position.Longitude);
-
-				//Console.WriteLine("Position Status: {0}", position.Timestamp);
-				//Console.WriteLine("Position Latitude: {0}", position.Latitude);
-				//Console.WriteLine("Position Longitude: {0}", position.Longitude);
 
 				_map = e.Map;
 				_map.MyLocationEnabled = true;
@@ -379,6 +381,8 @@ namespace InterViewer.Droid
 
 				//_map.SetOnCameraChangeListener(_clusterManager);
 
+				LoadDocument();
+
 				AddMapMarker();
 
 				RunOnUiThread(() =>
@@ -386,6 +390,18 @@ namespace InterViewer.Droid
 					AndHUD.Shared.Dismiss(this);
 				});
 			};
+
+			var locator = CrossGeolocator.Current;
+
+			locator.DesiredAccuracy = 50;
+
+			var position = await locator.GetPositionAsync(timeoutMilliseconds: 20000);
+
+			CenterLocation = defaultLocation = new LatLng(position.Latitude, position.Longitude);
+
+			Console.WriteLine("Position Status: {0}", position.Timestamp);
+			Console.WriteLine("Position Latitude: {0}", position.Latitude);
+			Console.WriteLine("Position Longitude: {0}", position.Longitude);
 
 			_mapFragment.GetMapAsync(mapReadyCallBack);
 		}
@@ -395,10 +411,6 @@ namespace InterViewer.Droid
 			if (null != _map)
 			{
 				_clusterManager.ClearItems();
-
-				InterViewerService DocumentManager = new InterViewerService(new IOService());
-
-				List<Document> DocumentList = DocumentManager.GetDocuments();
 
 				List<IClusterItem> items = new List<IClusterItem>();
 
@@ -430,6 +442,8 @@ namespace InterViewer.Droid
 				//}
 
 				_clusterManager.AddItems(items);
+
+				_clusterManager.Cluster();
 			}
 		}
 
@@ -441,6 +455,13 @@ namespace InterViewer.Droid
 			Console.WriteLine("{0}, {1}", cameraPos.Target.Latitude, cameraPos.Target.Longitude);
 
 			_clusterManager.OnCameraChange(cameraPos);
+
+			DocumentList = DocumentList.OrderBy(doc => doc.GetDistance(CenterLocation.Latitude, CenterLocation.Longitude)).ToList();
+
+			customAdapter.UpdateData(DocumentList);
+
+			customAdapter.NotifyDataSetChanged();
+
 		}
 		#endregion
 
@@ -556,12 +577,21 @@ namespace InterViewer.Droid
 			holder.imageView = view.FindViewById<ImageView>(Resource.Id.doc_image_view);
 
 			holder.imageView.SetImageBitmap(
-				BitmapFactory.DecodeFile(doc.Thumbnail)
+				BitmapFactory.DecodeFile(doc.Thumbnail, GetBitmapOptions(4))
 			);
 
 			holder.textView.Text = doc.Title;
-
+	
 			return view;
+		}
+
+		public BitmapFactory.Options GetBitmapOptions(Int32 scale)
+		{
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.InPurgeable = true;
+			options.InInputShareable = true;
+			options.InSampleSize = scale;
+			return options;
 		}
 	}
 

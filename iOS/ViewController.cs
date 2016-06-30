@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CoreGraphics;
 using CoreLocation;
 using Foundation;
 using MapKit;
 using UIKit;
+using Geolocator.Plugin;
+using Geolocator.Plugin.Abstractions;
 
 namespace InterViewer.iOS
 {
@@ -99,7 +102,6 @@ namespace InterViewer.iOS
 			btnNote.UserInteractionEnabled = true;
 			btnNote.AddGestureRecognizer(new UITapGestureRecognizer(tap =>
 			{
-				//CGPoint CollectionViewLocation = CollectionView.Frame.Location;
 
 				if (!CollectionViewIsOpen)
 				{
@@ -185,7 +187,7 @@ namespace InterViewer.iOS
 		{
 			InterViewerService DocumentManager = new InterViewerService(new IOService());
 
-			DocumentList = DocumentManager.GetDocuments();
+			DocumentList = DocumentManager.GetDocumentsOrderBy(CenterLocation.Latitude, CenterLocation.Longitude);
 
 			if (source != null)
 			{
@@ -205,52 +207,39 @@ namespace InterViewer.iOS
 			{
 				SectionInset = new UIEdgeInsets(10, 10, 10, 10),
 				ItemSize = new CGSize(200, 200),
-				//MinimumInteritemSpacing = 20,
 				ScrollDirection = UICollectionViewScrollDirection.Vertical
 			}, true);
 
 			source.Selected += ItemOnSelected;
 		}
 
-		public void MapViewInit()
+		public async void MapViewInit()
 		{
-			//var manager = new CLLocationManager();
-			//manager.RequestWhenInUseAuthorization();
-			/*
-				var locator = CrossGeolocator.Current;
-				locator.DesiredAccuracy = 50;
+			CLLocationManager manager = new CLLocationManager();
+			manager.RequestWhenInUseAuthorization();
 
-				var position = await locator.GetPositionAsync (timeoutMilliseconds: 10000);
+			IGeolocator locator = CrossGeolocator.Current;
+			locator.DesiredAccuracy = 50;
 
-				Console.WriteLine ("Position Status: {0}", position.Timestamp);
-				Console.WriteLine ("Position Latitude: {0}", position.Latitude);
-				Console.WriteLine ("Position Longitude: {0}", position.Longitude);
-			*/
+			Position position = await locator.GetPositionAsync(timeoutMilliseconds: 10000);
 
-			CLLocationCoordinate2D mapCenter = new CLLocationCoordinate2D(22.617193, 120.3032346);
+			Console.WriteLine("Position Status: {0}", position.Timestamp);
+			Console.WriteLine("Position Latitude: {0}", position.Latitude);
+			Console.WriteLine("Position Longitude: {0}", position.Longitude);
+
+			CLLocationCoordinate2D mapCenter = new CLLocationCoordinate2D(position.Latitude, position.Longitude);
+			//CLLocationCoordinate2D mapCenter = new CLLocationCoordinate2D(22.617193, 120.3032346);
 
 			CenterLocation = map.CenterCoordinate = mapCenter;
 
 			map.Region = MKCoordinateRegion.FromDistance(mapCenter, 1000, 1000);
 
-			map.ShowsUserLocation = true;
+			//map.ShowsUserLocation = true;
 
 			CustomMapViewDelegate customDelegate = new CustomMapViewDelegate();
 			customDelegate.OnRegionChanged += MapViewOnRegionChanged;
 			map.Delegate = customDelegate;
 
-			/*
-			map.UserInteractionEnabled = true;
-			UISwipeGestureRecognizer swipeGestureRecognizer = new UISwipeGestureRecognizer(sw =>
-			{
-
-			})
-			{
-				NumberOfTouchesRequired = 3
-			};
-
-			map.AddGestureRecognizer(swipeGestureRecognizer);
-			*/
 		}
 
 		public void AddAnnotations()
@@ -554,9 +543,17 @@ namespace InterViewer.iOS
 
 			//Console.WriteLine(String.Format("{0}, {1}", latitude, longitude));
 
+
 			Double scale = map.Bounds.Size.Width / map.VisibleMapRect.Size.Width;
 			List<IMKAnnotation> annotationsToDisplay = AnnotationsClusteringManager.ClusteredAnnotationsWithinMapRect(map.VisibleMapRect, scale);
 			AnnotationsClusteringManager.DisplayAnnotations(annotationsToDisplay, map);
+
+			DocumentList = DocumentList.OrderBy(doc => doc.GetDistance(CenterLocation.Latitude, CenterLocation.Longitude)).ToList();
+
+			source.UpdateData(DocumentList);
+
+			CollectionView.ReloadData();
+
 		}
 
 		private void ItemOnSelected(Object sender, TableSource.SelectedEventArgs e)

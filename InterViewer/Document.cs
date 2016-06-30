@@ -48,5 +48,26 @@ namespace InterViewer
 		/// <value>The attachments.</value>
 		public List<Attachment> Attachments { get; set; }
 
+		private const Double EARTH_RADIUS = 6371;
+
+		public Double GetDistance(double latitude, double longitude)
+		{
+			Double DocLatitude = ConvertDegreeToRadians(Latitude);
+			Double DocLongitude = ConvertDegreeToRadians(Longitude);
+			Double TargetLatitude = ConvertDegreeToRadians(latitude);
+			Double TargetLongitude = ConvertDegreeToRadians(longitude);
+
+			Double distance = Math.Acos(
+				(Math.Sin(DocLatitude) * Math.Sin(TargetLatitude)) + 
+				(Math.Cos(DocLatitude) * Math.Cos(TargetLatitude) * Math.Cos(DocLongitude - TargetLongitude))
+			);
+
+			return distance * EARTH_RADIUS;
+		}
+
+		private Double ConvertDegreeToRadians(Double degrees)
+		{
+			return (Math.PI / 180) * degrees;
+		}
 	}
 }
