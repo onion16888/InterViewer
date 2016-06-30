@@ -35,8 +35,9 @@ namespace InterViewer.Droid
 		}
 		public override long GetItemId (int position)
 		{
-			return 0;
+			return position;
 		}
+
 		// create a new ImageView for each item referenced by the Adapter
 		public override View GetView (int position, View convertView, ViewGroup parent)
 		{

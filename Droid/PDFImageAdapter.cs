@@ -2,9 +2,9 @@
 
 namespace InterViewer.Droid
 {
-	public static class PDFImageAdapter
+	public class PDFImageAdapter
 	{
-		public static GridViewAdapter TheImageAdapter;
+		public GridViewAdapter TheImageAdapter;
 	}
 }
 
