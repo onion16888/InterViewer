@@ -264,6 +264,7 @@ namespace InterViewer.Droid
 					//path.LineTo(point.X, point.Y);
 					break;
 
+				case MotionEventActions.Up:
 				case MotionEventActions.Cancel:
 					Debug.WriteLine("C");    
 

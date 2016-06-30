@@ -329,7 +329,7 @@ namespace InterViewer.Droid
 
 			gridview.ItemClick += (Object sender, AdapterView.ItemClickEventArgs e) =>
 			{
-				Console.WriteLine(e.Position.ToString());
+				//Console.WriteLine(e.Position.ToString());
 
 				DetailActivity.PDF_Type = "Edit";
 				DetailActivity.Doc = DocumentList[e.Position];
@@ -452,7 +452,7 @@ namespace InterViewer.Droid
 		{
 			CenterLocation = cameraPos.Target;
 
-			Console.WriteLine("{0}, {1}", cameraPos.Target.Latitude, cameraPos.Target.Longitude);
+			//Console.WriteLine("{0}, {1}", cameraPos.Target.Latitude, cameraPos.Target.Longitude);
 
 			_clusterManager.OnCameraChange(cameraPos);
 
