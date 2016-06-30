@@ -192,10 +192,26 @@ namespace InterViewer.Droid
 		{
 			pdfImageView = FindViewById<ImageView>(Resource.Id.pdfImageView);
 
-			pdfImageView = FindViewById<ImageView>(Resource.Id.pdfImageView);
+			Display display = WindowManager.DefaultDisplay;
+
+			Point size = new Point();
+			display.GetSize(size);
+
+			int width = size.X;
+			int height = size.Y;
+
+			pdfImageView.LayoutParameters = new RelativeLayout.LayoutParams(width, height);
+
+
+			//pdfImageView.SetBackgroundColor( Color.Yellow );
+
+			//pdfImageView = FindViewById<ImageView>(Resource.Id.pdfImageView);
 
 			pdfContent = FindViewById<RelativeLayout>(Resource.Id.pdfContent);
 			pdfRelativeLayout = FindViewById<RelativeLayout>(Resource.Id.ly1);
+
+			//pdfRelativeLayout.LayoutParameters = new FrameLayout.LayoutParams(width, height);
+
 			btnHome = FindViewById<Button>(Resource.Id.btnHome);
 			btnCamera = FindViewById<ImageButton>(Resource.Id.btnCamera);
 			btnPencil = FindViewById<ImageButton>(Resource.Id.btnPencil);

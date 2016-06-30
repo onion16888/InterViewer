@@ -17,17 +17,16 @@
             android:minHeight="25dp"
             android:background="@android:color/darker_gray">
             <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:id="@+id/ly1"
-                android:minWidth="25dp"
-                android:minHeight="25dp"
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
                 <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:id="@+id/pdfImageView"
+                    android:scaleType="fitCenter"
                     android:layout_marginBottom="10dp"
                     android:layout_alignBottom="@id/pdfScrollView"
                     android:src="@android:drawable/ic_menu_gallery"

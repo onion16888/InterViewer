@@ -80,7 +80,7 @@ namespace InterViewer.Droid
 				{
 					currentPage.Render(bitmap, null, null, PdfRenderMode.ForDisplay);
 
-					Double scale = 1f / 4f;
+					Double scale = 1f / 1f;
 
 					Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
 						bitmap,
