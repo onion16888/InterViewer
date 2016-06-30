@@ -53,9 +53,8 @@ namespace InterViewer.Droid
 		InterViewerService interViewerServiceHelper;
 		List<Document> listDocumentTempDoc;
 
-		string slideOrDocument = "slide";
-		const string BUTTON_SLIDE_SELECTED = "slide";
-		const string BUTTON_DOCUMENT_SELECTED = "document";
+		//List<Document> ReturnIconJson;
+
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
@@ -72,7 +71,8 @@ namespace InterViewer.Droid
 			this.DirCheck(AppDir);
 
 			List<FileSystemInfo> ReturnIcons = this.FindPngInPath(AppDir+"/Slides", visibleThings);
-			List<string> hh=new List<string>(); ;
+
+			List<string> hh=new List<string>();
 
 			var h = from qwe in ReturnIcons select new {qwe.FullName};
 			foreach(var v in h)
@@ -80,10 +80,9 @@ namespace InterViewer.Droid
 				hh.Add(v.FullName);
 			}
 			var cc=hh.Count;
+
 			//預設載入Sliders
-			PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
-			gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
-			//gridviewShow.Adapter = new ImageAdapter(this, AppDir, ReturnIcons);
+			gridviewShow.Adapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 			CheckButtonIsSelected(btnTemplate);
 
 			DetailActivity.PDF_Type = "Add";
@@ -91,9 +90,7 @@ namespace InterViewer.Droid
 			btnTemplate.Click += (object sender, EventArgs e) =>
 			{
 				CheckButtonIsSelected(btnTemplate);
-
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
-				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+				gridviewShow.Adapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 			};
 
 			btnDocuments.Click += (object sender, EventArgs e) =>
@@ -104,8 +101,7 @@ namespace InterViewer.Droid
 				var filepaths = from theDoc in listDocumentTempDoc
 								select theDoc.Thumbnail;
 
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, filepaths.ToArray());
-				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+				gridviewShow.Adapter = new GridViewAdapter(this, filepaths.ToArray());
 			};
 				
 			btnImages.Click+= (object sender, EventArgs e) => 
@@ -132,6 +128,8 @@ namespace InterViewer.Droid
 				//Toast.MakeText(this, ReturnIcons[args.Position].FullName, ToastLength.Long).Show();
 				//Intent DetailAc = new Intent(this, typeof(DetailActivity));
 
+				var q = gridviewShow.SelectedItem;
+
 				if (btnTemplate.Selected == true)
 				{
 					if (System.IO.File.Exists(ReturnIcons[args.Position].FullName.Replace(".png", ".pdf")))
@@ -142,16 +140,15 @@ namespace InterViewer.Droid
 				}
 				if(btnDocuments.Selected == true)
 				{
-					listDocumentTempDoc = interViewerServiceHelper.GetDocuments();
 					var filepaths = from theDoc in listDocumentTempDoc
-									where theDoc.Thumbnail == ReturnIcons[args.Position].FullName
+									where theDoc.Thumbnail == listDocumentTempDoc[args.Position].Thumbnail
 									select theDoc;
 					interViewerServiceHelper.CopyAttachment(Doc,filepaths.ToArray()[0]);
-					if (System.IO.File.Exists(ReturnIcons[args.Position].FullName.Replace(".png", ".pdf")))
-						Doc.Reference = ReturnIcons[args.Position].FullName.Replace(".png", ".pdf");
+					if (System.IO.File.Exists(listDocumentTempDoc[args.Position].Reference))
+						Doc.Reference = listDocumentTempDoc[args.Position].Reference;
 					else
-						Doc.Reference = ReturnIcons[args.Position].FullName;//passing a .png path
-					Doc.Thumbnail = ReturnIcons[args.Position].FullName;
+						Doc.Reference = listDocumentTempDoc[args.Position].Thumbnail;//passing a .png path
+					Doc.Thumbnail = listDocumentTempDoc[args.Position].Thumbnail;
 				}
 
 				DetailActivity.Doc = Doc;
@@ -215,14 +212,10 @@ namespace InterViewer.Droid
 						output.Close();
 						#endregion
 
-						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
-						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+						gridviewShow.Adapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 					}
 					else
 					{
-						PDFImageAdapter.TheImageAdapter = null;
-						//this.copy(new Java.IO.File(Source), new Java.IO.File(Des));
-
 						#region 縮圖
 						BitmapFactory.Options options = new BitmapFactory.Options();
 						options.InPreferredConfig = Bitmap.Config.Argb8888;
@@ -243,8 +236,7 @@ namespace InterViewer.Droid
 						output.Close();
 						#endregion
 
-						PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
-						gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+						gridviewShow.Adapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 					}
 				}
 				else
@@ -304,8 +296,7 @@ namespace InterViewer.Droid
 					this.copy(FileSou, FileDes);
 					this.WritePngToDir(Source, Des);
 				}
-				PDFImageAdapter.TheImageAdapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
-				gridviewShow.Adapter = PDFImageAdapter.TheImageAdapter;
+				gridviewShow.Adapter = new GridViewAdapter(this, queryFilesName(FindPngInPath(AppDir + "/Slides", visibleThings)));
 			}
 		}
 		//MaX Add

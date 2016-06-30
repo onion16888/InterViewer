@@ -98,8 +98,11 @@ namespace InterViewer.iOS
 			string[] pathList = getPathList(path);
 			for (int i = 0; i < fileList.Length; i++)
 			{
-				theFileAttributes = new FileListAttributes(true, fileList[i]);
-				theList.Add(theFileAttributes);
+				if (isPNG(fileList[i]))
+				{
+					theFileAttributes = new FileListAttributes(true, fileList[i]);
+					theList.Add(theFileAttributes);
+				}
 			}
 			for (int i = 0; i < pathList.Length; i++)
 			{

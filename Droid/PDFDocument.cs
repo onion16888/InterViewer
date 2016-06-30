@@ -74,18 +74,27 @@ namespace InterViewer.Droid
 
 		private Bitmap ConvertSinglePageToImages(int PageIndex) 
 		{
-			currentPage = renderer.OpenPage(PageIndex);
-		
-			Bitmap bitmap = Bitmap.CreateBitmap(currentPage.Width, currentPage.Height, Bitmap.Config.Argb8888);
+			using (currentPage = renderer.OpenPage(PageIndex))
+			{
+				using (Bitmap bitmap = Bitmap.CreateBitmap(currentPage.Width, currentPage.Height, Bitmap.Config.Argb4444))
+				{
+					currentPage.Render(bitmap, null, null, PdfRenderMode.ForDisplay);
 
-			currentPage.Render(bitmap, null, null, PdfRenderMode.ForDisplay);
+					Double scale = 1f / 1f;
 
-			currentPage.Close();
+					Bitmap resizedBitmap = Bitmap.CreateScaledBitmap(
+						bitmap,
+						(Int32)(bitmap.Width * scale),
+						(Int32)(bitmap.Height * scale),
+						false
+					);
 
-			return bitmap;
+					currentPage.Close();
+
+					return resizedBitmap;
+				}
+			}
 		}
-
-
 	}
 }
 

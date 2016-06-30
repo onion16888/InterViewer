@@ -883,6 +883,7 @@
                         <outlet property="btnPencil" destination="Wgq-7d-dcX" id="FPp-Ey-Ty8"/>
                         <outlet property="btnTag" destination="3XH-Zp-vDr" id="jb4-YQ-sGb"/>
                         <outlet property="imageView" destination="PUe-Eq-7EW" id="VxU-q1-9FW"/>
+                        <outlet property="navItem" destination="i8C-dM-96l" id="Uu3-1l-R7x"/>
                         <outlet property="scrollView" destination="HY5-g8-caH" id="cM0-cC-eCD"/>
                     </connections>
                 </viewController>
