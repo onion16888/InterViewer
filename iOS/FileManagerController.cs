@@ -121,8 +121,11 @@ namespace InterViewer.iOS
 			string[] pathList = getPathList(path);
 			for (int i = 0; i < fileList.Length; i++)
 			{
-				theFileAttributes = new FileListAttributes(true, fileList[i]);
-				theList.Add(theFileAttributes);
+				if (isPDF(fileList[i]))
+				{
+					theFileAttributes = new FileListAttributes(true, fileList[i]);
+					theList.Add(theFileAttributes);
+				}
 			}
 			for (int i = 0; i < pathList.Length; i++)
 			{
@@ -176,9 +179,7 @@ namespace InterViewer.iOS
 		/// <param name="fullFilePath">Full file path.</param>
 		private bool isPDF(string fullFilePath)
 		{
-			//return (getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' })[getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' }).Length - 1]=="pdf"||getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' })[getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' }).Length - 1] == "PDF" || getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' })[getFileNameFromFullFilePath(fullFilePath).Split(new char[] { '.' }).Length - 1] == "Pdf")? true : false;
 			return (Path.GetExtension(fullFilePath) == ".pdf" || Path.GetExtension(fullFilePath) == ".PDF" || Path.GetExtension(fullFilePath) == ".Pdf")?true:false;
-			//return false;
 		}
 		/// <summary>
 		/// Gets the file name from full file path.

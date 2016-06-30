@@ -31,7 +31,7 @@ namespace InterViewer.Droid
 		}
 		public override Java.Lang.Object GetItem (int position)
 		{
-			return null;
+			return fileName[position];
 		}
 		public override long GetItemId (int position)
 		{
