@@ -23,12 +23,8 @@ using Com.Google.Maps.Android.Clustering.View;
 
 namespace InterViewer.Droid
 {
-<<<<<<< HEAD
+
 	[Activity(Label = "Test", MainLauncher = true
-=======
-	[Activity(Label = "Test"
-	          , MainLauncher = true
->>>>>>> 253f8de5a706c1211995625132b526f2bd85aac1
 	          , Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Landscape)]
 	public class MainActivity : Activity
 	, ILocationListener
