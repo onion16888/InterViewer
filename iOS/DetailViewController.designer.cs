@@ -34,18 +34,16 @@ namespace InterViewer.iOS
 		UIKit.UIImageView imageView { get; set; }
 
 		[Outlet]
+		UIKit.UINavigationItem navItem { get; set; }
+
+		[Outlet]
 		UIKit.UIScrollView scrollView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (imageView != null) {
-				imageView.Dispose ();
-				imageView = null;
-			}
-
-			if (scrollView != null) {
-				scrollView.Dispose ();
-				scrollView = null;
+			if (navItem != null) {
+				navItem.Dispose ();
+				navItem = null;
 			}
 
 			if (btnCamera != null) {
@@ -76,6 +74,16 @@ namespace InterViewer.iOS
 			if (btnTag != null) {
 				btnTag.Dispose ();
 				btnTag = null;
+			}
+
+			if (imageView != null) {
+				imageView.Dispose ();
+				imageView = null;
+			}
+
+			if (scrollView != null) {
+				scrollView.Dispose ();
+				scrollView = null;
 			}
 		}
 	}

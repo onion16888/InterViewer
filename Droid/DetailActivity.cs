@@ -187,6 +187,8 @@ namespace InterViewer.Droid
 
 				pdfImageView.SetImageBitmap(pdf.Images[0]);
 
+
+
 				//reloadAttachment
 				LoadingAttachments();
 

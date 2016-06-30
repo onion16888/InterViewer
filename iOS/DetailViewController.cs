@@ -104,7 +104,7 @@ namespace InterViewer.iOS
 
 				   pointlist.Add(tempoint);
 
-				   if (IsPdfBackground==true)
+				   if (IsPdfBackground == true)
 				   {
 					   CGPDFPage pdfPg = _pdf.GetPage(PageNumber);
 
@@ -208,10 +208,10 @@ namespace InterViewer.iOS
 			CGRect pageRect = pdfPg.GetBoxRect(CGPDFBox.Media);
 			if (pageRect.Height > pageRect.Width)
 			{
-				
-				scale = (this.View.Frame.Width-80.0f) / pageRect.Width;
+
+				scale = (this.View.Frame.Width - 80.0f) / pageRect.Width;
 			}
-			else 
+			else
 			{
 				scale = this.View.Frame.Height / pageRect.Height;
 			}
@@ -225,7 +225,7 @@ namespace InterViewer.iOS
 			context.FillRect(pageRect);
 
 			context.SaveState();
-	
+
 			context.TranslateCTM(0, pageRect.Size.Height);
 			context.ScaleCTM(1, -1);
 
@@ -272,28 +272,28 @@ namespace InterViewer.iOS
 
 		private UISwipeGestureRecognizer setScrollViewChangPanGesture(UISwipeGestureRecognizerDirection direction)
 		{
-			return	new UISwipeGestureRecognizer((swipeDirection) =>
-		   {
-			  
-			   switch (direction)
-			   {
-				   case UISwipeGestureRecognizerDirection.Right:
-					   PageNumber++;   
-					break;
-				   case UISwipeGestureRecognizerDirection.Left:
-					   PageNumber--;
-					break;
-			   }
+			return new UISwipeGestureRecognizer((swipeDirection) =>
+		  {
 
-				imageView.Image = GetThumbForPage();
+			  switch (direction)
+			  {
+				  case UISwipeGestureRecognizerDirection.Right:
+					  PageNumber++;
+					  break;
+				  case UISwipeGestureRecognizerDirection.Left:
+					  PageNumber--;
+					  break;
+			  }
 
-			    ClearAllUIView();
-			    LoadingAttachments();
-			    SaveLoadJsonData();
-				scrollView.ScrollRectToVisible(new CGRect(0, 0, 100, 100), true);
+			  imageView.Image = GetThumbForPage();
+
+			  ClearAllUIView();
+			  LoadingAttachments();
+			  SaveLoadJsonData();
+			  scrollView.ScrollRectToVisible(new CGRect(0, 0, 100, 100), true);
 
 
-		   });
+		  });
 
 		}
 
@@ -315,6 +315,28 @@ namespace InterViewer.iOS
 				Doc.Name = string.Format("{0}.json", PDF_RECORD_DIR);
 			}
 
+			// add done button in navigation bar
+			var navButtonDone = new UIBarButtonItem(UIBarButtonSystemItem.Done, (s, e) =>
+			{
+				#region save data
+
+				// 畫筆未關時，進行關閉
+				if (openPen)
+				{
+					openPen = false;
+					AddAttachmentAndSaveJsonData(AttachmentTypeEnum.Paint);
+					newimage.RemoveFromSuperview();
+				}
+
+				ClearAllUIView();
+				LoadingAttachments();
+				SaveLoadJsonData();
+
+				#endregion
+
+				NavigationController.PopToRootViewController(true);
+			});
+			navItem.SetRightBarButtonItem(navButtonDone, true);
 		}
 
 
@@ -364,7 +386,7 @@ namespace InterViewer.iOS
 		#region getSaveImageLocalSystemPath
 
 
-		private string getSaveImageLocalSystemPath(string IdentifierName, AttachmentTypeEnum savetype, UIImage uiimage )
+		private string getSaveImageLocalSystemPath(string IdentifierName, AttachmentTypeEnum savetype, UIImage uiimage)
 		{
 
 
@@ -388,7 +410,7 @@ namespace InterViewer.iOS
 
 			string saveFilePath = Path.Combine(documentsDirectory, SAVE_FILE_NAME);
 
-			using (NSData imageData = savetype == AttachmentTypeEnum.Paint ? uiimage.AsPNG() : uiimage.AsJPEG() )
+			using (NSData imageData = savetype == AttachmentTypeEnum.Paint ? uiimage.AsPNG() : uiimage.AsJPEG())
 			{
 				NSError err = null;
 				imageData.Save(
@@ -482,10 +504,10 @@ namespace InterViewer.iOS
 			if (type == AttachmentTypeEnum.Note)
 			{
 				UITextView textview = new UITextView();
-				textview.Text = attachment == null ? string.Empty: attachment.Note;
+				textview.Text = attachment == null ? string.Empty : attachment.Note;
 				textview.AccessibilityIdentifier = attachment == null ? identifier : attachment.Name;
 				textview.BackgroundColor = UIColor.FromRGB(242, 255, 0);
-				textview.Frame = attachment == null ? new CoreGraphics.CGRect(scrollView.Center.X, scrollView.Center.Y, 100, 100): CGRectFrame;
+				textview.Frame = attachment == null ? new CoreGraphics.CGRect(scrollView.Center.X, scrollView.Center.Y, 100, 100) : CGRectFrame;
 				//textview.Center = attachment == null ? new CGPoint(scrollView.Center.X, scrollView.Center.Y) : centerPoint;
 				textview.Font = UIFont.FromName("Helvetica-Bold", 30f);
 				UIPanGestureRecognizer panGesture = SettingUIPanGesture(textview, UIType.UITextView);
@@ -594,7 +616,8 @@ namespace InterViewer.iOS
 			}
 		}
 
-		public void AddAttachmentAndSaveJsonData(AttachmentTypeEnum type) {
+		public void AddAttachmentAndSaveJsonData(AttachmentTypeEnum type)
+		{
 			SettingUIView(type);
 			SaveLoadJsonData();
 		}
@@ -680,7 +703,7 @@ namespace InterViewer.iOS
 					   {
 						   x = 0;
 						   y = 0;
-					       
+
 						   switch (uitype)
 						   {
 							   case UIType.UIImageView:
@@ -706,7 +729,7 @@ namespace InterViewer.iOS
 							   moveAttachment.X = X;
 							   moveAttachment.Y = Y;
 						   }
-						 
+
 					   }
 				   });
 
