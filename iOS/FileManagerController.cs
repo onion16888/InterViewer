@@ -11,28 +11,28 @@ namespace InterViewer.iOS
 {
 	public partial class FileManagerController : UIViewController
 	{
-		const int FIRST_PAGE = 1;
+		QueryMode _queryMode;
+		FileManagerTableSource _source;
+		List<FileListAttributes> _listFilePathName;
+		string _pathRightNow;
 		string _folderSlides = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/InterView/Sliders";
-		FileManagerTableSource source;
-		List<FileListAttributes> listFilePathName;
-		string pathRightNow;
-		public FileManagerController (IntPtr handle) : base (handle)
+		string _selectedFile;
+		public FileManagerController(IntPtr handle) : base(handle)
 		{
 		}
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
 
-			//Manager Start
-			listFilePathName = getFileAndPathList("/");
-			pathRightNow = "/";
-			//警告,FileManagerTableSource,可能造成記憶體問題
-			source = new FileManagerTableSource(listFilePathName);
-			FileManagerTableView.Source = source;
-			source.ItemClick += ListButton_Click;
-			FileManagerTableView.ReloadData();
+			//default setting
+			settingMode(new QueryMode() { status = "PDF" });
 
-			ReturnButton.TouchUpInside += ReturnButton_Click;
+			//Manager Start
+			setQueryPath("/");
+			fileManagerDisplay();
+
+			//return to previous page
+			ReturnButton.TouchUpInside += returnButton_Click;
 		}
 		public override void DidReceiveMemoryWarning()
 		{
@@ -40,12 +40,15 @@ namespace InterViewer.iOS
 			// Release any cached data, images, etc that aren't in use.
 		}
 		/// <summary>
-		/// Returns to the previou page
+		/// Returns the button click.
 		/// </summary>
-		private void ReturnButton_Click(object sender, EventArgs e)
+		/// <returns>The button click.</returns>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		private void returnButton_Click(object sender, EventArgs e)
 		{
 			char[] seperater = { '/' };
-			string[] pathTemp = pathRightNow.Split(seperater);
+			string[] pathTemp = _pathRightNow.Split(seperater);
 			string pathForQuery = string.Empty;
 			if (pathTemp.Length > 2)
 			{
@@ -59,55 +62,127 @@ namespace InterViewer.iOS
 			{
 				pathForQuery += "/";
 			}
-			listFilePathName = getFileAndPathList(pathForQuery);
-			source = new FileManagerTableSource(listFilePathName);
-			FileManagerTableView.Source = source;
-			source.ItemClick += ListButton_Click;
-			FileManagerTableView.ReloadData();
+			setQueryPath(pathForQuery);
+			fileManagerDisplay();
 			ReturnButton.SetTitle("<< " + pathForQuery, UIControlState.Normal);
-			pathRightNow = pathForQuery;
 		}
 		/// <summary>
-		/// The list button clicked
+		/// Lists the button click.
 		/// </summary>
 		/// <returns>The button click.</returns>
 		/// <param name="sender">Sender.</param>
-		/// <param name="e">E.</param>
-		private void ListButton_Click(object sender, FileManagerTableSource.SelectedEventArgs e)
+		/// <param name="e">E.(the selected item)</param>
+		protected virtual void listButton_Click(object sender, FileManagerTableSource.SelectedEventArgs e)
 		{
-			bool isFilePDF = isPDF(e.SelectedName.Name);
 			if (e.SelectedName.IsFile == true)
 			{
-				if (isFilePDF == true)
-				{
-					if (!File.Exists(_folderSlides))
-						Directory.CreateDirectory(_folderSlides);
-					File.Copy(e.SelectedName.Name, _folderSlides + "/" + getFileNameFromFullFilePath(e.SelectedName.Name));
-					PDFDocument theChoosedPDF = new PDFDocument(e.SelectedName.Name, FIRST_PAGE);
-					theChoosedPDF.SaveAsPng(_folderSlides, getFileNameFromFullFilePath(e.SelectedName.Name).Replace(".pdf",".png"));
-					showAlert("新增範本", e.SelectedName.Name + @" 新增成功!!", @"確定", this);
-				}
-				else
-				{
-					showAlert("新增範本", e.SelectedName.Name + @" 不是PDF檔案", @"確定", this);
-				}
+				selectPath(e.SelectedName.Name);
+				listButtonAction();
 			}
 			else
 			{
-				listFilePathName = getFileAndPathList(e.SelectedName.Name);
-				source = new FileManagerTableSource(listFilePathName);
-				FileManagerTableView.Source = source;
-				source.ItemClick += ListButton_Click;
-				FileManagerTableView.ReloadData();
-				ReturnButton.SetTitle("<< "+e.SelectedName.Name, UIControlState.Normal);
-				pathRightNow = e.SelectedName.Name;
+				setQueryPath(e.SelectedName.Name);
+				fileManagerDisplay();
+				ReturnButton.SetTitle("<< " + e.SelectedName.Name, UIControlState.Normal);
 			}
 		}
-		//private void enviromentCheck()
-		//{
-		//	if (!File.Exists(_folderSlides))
-		//		Directory.CreateDirectory(_folderSlides);
-		//}
+		/// <summary>
+		/// Selects the path.
+		/// </summary>
+		/// <returns>The path.</returns>
+		/// <param name="path">Path.</param>
+		protected virtual void selectPath(string path)
+		{
+			_selectedFile = path;
+		}
+		/// <summary>
+		/// Lists the button action.
+		/// </summary>
+		/// <returns>The button action.</returns>
+		private void listButtonAction()
+		{
+			if (_queryMode.status == "PDF")
+			{
+				if (isPDF(_selectedFile))
+				{
+					copyToDestination(_selectedFile, _folderSlides);
+					showAlert("新增PDF", _selectedFile + @" 新增成功!!", @"確定", this);
+				}
+				else
+				{
+					showAlert("新增PDF", _selectedFile + @" 不是PDF檔案", @"確定", this);
+				}
+			}
+			if (_queryMode.status == "PNG")
+			{
+				if (isPNG(_selectedFile))
+				{
+					copyToDestination(_selectedFile, _folderSlides);
+					showAlert("新增影像", _selectedFile + @" 新增成功!!", @"確定", this);
+				}
+				else
+				{
+					showAlert("新增影像", _selectedFile + @" 不是PNG檔案", @"確定", this);
+				}
+			}
+		}
+		/// <summary>
+		/// Settings the mode.(For simulation dependency injection)
+		/// </summary>
+		/// <returns>The mode.</returns>
+		/// <param name="queryMode">Query mode.</param>
+		public virtual void settingMode(QueryMode queryMode)
+		{
+			this._queryMode = queryMode;
+		}
+		/// <summary>
+		/// Simulation a Copy Button Click Event
+		/// </summary>
+		/// <returns>The copy button click.</returns>
+		private void virtualCopyButtonClick()
+		{
+		}
+		/// <summary>
+		/// Copies to destination.
+		/// </summary>
+		/// <returns>The to destination.</returns>
+		/// <param name="sourceName">Source name.</param>
+		/// <param name="destinationFolder">Destination folder.</param>
+		private bool copyToDestination(string sourceName, string destinationFolder)
+		{
+			try
+			{
+				if (!File.Exists(destinationFolder))
+					Directory.CreateDirectory(destinationFolder);
+				File.Copy(sourceName, destinationFolder + "/" + getFileNameFromFullFilePath(sourceName));
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+		/// <summary>
+		/// Sets the query path.
+		/// </summary>
+		/// <returns>The query path.</returns>
+		/// <param name="path">Path.</param>
+		private void setQueryPath(string path)
+		{
+			_listFilePathName = getFileAndPathList(path);
+			_pathRightNow = path;
+		}
+		/// <summary>
+		/// Files the manager display.
+		/// </summary>
+		/// <returns>The manager display.</returns>
+		private void fileManagerDisplay()
+		{
+			_source = new FileManagerTableSource(_listFilePathName);
+			FileManagerTableView.Source = _source;
+			_source.ItemClick += listButton_Click;
+			FileManagerTableView.ReloadData();
+		}
 		/// <summary>
 		/// Gets the file and path list.
 		/// </summary>
@@ -179,7 +254,16 @@ namespace InterViewer.iOS
 		/// <param name="fullFilePath">Full file path.</param>
 		private bool isPDF(string fullFilePath)
 		{
-			return (Path.GetExtension(fullFilePath) == ".pdf" || Path.GetExtension(fullFilePath) == ".PDF" || Path.GetExtension(fullFilePath) == ".Pdf")?true:false;
+			return (Path.GetExtension(fullFilePath) == ".pdf" || Path.GetExtension(fullFilePath) == ".PDF" || Path.GetExtension(fullFilePath) == ".Pdf") ? true : false;
+		}
+		/// <summary>
+		/// Ises the png.
+		/// </summary>
+		/// <returns>The png.</returns>
+		/// <param name="fullFilePath">Full file path.</param>
+		private bool isPNG(string fullFilePath)
+		{
+			return (Path.GetExtension(fullFilePath) == ".png" || Path.GetExtension(fullFilePath) == ".PNG" || Path.GetExtension(fullFilePath) == ".Png") ? true : false;
 		}
 		/// <summary>
 		/// Gets the file name from full file path.
@@ -188,7 +272,7 @@ namespace InterViewer.iOS
 		/// <param name="fullFilePath">Full file path.</param>
 		private string getFileNameFromFullFilePath(string fullFilePath)
 		{
-			return fullFilePath.Split(new char[] { '/' })[fullFilePath.Split(new char[] { '/' }).Length-1];
+			return fullFilePath.Split(new char[] { '/' })[fullFilePath.Split(new char[] { '/' }).Length - 1];
 		}
 		/// <summary>
 		/// Gets the path name from full file path.
@@ -197,7 +281,7 @@ namespace InterViewer.iOS
 		/// <param name="fullFilePath">Full file path.</param>
 		private string getPathNameFromFullFilePath(string fullFilePath)
 		{
-			string[] pathTemp = fullFilePath.Split(new char[]{'/'});
+			string[] pathTemp = fullFilePath.Split(new char[] { '/' });
 			string folderPath = "";
 			if (pathTemp.Length > 2)
 			{
@@ -228,5 +312,12 @@ namespace InterViewer.iOS
 			alertController.AddAction(UIAlertAction.Create(actionTitle, UIAlertActionStyle.Default, null));
 			caller.PresentViewController(alertController, true, null);
 		}
+	}
+	/// <summary>
+	/// For simulation dependency injection
+	/// </summary>
+	public class QueryMode
+	{
+		public string status;
 	}
 }
