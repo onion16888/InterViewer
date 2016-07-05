@@ -11,7 +11,7 @@ namespace InterViewer.iOS
 {
 	public partial class FileManagerController : UIViewController
 	{
-		QueryMode _queryMode;
+		public static QueryMode _queryMode;
 		FileManagerTableSource _source;
 		List<FileListAttributes> _listFilePathName;
 		string _pathRightNow;
@@ -25,7 +25,7 @@ namespace InterViewer.iOS
 			base.ViewDidLoad();
 
 			//default setting
-			settingMode(new QueryMode() { status = "PDF" });
+			//settingMode(new QueryMode() { status = "PDF" });
 
 			//Manager Start
 			setQueryPath("/");
@@ -131,10 +131,10 @@ namespace InterViewer.iOS
 		/// </summary>
 		/// <returns>The mode.</returns>
 		/// <param name="queryMode">Query mode.</param>
-		public virtual void settingMode(QueryMode queryMode)
-		{
-			this._queryMode = queryMode;
-		}
+		//public static virtual void settingMode(QueryMode queryMode)
+		//{
+		//	this._queryMode = queryMode;
+		//}
 		/// <summary>
 		/// Simulation a Copy Button Click Event
 		/// </summary>
@@ -196,10 +196,21 @@ namespace InterViewer.iOS
 			string[] pathList = getPathList(path);
 			for (int i = 0; i < fileList.Length; i++)
 			{
-				if (isPDF(fileList[i]))
+				if (_queryMode.status == "PDF")
 				{
-					theFileAttributes = new FileListAttributes(true, fileList[i]);
-					theList.Add(theFileAttributes);
+					if (isPDF(fileList[i]))
+					{
+						theFileAttributes = new FileListAttributes(true, fileList[i]);
+						theList.Add(theFileAttributes);
+					}
+				}
+				if (_queryMode.status == "PNG")
+				{
+					if (isPNG(fileList[i]))
+					{
+						theFileAttributes = new FileListAttributes(true, fileList[i]);
+						theList.Add(theFileAttributes);
+					}
 				}
 			}
 			for (int i = 0; i < pathList.Length; i++)
