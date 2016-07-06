@@ -100,13 +100,21 @@ namespace InterViewer.iOS
 		{
 			if (!Directory.Exists(Path + "/InterView"))
 			{
+				//實機適用
+				CopyDirectoryFiles(Path + "/InterView/Documents", "./InterView/Documents");
+				CopyDirectoryFiles(Path + "/InterView/Sliders", "./InterView/Sliders");
 
-				//CopyDirectoryFiles(Path + "/InterView/Documents", "./InterView/Documents");
-				//CopyDirectoryFiles(Path + "/InterView/Sliders", "./InterView/Sliders");
-				Directory.Move("./InterView", Path + "/InterView");
+				//虛擬機適用
+				//Directory.Move("./InterView", Path + "/InterView");
 			}
 		}
 
+		/// <summary>
+		/// 複製檔案用，因為用Directory.Move方式搬移檔案，實機會有存取權限問題
+		/// </summary>
+		/// <returns>The directory files.</returns>
+		/// <param name="targetDirPath">Target dir path.</param>
+		/// <param name="sourceDirPath">Source dir path.</param>
 		public void CopyDirectoryFiles(string targetDirPath, string sourceDirPath)
 		{
 
