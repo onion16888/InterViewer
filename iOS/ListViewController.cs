@@ -85,7 +85,6 @@ namespace InterViewer.iOS
 			};
 			btnImages.TouchUpInside += (object sender, EventArgs e) =>
 			{
-				_fileManagerType = _File_Manager;
 				FileManagerController._queryMode = new QueryMode() { status = "PNG" };
 				InvokeOnMainThread(() =>
 				{
@@ -94,7 +93,6 @@ namespace InterViewer.iOS
 			};
 			btnAdd.TouchUpInside += (object sender, EventArgs e) =>
 			{
-				_fileManagerType = _Image_Manager;
 				FileManagerController._queryMode = new QueryMode() { status = "PDF" };
 				InvokeOnMainThread(() =>
 				{
@@ -226,10 +224,10 @@ namespace InterViewer.iOS
 
 			public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
 			{
-				string JsonFileName=null;
-				if(this._JsonName!=null)
+				string JsonFileName = null;
+				if(this._JsonName != null)
 				{
-					JsonIndex SomeItem=_JsonName.ToArray()[indexPath.Row];
+					JsonIndex SomeItem = _JsonName.ToArray()[indexPath.Row];
 					JsonFileName = SomeItem.JsonName;
 				}
 
@@ -242,7 +240,7 @@ namespace InterViewer.iOS
 
 				if (null != handle)
 				{
-					var args = new SelectedEventArgs { Selected = data,JsonName=JsonFileName };
+					var args = new SelectedEventArgs { Selected = data, JsonName = JsonFileName };
 					handle(this, args);
 				}
 			}
