@@ -1,10 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -12,9 +10,6 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Android.Graphics;
-using Debug = System.Diagnostics.Debug;
-
-
 using Android.Provider;
 using Java.IO;
 using Environment = Android.OS.Environment;
@@ -44,9 +39,8 @@ namespace InterViewer.Droid
 		int _pageNumber = 0;
 		public static Document Doc { get; set; }
 		private float startX, endX = 0;
-		private Bitmap drawRectLine;
+		private Bitmap drawRectLineBitmap;
 		private string DocumentPath;
-
 
 		RelativeLayout pdfContent;
 		PencilDrawLine drawLineView;
@@ -87,51 +81,111 @@ namespace InterViewer.Droid
 
 			SetContentView(Resource.Layout.Detail);
 
-
 			ioService = new IOService();
 			interviewerservice = new InterViewerService(ioService);
 			DocumentPath = ioService.GetDocumentDirectory();
 
+
 			Initial();
 
-			ImageView drawImageView = new ImageView(pdfContent.Context);
-			drawLineView = new PencilDrawLine(pdfContent.Context);
+			//reloadAttachment
+			LoadingAttachments();
+		}
+
+		#region 按鈕事件 
+		public void ButtonEventHandle()
+		{
+
+			//drawLineView = new PencilDrawLine(pdfContent.Context);
 			btnPencil.Click += (object sender, EventArgs e) =>
 			{
+				//ImageView drawImageView = new ImageView(pdfContent.Context);
+				//drawImageView.Id = View.GenerateViewId();
 
-				drawImageView.Id = View.GenerateViewId();
-			
-				Debug.WriteLine(drawImageView.Id.ToString());
 				if (!openPen)
 				{
 					openPen = true;
-					drawImageView = new ImageView(pdfContent.Context);
+					//drawImageView = new ImageView(pdfContent.Context);
 					btnPencil.SetBackgroundColor(Color.Red);
 					drawLineView = new PencilDrawLine(pdfContent.Context);
 
 					pdfContent.AddView(drawLineView);
-					pdfContent.AddView(drawImageView);
+					//pdfContent.AddView(drawImageView);
 				}
 				else
 				{
 					openPen = false;
 					//設置透明底色
 					btnPencil.SetBackgroundColor(Color.Transparent);
-				    drawRectLine = drawLineView.GetRectBitmap(drawLineView);
+					//取得畫布的線的矩形大小的圖片
+					drawRectLineBitmap = drawLineView.GetRectBitmap(drawLineView);
 					pdfContent.RemoveView(drawLineView);
 
-					AddAttachmentAndSaveJsonData(AttachmentTypeEnum.Paint);
+					CreateNewUIViewHandle(AttachmentTypeEnum.Paint);
 
 				}
 
 			};
 
+			//回Page1
 			btnHome.Click += (object sender, EventArgs e) =>
 			{
 				StartActivity(typeof(MainActivity));
 			};
 
+			#region Camera 
+			//判斷手機是否有相機裝置
+			if (IsThereAnAppToTakePictures())
+			{
+				CreateDirectoryForPictures();
+				cameraImageView = new ImageView(pdfContent.Context);
+				btnCamera.Click += TakeAPicture;
 
+			}
+			#endregion
+		}
+
+		#endregion
+
+		private void Initial()
+		{
+
+			#region 延展pdf的長寬至螢幕大小
+			pdfImageView = FindViewById<ImageView>(Resource.Id.pdfImageView);
+			Display display = WindowManager.DefaultDisplay;
+
+			Point size = new Point();
+			display.GetSize(size);
+
+			int width = size.X;
+			int height = size.Y;
+
+			pdfImageView.LayoutParameters = new RelativeLayout.LayoutParams(width, height);
+			#endregion
+
+			#region 初始化物件
+
+			pdfContent = FindViewById<RelativeLayout>(Resource.Id.pdfContent);
+			pdfRelativeLayout = FindViewById<RelativeLayout>(Resource.Id.ly1);
+
+			btnHome = FindViewById<Button>(Resource.Id.btnHome);
+			btnCamera = FindViewById<ImageButton>(Resource.Id.btnCamera);
+			btnPencil = FindViewById<ImageButton>(Resource.Id.btnPencil);
+
+			#endregion
+
+			#region 產生存放畫線＆圖片的資料夾名稱
+
+			PDF_RECORD_DIR = PDF_Type == "Add" ? DateTime.Now.Ticks.ToString() : System.IO.Path.GetFileNameWithoutExtension(Doc.Name);
+			if (PDF_Type == "Add" && Doc.Name == null)
+			{
+				Doc.Name = string.Format("{0}.json", PDF_RECORD_DIR);
+			}
+
+			#endregion
+
+			#region Page3測試用讀PDF
+			/*
 			var dir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
 			string pdfFilepath = System.IO.Path.Combine(dir, "0200B9.pdf");
 
@@ -143,8 +197,10 @@ namespace InterViewer.Droid
 					source.CopyTo(dest);
 				}
 			}
+			*/
+			#endregion
 
-
+			#region pdfimageview讀取pdf轉成的image
 			if (!System.IO.File.Exists(Doc.Reference))
 			{
 				var alertDialog1 = new AlertDialog.Builder(this).Create();
@@ -161,66 +217,17 @@ namespace InterViewer.Droid
 			else
 			{
 				pdf = new PDFDocument(this, Doc.Reference);
-				//var count = pdf.Count;
 
 				pdfImageView.SetImageBitmap(pdf.Images[0]);
-
-
-
-				//reloadAttachment
-				LoadingAttachments();
-
 			}
 
-
-			#region Camera 
-			if (IsThereAnAppToTakePictures())
-			{
-				CreateDirectoryForPictures();
-				cameraImageView = new ImageView(pdfContent.Context);
-				btnCamera.Click += TakeAPicture;
-
-			}
 			#endregion
 
+			//按鈕事件處理
+			ButtonEventHandle();
 
+			//新增pdf的Touch事件
 			pdfImageView.SetOnTouchListener(this);
-
-		}
-
-		private void Initial()
-		{
-			pdfImageView = FindViewById<ImageView>(Resource.Id.pdfImageView);
-
-			Display display = WindowManager.DefaultDisplay;
-
-			Point size = new Point();
-			display.GetSize(size);
-
-			int width = size.X;
-			int height = size.Y;
-
-			pdfImageView.LayoutParameters = new RelativeLayout.LayoutParams(width, height);
-
-
-			//pdfImageView.SetBackgroundColor( Color.Yellow );
-
-			//pdfImageView = FindViewById<ImageView>(Resource.Id.pdfImageView);
-
-			pdfContent = FindViewById<RelativeLayout>(Resource.Id.pdfContent);
-			pdfRelativeLayout = FindViewById<RelativeLayout>(Resource.Id.ly1);
-
-			//pdfRelativeLayout.LayoutParameters = new FrameLayout.LayoutParams(width, height);
-
-			btnHome = FindViewById<Button>(Resource.Id.btnHome);
-			btnCamera = FindViewById<ImageButton>(Resource.Id.btnCamera);
-			btnPencil = FindViewById<ImageButton>(Resource.Id.btnPencil);
-			PDF_RECORD_DIR = PDF_Type == "Add" ? DateTime.Now.Ticks.ToString() : System.IO.Path.GetFileNameWithoutExtension(Doc.Name);
-			if (PDF_Type == "Add" && Doc.Name == null)
-			{
-				Doc.Name = string.Format("{0}.json", PDF_RECORD_DIR);
-			}
-
 		}
 
 		public bool OnTouch(View v, MotionEvent e)
@@ -228,20 +235,17 @@ namespace InterViewer.Droid
 			switch (e.Action)
 			{
 				case MotionEventActions.Down:
-					Debug.WriteLine("D");
 					startX = e.GetX();
 					break;
 				case MotionEventActions.Move:
-					
+
 					break;
 
 				case MotionEventActions.Up:
 				case MotionEventActions.Cancel:
-					Debug.WriteLine("C");
 
 					endX = e.GetX();
 					float diff = startX - endX;
-					Debug.WriteLine(diff.ToString());
 					//-left to right
 					if (startX < endX)
 					{
@@ -264,21 +268,19 @@ namespace InterViewer.Droid
 					pdfImageView.SetImageBitmap(pdf.Images[PageNumber]);
 
 					startX = endX = 0;
-
+					//翻頁清除頁面所有物件
 					ClearAllView();
+					//讀取記憶體中的物件
 					LoadingAttachments();
-					SaveLoadJsonData();
-
-					Debug.WriteLine(PageNumber);
-
+					//儲存json
+					SaveJsonData();
 					break;
-
 			}
 
 			return true;
 		}
 
-		#region Camera Take Pictures Processing
+		#region 相機事件處理
 
 		private void CreateDirectoryForPictures()
 		{
@@ -290,6 +292,10 @@ namespace InterViewer.Droid
 			}
 		}
 
+		/// <summary>
+		/// 判斷裝置是否有相機
+		/// </summary>
+		/// <returns>The there an app to take pictures.</returns>
 		private bool IsThereAnAppToTakePictures()
 		{
 			Intent intent = new Intent(MediaStore.ActionImageCapture);
@@ -324,8 +330,8 @@ namespace InterViewer.Droid
 			CameraApp.bitmap = CameraApp._file.Path.LoadAndResizeBitmap(width, height);
 			if (CameraApp.bitmap != null)
 			{
-				
-				AddAttachmentAndSaveJsonData(AttachmentTypeEnum.Photo);
+
+				CreateNewUIViewHandle(AttachmentTypeEnum.Photo);
 
 				CameraApp.bitmap = null;
 			}
@@ -336,11 +342,12 @@ namespace InterViewer.Droid
 
 		#endregion
 
+		#region 資料儲存處理
+
 		#region getSaveImageLocalSystemPath
 
 		private string getSaveImageLocalSystemPath(string IdentifierName, AttachmentTypeEnum savetype, Bitmap image)
 		{
-
 
 			string SAVE_FILE_NAME = string.Format("{0}.{1}", IdentifierName, savetype == AttachmentTypeEnum.Photo ? "jpg" : "png");
 			string SYSTEM_FILE_PATH = System.IO.Path.Combine(PDF_RECORD_DIR, SAVE_FILE_NAME);
@@ -352,7 +359,7 @@ namespace InterViewer.Droid
 
 			string saveFilePath = System.IO.Path.Combine(documentsDirectory, SAVE_FILE_NAME);
 
-			SaveBitmapFile(saveFilePath, image);
+			saveBitmapFile(saveFilePath, image);
 			if (!System.IO.File.Exists(saveFilePath))
 			{
 				SYSTEM_FILE_PATH = string.Empty;
@@ -360,7 +367,7 @@ namespace InterViewer.Droid
 			return SYSTEM_FILE_PATH;
 		}
 
-		private void SaveBitmapFile(string drawImageFileName, Bitmap image)
+		private void saveBitmapFile(string drawImageFileName, Bitmap image)
 		{
 
 			var drawSaveDirPath = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
@@ -372,7 +379,29 @@ namespace InterViewer.Droid
 
 		#endregion
 
-		public void SettingAttachments(Attachment attachment)
+
+		public void SaveJsonData()
+		{
+			interviewerservice.SaveAsJson(Doc);
+		}
+
+		public void CreateNewUIViewHandle(AttachmentTypeEnum type)
+		{
+			//建立新的附件物件
+			Attachment newAttachment = GetNewAttachment(type);
+			//根據Attachment物件，建立UIView物件
+			CreateUIView(newAttachment);
+			//編輯Attachment物件
+			EditDocumentAttachments(newAttachment);
+			//儲存至Json檔
+			SaveJsonData();
+		}
+
+		#endregion
+
+		#region Attachments物件處理
+
+		public void EditDocumentAttachments(Attachment attachment)
 		{
 
 			if (Doc.Attachments == null)
@@ -402,69 +431,73 @@ namespace InterViewer.Droid
 				List<Attachment> attachments = Doc.Attachments.Where(x => x.PageIndex == PageNumber).ToList();
 				foreach (Attachment attachment in attachments)
 				{
-
-					switch (attachment.Type)
-					{
-						case AttachmentTypeEnum.Note:
-							SettingUIView(AttachmentTypeEnum.Note, attachment);
-							break;
-						case AttachmentTypeEnum.Paint:
-							SettingUIView(AttachmentTypeEnum.Paint, attachment);
-							break;
-						case AttachmentTypeEnum.Photo:
-							SettingUIView(AttachmentTypeEnum.Photo, attachment);
-							break;
-
-					}
-
+					CreateUIView(attachment);
 				}
 			}
-
 		}
 
-		public void SettingUIView(AttachmentTypeEnum type, Attachment attachment = null)
-		{
-			var rectPoint = new ImageRectPoint();
-			//CGRect CGRectFrame = new CGRect();
-			if (attachment != null)
-			{
-				rectPoint.LeftX = attachment.X;
-				rectPoint.TopY = attachment.Y;
-				rectPoint.Width = attachment.Width;
-				rectPoint.Height = attachment.Height;
+		#endregion
 
-			}
+		/// <summary>
+		/// 新增新的附件元素
+		/// </summary>
+		/// <returns>The new attachment.</returns>
+		/// <param name="type">Type.</param>
+		public Attachment GetNewAttachment(AttachmentTypeEnum type)
+		{
 			string identifier = DateTime.Now.Ticks.ToString();
+			var rectPoint = new ImageRectPoint();
+			string systemPath = string.Empty;
 			if (type == AttachmentTypeEnum.Note)
 			{
-				
+
+			}
+			else
+			{
+				systemPath = string.Empty;
+				Bitmap saveBitmap = type == AttachmentTypeEnum.Paint ? drawRectLineBitmap : CameraApp.bitmap;
+				systemPath = getSaveImageLocalSystemPath(identifier, type, saveBitmap);
+				rectPoint.LeftX = type == AttachmentTypeEnum.Paint ? drawLineView.GetRectLeftX() : cameraImageView.GetX() + 600;
+				rectPoint.TopY = type == AttachmentTypeEnum.Paint ? drawLineView.GetRectTopY() : drawLineView.GetY() + 250;
+				rectPoint.Width = type == AttachmentTypeEnum.Paint ? drawLineView.Width : 150;
+				rectPoint.Height = type == AttachmentTypeEnum.Paint ? drawLineView.Height : 75;
+				string filePath = System.IO.Path.Combine(DocumentPath, systemPath);
+
 			}
 
-			if (type == AttachmentTypeEnum.Paint || type == AttachmentTypeEnum.Photo)
-			{
-				string systemPath = string.Empty;
-				if (type == AttachmentTypeEnum.Paint && attachment == null)
-				{
-					systemPath = getSaveImageLocalSystemPath(identifier, AttachmentTypeEnum.Paint, drawRectLine);
-					rectPoint.LeftX = drawLineView.GetRectLeftX();
-					rectPoint.TopY = drawLineView.GetRectTopY();
-					rectPoint.Width = drawLineView.Width;
-					rectPoint.Height = drawLineView.Height;
-				}
-				else if (type == AttachmentTypeEnum.Photo && attachment == null)
-				{
-					systemPath = getSaveImageLocalSystemPath(identifier, AttachmentTypeEnum.Photo, CameraApp.bitmap);
-					rectPoint.LeftX = cameraImageView.GetX() + 600;
-					rectPoint.TopY = drawLineView.GetY() + 250;
-					rectPoint.Width = 150;
-					rectPoint.Height = 75;
-				}
-				else
-				{
-					systemPath = attachment.Path;
-				}
+			Attachment newAttachment = new Attachment();
+			newAttachment.Name = identifier;
+			newAttachment.PageIndex = PageNumber;
+			newAttachment.Note = string.Empty;
+			newAttachment.Type = type;
+			newAttachment.Path = systemPath;
+			newAttachment.Width = (int)rectPoint.Width;
+			newAttachment.Height = (int)rectPoint.Height;
+			newAttachment.X = (float)rectPoint.LeftX;
+			newAttachment.Y = (float)rectPoint.TopY;
 
-				string filePath = System.IO.Path.Combine(DocumentPath, attachment == null ? systemPath : attachment.Path);
+			return newAttachment;
+		}
+
+		#region UIView實作
+
+		public void CreateUIView(Attachment attachment)
+		{
+			var rectPoint = new ImageRectPoint();
+			rectPoint.LeftX = attachment.X;
+			rectPoint.TopY = attachment.Y;
+			rectPoint.Width = attachment.Width;
+			rectPoint.Height = attachment.Height;
+
+			string identifier = DateTime.Now.Ticks.ToString();
+			if (attachment.Type == AttachmentTypeEnum.Note)
+			{
+
+			}
+			else
+			{
+
+				string filePath = System.IO.Path.Combine(DocumentPath, attachment.Path);
 
 				Java.IO.File DrawLinePNGFileIO = new Java.IO.File(filePath);
 				if (DrawLinePNGFileIO.Exists())
@@ -477,23 +510,9 @@ namespace InterViewer.Droid
 					imageView.SetY((float)rectPoint.TopY);
 					imageView.SetMaxWidth((int)rectPoint.Width);
 					imageView.SetMaxHeight((int)rectPoint.Height);
-					pdfContent.RemoveView(drawLineView);
 
 					pdfRelativeLayout.AddView(imageView);
 
-					if (attachment == null)
-					{
-						Attachment newattachment = new Attachment();
-						newattachment.Name = identifier;
-						newattachment.PageIndex = PageNumber;
-						newattachment.Path = systemPath;
-						newattachment.Type = type;
-						newattachment.Width = imageView.Width;
-						newattachment.Height = imageView.Height;
-						newattachment.X = imageView.GetX();
-						newattachment.Y = imageView.GetY();
-						SettingAttachments(newattachment);
-					}
 				}
 			}
 		}
@@ -507,16 +526,7 @@ namespace InterViewer.Droid
 			pdfRelativeLayout.RemoveViewsInLayout(1, pdfRelativeLayout.ChildCount - 1);
 		}
 
-		public void AddAttachmentAndSaveJsonData(AttachmentTypeEnum type)
-		{
-			SettingUIView(type);
-			SaveLoadJsonData();
-		}
-
-		public void SaveLoadJsonData()
-		{
-			interviewerservice.SaveAsJson(Doc);
-		}
+		#endregion
 
 		public class ImageRectPoint
 		{

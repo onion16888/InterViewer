@@ -3,7 +3,7 @@ using Android.Views;
 using Android.Graphics;
 namespace InterViewer.Droid
 {
-	
+
 	public class FindRect
 	{
 		public int leftX = 0;
@@ -11,71 +11,56 @@ namespace InterViewer.Droid
 		public int rightX = 0;
 		public int bottomY = 0;
 		public Rect GetRect { get; set; }
-		public int RectWidth { get; set;}
+		public int RectWidth { get; set; }
 		public int RectHight { get; set; }
 		public void FindBestRect(int pointX, int pointY)
 		{
-			
-
-			if (leftX == 0)
-			{
-				leftX = pointX;
-			}
-			else
-			{
-				if (pointX < leftX)
-				{
-					leftX = pointX;
-				}
-			}
-
-			if (topY == 0)
-			{
-				topY = pointY;
-			}
-			else
-			{
-				if (pointY < topY)
-				{
-					topY = pointY;
-				}
-			}
-
-
-			if (rightX == 0)
-			{
-				rightX = pointX;
-			}
-			else
-			{
-
-				if (pointX > rightX)
-				{
-					rightX = pointX;
-				}
-			}
-
-			if (bottomY == 0)
-			{
-				bottomY = pointY;
-			}
-			else
-			{
-				if (pointY > bottomY)
-				{
-					bottomY = pointY;
-				}
-			}
+			CheckMinMaxPoint(pointX, ref leftX, CheckStatus.Min);
+			CheckMinMaxPoint(pointY, ref topY, CheckStatus.Min);
+			CheckMinMaxPoint(pointX, ref rightX, CheckStatus.Max);
+			CheckMinMaxPoint(pointY, ref bottomY, CheckStatus.Max);
 
 			GetRect = new Rect(leftX, topY, rightX, bottomY);
 			RectWidth = rightX - leftX;
 			RectHight = bottomY - topY;
 		}
 
+		/// <summary>
+		/// 檢查狀態，找最大或最小
+		/// </summary>
+		public enum CheckStatus
+		{
+			Max,
+			Min
+		}
+
+		public void CheckMinMaxPoint(int checkPoint, ref int comparePoint, CheckStatus checkstatus)
+		{
+			if (comparePoint == 0)
+			{
+				comparePoint = checkPoint;
+			}
+			else
+			{
+				if (checkstatus == CheckStatus.Min)
+				{
+					if (checkPoint < comparePoint)
+					{
+						comparePoint = checkPoint;
+					}
+				}
+				else
+				{
+					if (checkPoint > comparePoint)
+					{
+						comparePoint = checkPoint;
+					}
+				}
+
+			}
+		}
 
 
-
-		
 	}
 }
 
