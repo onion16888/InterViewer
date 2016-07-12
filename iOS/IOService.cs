@@ -64,6 +64,12 @@ namespace InterViewer.iOS
 			return GetPath(dirName);
 		}
 
+		public string GetThumbnailDirectory()
+		{
+			var dirName = "Thumbnail";
+			return GetPath(dirName);
+		}
+
 		public string ReadAllText(string path)
 		{
 			return File.ReadAllText(path);
@@ -85,6 +91,8 @@ namespace InterViewer.iOS
 			CheckDirectory(path);
 			return path;
 		}
+
+
 	}
 }
 

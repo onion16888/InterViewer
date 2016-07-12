@@ -53,6 +53,12 @@ namespace InterViewer.Droid
 			return GetPath(dirName);
 		}
 
+		public string GetThumbnailDirectory()
+		{
+			var dirName = "Thumbnail";
+			return GetPath(dirName);
+		}
+
 		public bool IsFileExists(string path)
 		{
 			return File.Exists(path);
