@@ -176,15 +176,6 @@
     <Compile Include="AlertViewControllerHelper.cs" />
     <Compile Include="GetPngClass.cs" />
     <Compile Include="PDFUtils.cs" />
-    <Compile Include="ImageManagerController.cs" />
-    <Compile Include="ImageManagerController.designer.cs">
-      <DependentUpon>ImageManagerController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ImageManagerTableCell.cs" />
-    <Compile Include="ImageManagerTableCell.designer.cs">
-      <DependentUpon>ImageManagerTableCell.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ImageManagerTableSource.cs" />
     <Compile Include="FileSystemHelper.cs" />
     <Compile Include="IOService.cs" />
   </ItemGroup>

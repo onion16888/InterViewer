@@ -7,13 +7,15 @@ namespace InterViewer
 	{
 		string AppPath { get;}
 
-		string GetPdfDirectory();
-
 		string GetTemplateDirectory();
 
 		string GetDocumentDirectory();
 
-		string GetImageDirectory();
+		/// <summary>
+		/// 取得縮圖資料夾路徑
+		/// </summary>
+		/// <returns>The thumbnail directory.</returns>
+		string GetThumbnailDirectory();
 
 		void CheckDirectory(string path);
 

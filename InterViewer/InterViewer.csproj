@@ -35,9 +35,10 @@
     <Compile Include="AttachmentTypeEnum.cs" />
     <Compile Include="Attachment.cs" />
     <Compile Include="IService.cs" />
-    <Compile Include="PdfTemplate.cs" />
+    <Compile Include="Template.cs" />
     <Compile Include="IIOService.cs" />
     <Compile Include="InterViewerService.cs" />
+    <Compile Include="TemplateTypeEnum.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">

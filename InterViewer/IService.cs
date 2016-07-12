@@ -5,7 +5,7 @@ namespace InterViewer
 {
 	public interface IService
 	{
-		List<PdfTemplate> GetPdfTemplates();
+		List<Template> GetTemplates();
 
 		List<Document> GetDocuments();
 

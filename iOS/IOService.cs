@@ -8,10 +8,13 @@ namespace InterViewer.iOS
 	public class IOService : IIOService
 	{
 		private string appPath;
+		private string dataPath;
 
 		public IOService()
 		{
 			appPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+			dataPath = Path.Combine(appPath, "Data");
+			CheckDirectory(dataPath);
 		}
 
 		public string AppPath
@@ -51,24 +54,20 @@ namespace InterViewer.iOS
 
 		public string GetDocumentDirectory()
 		{
-			return appPath;
-		}
-
-		public string GetImageDirectory()
-		{
-			var imagePath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-			CheckDirectory(imagePath);
-			return imagePath;
-		}
-
-		public string GetPdfDirectory()
-		{
-			return appPath;
+			var dirName = "Documents";
+			return GetPath(dirName);
 		}
 
 		public string GetTemplateDirectory()
 		{
-			return appPath;
+			var dirName = "Template";
+			return GetPath(dirName);
+		}
+
+		public string GetThumbnailDirectory()
+		{
+			var dirName = "Thumbnail";
+			return GetPath(dirName);
 		}
 
 		public string ReadAllText(string path)
@@ -85,6 +84,15 @@ namespace InterViewer.iOS
 		{
 			File.Copy(sourceFileName, destFileName, true);
 		}
+
+		private string GetPath(string directoryName)
+		{
+			var path = Path.Combine(dataPath, directoryName);
+			CheckDirectory(path);
+			return path;
+		}
+
+
 	}
 }
 

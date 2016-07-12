@@ -18,10 +18,13 @@ namespace InterViewer.iOS
 		private const bool _Add = true;
 		private const bool _Edit = false;
 		private bool _AddOrEdit = true;
-		List<JsonIndex> JsonNameAndPng=new List<JsonIndex>();
+		private List<JsonIndex> JsonNameAndPng=new List<JsonIndex>();
 		private IOService IIO;
 		private InterViewerService InterViewService;
 		private string TempJsonName=null;
+		private string _fileManagerType;
+		private const string _File_Manager = "PDF";
+		private const string _Image_Manager = "PNG";
 		public ListViewController(IntPtr handle) : base(handle)
 		{
 			selectedColor = new UIColor(red: 0.95f, green: 0.52f, blue: 0.00f, alpha: 1.0f);
@@ -38,13 +41,13 @@ namespace InterViewer.iOS
 			// Perform any additional setup after loading the view, typically from a nib.
 			//練習用
 			var documents = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/Documents";
-
+			var vv = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 			//把共用目錄路徑丟進去檢查公用目錄下的/Interview是否存在
 			CheckDir(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
 
 			//練習用
 			var filename = Path.Combine(documents, "Write.txt");
-			File.WriteAllText(filename, "Write this text into a file");
+			//File.WriteAllText(filename, "Write this text into a file");
 
 			//預設先撈Sliders
 			IEnumerable<string> fileOrDirectory = GetDirPngFile("Sliders");
@@ -82,13 +85,15 @@ namespace InterViewer.iOS
 			};
 			btnImages.TouchUpInside += (object sender, EventArgs e) =>
 			{
+				FileManagerController._queryMode = new QueryMode() { status = "PNG" };
 				InvokeOnMainThread(() =>
 				{
-					PerformSegue(@"moveToImageManagerSegue", this);
+					PerformSegue(@"moveToFileManagerSegue", this);
 				});
 			};
 			btnAdd.TouchUpInside += (object sender, EventArgs e) =>
 			{
+				FileManagerController._queryMode = new QueryMode() { status = "PDF" };
 				InvokeOnMainThread(() =>
 				{
 					PerformSegue(@"moveToFileManagerSegue", this);
@@ -100,9 +105,42 @@ namespace InterViewer.iOS
 		{
 			if (!Directory.Exists(Path + "/InterView"))
 			{
-				Directory.Move("./InterView", Path + "/InterView");
+				//實機適用
+				CopyDirectoryFiles(Path + "/InterView/Documents", "./InterView/Documents");
+				CopyDirectoryFiles(Path + "/InterView/Sliders", "./InterView/Sliders");
+
+				//虛擬機適用
+				//Directory.Move("./InterView", Path + "/InterView");
 			}
 		}
+
+		/// <summary>
+		/// 複製檔案用，因為用Directory.Move方式搬移檔案，實機會有存取權限問題
+		/// </summary>
+		/// <returns>The directory files.</returns>
+		/// <param name="targetDirPath">Target dir path.</param>
+		/// <param name="sourceDirPath">Source dir path.</param>
+		public void CopyDirectoryFiles(string targetDirPath, string sourceDirPath)
+		{
+
+			if (!Directory.Exists(targetDirPath))
+			{
+				Directory.CreateDirectory(targetDirPath);
+			}
+
+			//string sourceDirPath = "./InterView/Documents";
+			string[] files = Directory.GetFiles(sourceDirPath);
+
+			// Copy the files and overwrite destination files if they already exist.
+			foreach (string s in files)
+			{
+				// Use static Path methods to extract only the file name from the path.
+				string fileName = System.IO.Path.GetFileName(s);
+				string destFile = System.IO.Path.Combine(targetDirPath, fileName);
+				File.Copy(s, destFile, true);
+			}
+		}
+
 		//暫時用不到
 		public static IEnumerable<string> GetDirFileList(string Whichfolder)
 		{
@@ -219,10 +257,10 @@ namespace InterViewer.iOS
 
 			public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
 			{
-				string JsonFileName=null;
-				if(this._JsonName!=null)
+				string JsonFileName = null;
+				if(this._JsonName != null)
 				{
-					JsonIndex SomeItem=_JsonName.ToArray()[indexPath.Row];
+					JsonIndex SomeItem = _JsonName.ToArray()[indexPath.Row];
 					JsonFileName = SomeItem.JsonName;
 				}
 
@@ -235,7 +273,7 @@ namespace InterViewer.iOS
 
 				if (null != handle)
 				{
-					var args = new SelectedEventArgs { Selected = data,JsonName=JsonFileName };
+					var args = new SelectedEventArgs { Selected = data, JsonName = JsonFileName };
 					handle(this, args);
 				}
 			}
@@ -306,12 +344,6 @@ namespace InterViewer.iOS
 					break;
 				case @"moveToFileManagerSegue":
 					if (segue.DestinationViewController is FileManagerController)
-					{
-
-					}
-					break;
-				case @"moveToImageManagerSegue":
-					if (segue.DestinationViewController is ImageManagerController)
 					{
 
 					}
