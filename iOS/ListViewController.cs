@@ -34,13 +34,14 @@ namespace InterViewer.iOS
 			IIO = new IOService();
 			InterViewService = new InterViewerService(IIO);
 
+			Console.WriteLine(IIO.AppPath);
+
+			//把共用目錄路徑丟進去檢查公用目錄下的/Interview是否存在
+			CheckDir(IIO.AppPath);
 
 			// Perform any additional setup after loading the view, typically from a nib.
 			//練習用
-			var documents = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/Documents";
-
-			//把共用目錄路徑丟進去檢查公用目錄下的/Interview是否存在
-			CheckDir(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+			var documents = IIO.AppPath + "/InterView/Documents";
 
 			//練習用
 			var filename = Path.Combine(documents, "Write.txt");
@@ -48,11 +49,12 @@ namespace InterViewer.iOS
 
 			//預設先撈Sliders
 			IEnumerable<string> fileOrDirectory = GetDirPngFile("Sliders");
-
-			CheckButtonIsSelected(btnTemplate);
 			//把Sliders下的.png集合發給grid
 			JsonNameAndPng = null;
 			CollectionViewInit(fileOrDirectory);
+
+			CheckButtonIsSelected(btnTemplate);
+
 
 			//Slider按鈕
 			btnTemplate.TouchUpInside += (object sender, EventArgs e) =>
@@ -103,45 +105,40 @@ namespace InterViewer.iOS
 				Directory.Move("./InterView", Path + "/InterView");
 			}
 		}
-		//暫時用不到
-		public static IEnumerable<string> GetDirFileList(string Whichfolder)
-		{
-			var fileOrDirectory = Directory.EnumerateFileSystemEntries("./InterView/" + Whichfolder);
-
-			foreach (var entry in fileOrDirectory)
-			{
-				Console.WriteLine(entry);
-			}
-
-			return fileOrDirectory;
-		}
 		//撈出資料夾下所有.Png檔案
-		public static IEnumerable<string> GetDirPngFile(string Whichfolder)
+		public IEnumerable<string> GetDirPngFile(string Whichfolder)
 		{
 			//看送過來的是哪個資料夾 撈出底下所有的.png 回傳
-			var PngFileList = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/" + Whichfolder);
+			IEnumerable<string> PngFileList = Directory.EnumerateFiles(IIO.AppPath + "/InterView/" + Whichfolder);
 
-			var result = PngFileList.Where(FilePath => Path.GetExtension(FilePath) == ".png");
+			IEnumerable<string> result = PngFileList.Where(FilePath => Path.GetExtension(FilePath) == ".png");
 
 			return result;
 		}
 		//撈出Jimmy底下所有的json
 		public List<string> GetJsonFile()
 		{
+			//會有重複累加,如果有就清空
 			if (JsonNameAndPng != null)
 			{ JsonNameAndPng.Clear(); }
 			else
+			//沒有累加就初始化	
 			{ JsonNameAndPng = new List<JsonIndex>(); }
-			List<string> DocPng = new List<string>(); ;
+
+			List<string> DocPng = new List<string>();
 			List<string> JsonList = GetJsonLFileList();
 			foreach (var h in JsonList)
 			{
-				string JsonContent = System.IO.File.ReadAllText(h);
+				//讀取每一筆路徑下的Json資料
+				string JsonContent = IIO.ReadAllText(h);
+				//反序列化
 				Document DocJson = JsonConvert.DeserializeObject<Document>(JsonContent);
-
+				//利用GetFileName取得路徑下的縮圖檔案名
 				String filename = Path.GetFileName(DocJson.Thumbnail);
-				String path = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "/InterView/Sliders/" + filename;
+				//組成參考圖路徑
+				String path = IIO.AppPath + "/InterView/Sliders/" + filename;
 				Boolean Check = File.Exists(path);
+				//加到陣列裡，準備給第二個按鈕排列用
 				DocPng.Add(path);
 				JsonNameAndPng.Add(new JsonIndex { JsonName = DocJson.Name, JsonPng = path });
 			}
@@ -155,18 +152,13 @@ namespace InterViewer.iOS
 		}
 		public void CollectionViewInit(IEnumerable<string> PngSource)
 		{
-			//List<Int32> temp = new List<Int32>();
-
-			//for (Int32 i = 0; i < 500; i++)
-			//{
-			//	temp.Add(i);
-			//}
-			List<string> ss = new List<string>();
-			ss.AddRange(PngSource);
+			List<string> _PngSource = new List<string>();
+			_PngSource.AddRange(PngSource);
 			//var v=from qwe in ss where 
 			var source = new TableSource(PngSource,JsonNameAndPng);
 			MyCollectionView.Source = source;
 
+			//設定東西南北距離，長寬大小，橫排直排
 			MyCollectionView.SetCollectionViewLayout(new UICollectionViewFlowLayout
 			{
 				SectionInset = new UIEdgeInsets(10, 10, 10, 10),
@@ -278,29 +270,27 @@ namespace InterViewer.iOS
 				case @"moveToDetailViewSegue":
 					if (segue.DestinationViewController is DetailViewController)
 					{
-						if (segue.DestinationViewController is DetailViewController)
-						{
-							var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
+						var Detailviewcontroller = segue.DestinationViewController as DetailViewController;
 
-							if (_AddOrEdit == _Add)
-							{
+						if (_AddOrEdit == _Add)
+						{
 								Detailviewcontroller.PDF_Type = "Add";
 								Detailviewcontroller.Doc = this.Doc;
-							}
-							else
-							{
+						}
+						else
+						{
 								//賦予第三頁PDF類型
-								Detailviewcontroller.PDF_Type = "Edit";
-								List<Document> Json=InterViewService.GetDocuments();
-								foreach(var h in Json)
+							Detailviewcontroller.PDF_Type = "Edit";
+							List<Document> Json=InterViewService.GetDocuments();
+							foreach(var h in Json)
+							{
+								if(h.Name.Equals(TempJsonName))
 								{
-									if(h.Name.Equals(TempJsonName))
-									{
-										Detailviewcontroller.Doc = InterViewService.CopyAttachment(this.Doc,h);
-									}
+									Detailviewcontroller.Doc = InterViewService.CopyAttachment(this.Doc,h);
 								}
 							}
 						}
+						
 						break;
 					}
 					break;
@@ -334,14 +324,14 @@ namespace InterViewer.iOS
 			button.Selected = true;
 			button.BackgroundColor = selectedColor;
 		}
-
-		static List<string> GetJsonLFileList()
+		//去公開目錄底下，撈出所有所有.json資料回傳成List
+		public List<string> GetJsonLFileList()
 		{
-			var JsonFile = Directory.EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+			IEnumerable<string> JsonFile = Directory.EnumerateFiles(IIO.AppPath);
 
-			var result = JsonFile.Where(FilePath => Path.GetExtension(FilePath) == ".json");
+			IEnumerable<string> result = JsonFile.Where(FilePath => Path.GetExtension(FilePath) == ".json");
 
-			var JsonList = result.ToList();
+			List<string> JsonList = result.ToList();
 
 			return JsonList;
 		}

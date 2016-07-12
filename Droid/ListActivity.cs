@@ -1,21 +1,15 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.Database;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Graphics;
 using Java.IO;
-using Android.Content.Res;
-using Android.Content.PM;
 using Android.Provider;
 using Java.Lang;
 
@@ -49,7 +43,7 @@ namespace InterViewer.Droid
 		//轉出縮圖的物件
 		PDFDocument Pdf;
 
-		IOService serviceHelper;
+		IOService IIO;
 		InterViewerService interViewerServiceHelper;
 		List<Document> listDocumentTempDoc;
 
@@ -60,13 +54,10 @@ namespace InterViewer.Droid
 			base.OnCreate(savedInstanceState);
 
 			SetContentView(Resource.Layout.List);
-			//StartActivity(typeof(DetailActivity));
 
-			//var sq=System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-
-			//Directory.CreateDirectory(sq +"/ InterView");
-			//var ss = Directory.Exists(sq + "/dog");
 			init();
+
+			System.Console.WriteLine(IIO.AppPath);
 			//檢查專用目錄是否存在,不存在就建立
 			this.DirCheck(AppDir);
 
@@ -164,8 +155,8 @@ namespace InterViewer.Droid
 			btnAdd = FindViewById<Button>(Resource.Id.btnAdd);
 			gridviewShow = FindViewById<GridView>(Resource.Id.gridviewShow);
 
-			serviceHelper = new IOService();
-			interViewerServiceHelper = new InterViewerService(serviceHelper);
+			IIO = new IOService();
+			interViewerServiceHelper = new InterViewerService(IIO);
 		}
 
 		protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
@@ -434,22 +425,6 @@ namespace InterViewer.Droid
 			sou.Close();
 			des.Close();
 		}
-
-		private void ShowAlert(string message, EventHandler<Android.Content.DialogClickEventArgs> positiveButtonClickHandle)
-		{
-
-			AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-			alert.SetTitle(message);
-
-			alert.SetPositiveButton("OK!", positiveButtonClickHandle);
-
-			RunOnUiThread(() =>
-			{
-				alert.Show();
-			});
-		}
-
 		//Sid ADD
 		private void DirCheck(string AppDir)
 		{

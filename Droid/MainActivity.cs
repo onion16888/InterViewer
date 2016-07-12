@@ -15,9 +15,7 @@ using Android.Content;
 using Android.Util;
 using Android.Content.PM;
 using Geolocator.Plugin;
-
 using AndroidHUD;
-
 using Com.Google.Maps.Android.Clustering;
 using Com.Google.Maps.Android.Clustering.View;
 using System.Linq;
@@ -25,7 +23,8 @@ using System.Linq;
 namespace InterViewer.Droid
 {
 
-	[Activity(Label = "Test", MainLauncher = true, Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Landscape)]
+	[Activity(Label = "Test", MainLauncher = true
+	          , Icon = "@mipmap/icon", ScreenOrientation = ScreenOrientation.Landscape)]
 
 	public class MainActivity : Activity
 	, ILocationListener

@@ -34,7 +34,7 @@ namespace InterViewer.iOS
 		{
 			return Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
 		}
-
+		//Max 2016 ???
 		public Document FixDocument(Document document)
 		{ 
 			document.Thumbnail = appPath + "/InterView/Sliders/" + Path.GetFileName(document.Thumbnail);
