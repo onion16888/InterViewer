@@ -115,13 +115,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
-    <Folder Include="Resources\InterView2\" />
-    <Folder Include="Resources\InterView2\Documents2\" />
-    <Folder Include="Resources\InterView2\Sliders2\" />
-    <Folder Include="Resources\InterView2\PdfFile2\" />
-    <Folder Include="Resources\InterView\" />
-    <Folder Include="Resources\InterView\Sliders\" />
-    <Folder Include="Resources\InterView\Documents\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -199,31 +192,6 @@
     <BundleResource Include="Resources\icon_clock.png" />
     <BundleResource Include="Resources\minus.png" />
     <BundleResource Include="Resources\plus.png" />
-    <BundleResource Include="Resources\InterView2\Documents2\icon_camera_d.png" />
-    <BundleResource Include="Resources\InterView2\Sliders2\icon_clock.png" />
-    <BundleResource Include="Resources\InterView2\PdfFile2\icon_camera_d.pdf" />
-    <BundleResource Include="Resources\InterView2\PdfFile2\icon_clock.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_CLA_Shooting_Brake_20160509.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_CLA_Shooting_Brake_20160509.png" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_CLS_Shooting_Brake.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_CLS_Shooting_Brake.png" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_G-Class_0516.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_G-Class_0516.png" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_GLC_20160506.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_GLC_20160506.png" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_GLE_20160406.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_GLE_20160406.png" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_Mercedes-AMG_GT.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_Mercedes-AMG_GT.png" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_GL.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_GL.png" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_SL-Class.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_SL-Class.png" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_SLK.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_MY1516_SLK.png" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_V-ClassVito_20160509.pdf" />
-    <BundleResource Include="Resources\InterView\Sliders\Benz_V-ClassVito_20160509.png" />
-    <BundleResource Include="Resources\InterView\Documents\Benz_CLA_Shooting_Brake_20160509.pdf" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="GeolocatorPlugin">
