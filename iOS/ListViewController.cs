@@ -18,10 +18,13 @@ namespace InterViewer.iOS
 		private const bool _Add = true;
 		private const bool _Edit = false;
 		private bool _AddOrEdit = true;
-		List<JsonIndex> JsonNameAndPng=new List<JsonIndex>();
+		private List<JsonIndex> JsonNameAndPng=new List<JsonIndex>();
 		private IOService IIO;
 		private InterViewerService InterViewService;
 		private string TempJsonName=null;
+		private string _fileManagerType;
+		private const string _File_Manager = "PDF";
+		private const string _Image_Manager = "PNG";
 		public ListViewController(IntPtr handle) : base(handle)
 		{
 			selectedColor = new UIColor(red: 0.95f, green: 0.52f, blue: 0.00f, alpha: 1.0f);
@@ -82,13 +85,15 @@ namespace InterViewer.iOS
 			};
 			btnImages.TouchUpInside += (object sender, EventArgs e) =>
 			{
+				FileManagerController._queryMode = new QueryMode() { status = "PNG" };
 				InvokeOnMainThread(() =>
 				{
-					PerformSegue(@"moveToImageManagerSegue", this);
+					PerformSegue(@"moveToFileManagerSegue", this);
 				});
 			};
 			btnAdd.TouchUpInside += (object sender, EventArgs e) =>
 			{
+				FileManagerController._queryMode = new QueryMode() { status = "PDF" };
 				InvokeOnMainThread(() =>
 				{
 					PerformSegue(@"moveToFileManagerSegue", this);
@@ -252,10 +257,10 @@ namespace InterViewer.iOS
 
 			public override void ItemSelected(UICollectionView collectionView, NSIndexPath indexPath)
 			{
-				string JsonFileName=null;
-				if(this._JsonName!=null)
+				string JsonFileName = null;
+				if(this._JsonName != null)
 				{
-					JsonIndex SomeItem=_JsonName.ToArray()[indexPath.Row];
+					JsonIndex SomeItem = _JsonName.ToArray()[indexPath.Row];
 					JsonFileName = SomeItem.JsonName;
 				}
 
@@ -268,7 +273,7 @@ namespace InterViewer.iOS
 
 				if (null != handle)
 				{
-					var args = new SelectedEventArgs { Selected = data,JsonName=JsonFileName };
+					var args = new SelectedEventArgs { Selected = data, JsonName = JsonFileName };
 					handle(this, args);
 				}
 			}
@@ -339,12 +344,6 @@ namespace InterViewer.iOS
 					break;
 				case @"moveToFileManagerSegue":
 					if (segue.DestinationViewController is FileManagerController)
-					{
-
-					}
-					break;
-				case @"moveToImageManagerSegue":
-					if (segue.DestinationViewController is ImageManagerController)
 					{
 
 					}

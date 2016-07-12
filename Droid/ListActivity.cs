@@ -3,19 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 using Android.App;
 using Android.Content;
 using Android.Database;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Graphics;
 using Java.IO;
-using Android.Content.Res;
-using Android.Content.PM;
 using Android.Provider;
 using Java.Lang;
 
@@ -437,13 +433,9 @@ namespace InterViewer.Droid
 
 		private void ShowAlert(string message, EventHandler<Android.Content.DialogClickEventArgs> positiveButtonClickHandle)
 		{
-
 			AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
 			alert.SetTitle(message);
-
 			alert.SetPositiveButton("OK!", positiveButtonClickHandle);
-
 			RunOnUiThread(() =>
 			{
 				alert.Show();
@@ -623,13 +615,9 @@ namespace InterViewer.Droid
 				var filepath = _visibleThings[position];
 				Bitmap bmp = BitmapFactory.DecodeFile(filepath.FullName);
 
-				//imageView.SetImageResource (thumbIds[position]);
 				imageView.SetImageBitmap(bmp);
 				return imageView;
 			}
-
-			// references to our images
-
 		}
 	}
 }
