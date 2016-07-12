@@ -47,18 +47,6 @@ namespace InterViewer.Droid
 			return GetPath(dirName);
 		}
 
-		public string GetImageDirectory()
-		{
-			var dirName = "Images";
-			return GetPath(dirName);
-		}
-
-		public string GetPdfDirectory()
-		{
-			var dirName = "Pdf";
-			return GetPath(dirName);
-		}
-
 		public string GetTemplateDirectory()
 		{
 			var dirName = "Template";
