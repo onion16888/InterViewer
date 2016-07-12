@@ -184,13 +184,13 @@ namespace InterViewer
 			return list;
 		}
 
-		public List<PdfTemplate> GetPdfTemplates()
+		public List<Template> GetTemplates()
 		{
-			var templates = new List<PdfTemplate>();
+			var templates = new List<Template>();
 
-			var exts = new[] { "pdf" };
+			var exts = new[] { "pdf", "jpg", "jpeg", "png" };
 
-			var path = ioService.GetDocumentDirectory();
+			var path = ioService.GetTemplateDirectory();
 			var files = ioService.EnumerateFiles(path, "*.*")
 								 .Where(file => exts.Any(x => file.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
 
@@ -198,11 +198,19 @@ namespace InterViewer
 			{
 				if (ioService.IsFileExists(filePath))
 				{
-					templates.Add(new PdfTemplate
+					var template = new Template
 					{
 						Name = Path.GetFileName(filePath),
-						Path = filePath
-					});
+						Path = filePath,
+						Type=TemplateTypeEnum.Image
+					};
+
+					if (template.Name.EndsWith("pdf", StringComparison.OrdinalIgnoreCase))
+					{
+						template.Type = TemplateTypeEnum.PDF;
+					}
+
+					templates.Add(template);
 				}
 			}
 
