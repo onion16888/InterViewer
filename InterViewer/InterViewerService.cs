@@ -194,13 +194,16 @@ namespace InterViewer
 			var files = ioService.EnumerateFiles(path, "*.*")
 								 .Where(file => exts.Any(x => file.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
 
+			var thumpnailPath = ioService.GetThumbnailDirectory();
 			foreach (var filePath in files)
 			{
 				if (ioService.IsFileExists(filePath))
 				{
+					var fileName = Path.GetFileName(filePath);
+
 					var template = new Template
 					{
-						Name = Path.GetFileName(filePath),
+						Name = fileName,
 						Path = filePath,
 						Type=TemplateTypeEnum.Image
 					};

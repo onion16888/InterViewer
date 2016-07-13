@@ -46,8 +46,10 @@ namespace InterViewer.iOS
 			var filename = Path.Combine(documents, "Write.txt");
 			File.WriteAllText(filename, "Write this text into a file");
 
-			//預設先撈Sliders
-			IEnumerable<string> fileOrDirectory = GetDirPngFile("Sliders");
+			//預設先撈範本
+			//IEnumerable<string> fileOrDirectory = GetDirPngFile("Sliders");
+			List<Template> fileOrDirectory =InterViewService.GetTemplates();
+
 			//把Sliders下的.png集合發給grid
 			JsonNameAndPng = null;
 			CollectionViewInit(fileOrDirectory);
@@ -64,7 +66,10 @@ namespace InterViewer.iOS
 					CheckButtonIsSelected(btnTemplate);
 					JsonNameAndPng = null;
 					//取得Sliders下的.png送給grid
-					CollectionViewInit(GetDirPngFile("Sliders"));
+					var templates = InterViewService.GetTemplates();
+
+
+					CollectionViewInit(templates);
 				});
 			};
 			btnDocuments.TouchUpInside += (object sender, EventArgs e) =>
@@ -77,7 +82,7 @@ namespace InterViewer.iOS
 					//GetJsonFile();
 
 					//取得Documents下的.png送給grid
-					CollectionViewInit(GetJsonFile());
+					CollectionViewInit(InterViewService.GetDocuments());
 					//CollectionViewInit(GetDirPngFile("Documents"));
 				});
 			};
@@ -136,19 +141,16 @@ namespace InterViewer.iOS
 				JsonNameAndPng.Add(new JsonIndex { JsonName = DocJson.Name, JsonPng = path });
 			}
 
-			return DocPng;
+			return DocPng; 
 		}
 		public override void DidReceiveMemoryWarning()
 		{
 			base.DidReceiveMemoryWarning();
 			// Release any cached data, images, etc that aren't in use.
 		}
-		public void CollectionViewInit(IEnumerable<string> PngSource)
+		public void CollectionViewInit(IEnumerable<EmptyInterface> PngSource)
 		{
-			List<string> _PngSource = new List<string>();
-			_PngSource.AddRange(PngSource);
-			//var v=from qwe in ss where 
-			var source = new TableSource(PngSource,JsonNameAndPng);
+			TableSource source = new TableSource(PngSource,JsonNameAndPng);
 			MyCollectionView.Source = source;
 
 			//設定東西南北距離，長寬大小，橫排直排
@@ -162,27 +164,27 @@ namespace InterViewer.iOS
 
 			source.Selected += ItemOnSelected;
 		}
-		public class TableSource : UICollectionViewSource
+		public class TableSource  : UICollectionViewSource
 		{
 			const String CollectionViewCellIdentifier = "MyCollectionViewCell";
 
-			public List<string> Source { get; set; }
+			public List<EmptyInterface> Source { get; set; }
 			public List<JsonIndex> _JsonName { get; set;}
 
 
-			public TableSource(IEnumerable<string> list,List<JsonIndex> _JsonName)
+			public TableSource(IEnumerable<EmptyInterface> list,List<JsonIndex> _JsonName)
 			{
 				this._JsonName = _JsonName;
 
-				Source = new List<string>();
+				Source = new List<EmptyInterface>();
 				Source.AddRange(list);
 			}
 
-			public TableSource(IEnumerable<string> list)
-			{
-				Source = new List<string>();
-				Source.AddRange(list);
-			}
+			//public TableSource(IEnumerable<string> list)
+			//{
+			//	Source = new List<string>();
+			//	Source.AddRange(list);
+			//}
 
 			public override nint GetItemsCount(UICollectionView collectionView, nint section)
 			{
@@ -195,7 +197,7 @@ namespace InterViewer.iOS
 
 				var data = Source[indexPath.Row];
 
-				cell.UpdateCellData(data);
+				cell.UpdateCellData(data.Thumbnail);
 
 				return cell;
 			}
@@ -220,7 +222,7 @@ namespace InterViewer.iOS
 
 				if (null != handle)
 				{
-					var args = new SelectedEventArgs { Selected = data, JsonName = JsonFileName };
+					var args = new SelectedEventArgs { Selected = data.Thumbnail, JsonName = JsonFileName };
 					handle(this, args);
 				}
 			}

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace InterViewer
 {
-	public class Document
+	public class Document : RelayInterface
 	{
 		/// <summary>
 		/// 文件標題

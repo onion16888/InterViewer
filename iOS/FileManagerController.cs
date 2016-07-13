@@ -2,8 +2,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using CoreGraphics;
+using Foundation;
 using UIKit;
 using Debug = System.Diagnostics.Debug;
 
@@ -17,8 +20,12 @@ namespace InterViewer.iOS
 		string _pathRightNow;
 		string _folderSlides = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"/InterView/Sliders";
 		string _selectedFile;
+		private IOService IIO;
+		private InterViewerService InterViewService;
 		public FileManagerController(IntPtr handle) : base(handle)
 		{
+			IIO = new IOService();
+			InterViewService = new InterViewerService(IIO);
 		}
 		public override void ViewDidLoad()
 		{
@@ -26,6 +33,7 @@ namespace InterViewer.iOS
 
 			//default setting
 			//settingMode(new QueryMode() { status = "PDF" });
+			_folderSlides = IIO.GetTemplateDirectory();
 
 			//Manager Start
 			setQueryPath("/");
@@ -77,6 +85,7 @@ namespace InterViewer.iOS
 			if (e.SelectedName.IsFile == true)
 			{
 				selectPath(e.SelectedName.Name);
+
 				listButtonAction();
 			}
 			else
@@ -118,12 +127,39 @@ namespace InterViewer.iOS
 				if (isPNG(_selectedFile))
 				{
 					copyToDestination(_selectedFile, _folderSlides);
+					var imageView =UIImage.FromBundle(_selectedFile);
+					var ThumbnailByte=ResizeImageIOS(imageView, 150, 150);
+					var FilePath = Path.Combine(IIO.GetThumbnailDirectory(),Path.GetFileName(_selectedFile));
+					File.WriteAllBytes(FilePath, ThumbnailByte);
 					showAlert("新增影像", _selectedFile + @" 新增成功!!", @"確定", this);
 				}
 				else
 				{
 					showAlert("新增影像", _selectedFile + @" 不是PNG檔案", @"確定", this);
 				}
+			}
+		}
+		//縮圖方法 回傳byte[]Array
+		public static byte[] ResizeImageIOS(UIImage originalImage, float width, float height)
+		{
+			UIImageOrientation orientation = originalImage.Orientation;
+
+			//create a 24bit RGB image
+			using (CGBitmapContext context = new CGBitmapContext(IntPtr.Zero,
+											  (int)width, (int)height, 8,
+											  (int)(4 * width), CGColorSpace.CreateDeviceRGB(),
+											  CGImageAlphaInfo.PremultipliedFirst))
+			{
+
+				RectangleF imageRect = new RectangleF(0, 0, width, height);
+
+				// draw the image
+				context.DrawImage(imageRect, originalImage.CGImage);
+
+				UIKit.UIImage resizedImage = UIKit.UIImage.FromImage(context.ToImage(), 0, orientation);
+
+				// save the image as a jpeg
+				return resizedImage.AsPNG().ToArray();
 			}
 		}
 		/// <summary>
@@ -152,12 +188,15 @@ namespace InterViewer.iOS
 		{
 			try
 			{
-				if (!File.Exists(destinationFolder))
+				if (!Directory.Exists(destinationFolder))
 					Directory.CreateDirectory(destinationFolder);
-				File.Copy(sourceName, destinationFolder + "/" + getFileNameFromFullFilePath(sourceName));
+				var ss = Path.GetFileName(sourceName);
+				File.Copy(sourceName, Path.Combine(destinationFolder,ss));
+				PDFDocument theChoosedPDF = new PDFDocument(sourceName, 1);
+				theChoosedPDF.SaveAsPng(IIO.GetThumbnailDirectory(), getFileNameFromFullFilePath(sourceName).Replace(".pdf", ".png"));
 				return true;
 			}
-			catch
+			catch(Exception e)
 			{
 				return false;
 			}
@@ -331,4 +370,5 @@ namespace InterViewer.iOS
 	{
 		public string status;
 	}
+
 }
