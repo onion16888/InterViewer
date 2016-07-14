@@ -27,8 +27,10 @@ namespace InterViewer
 			{
 				var jsonText = ioService.ReadAllText(file);
 
-				var document = ioService.FixDocument(JsonConvert.DeserializeObject<Document>(jsonText));
-
+				var document = JsonConvert.DeserializeObject<Document>(jsonText);
+				//Sid Add 2016/07/13 因為如果直接撈以前的路徑，沙盒名稱會有誤，所以要重撈
+				document.Thumbnail = Path.Combine(ioService.GetThumbnailDirectory() , Path.GetFileName(document.Thumbnail));
+				document.Reference = Path.Combine(ioService.GetTemplateDirectory() , Path.GetFileName(document.Reference));
 				list.Add(document);
 			}
 
@@ -195,6 +197,7 @@ namespace InterViewer
 								 .Where(file => exts.Any(x => file.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
 
 			var thumbnailPath = ioService.GetThumbnailDirectory();
+
 			foreach (var filePath in files)
 			{
 				if (ioService.IsFileExists(filePath))

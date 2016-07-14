@@ -4,7 +4,7 @@ namespace InterViewer
 	/// <summary>
 	/// 範本類別
 	/// </summary>
-	public class Template
+	public class Template:RelayInterface
 	{
 		/// <summary>
 		/// 檔案名稱(包含副檔名)

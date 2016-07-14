@@ -39,6 +39,7 @@
     <Compile Include="IIOService.cs" />
     <Compile Include="InterViewerService.cs" />
     <Compile Include="TemplateTypeEnum.cs" />
+    <Compile Include="RelayInterface.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
